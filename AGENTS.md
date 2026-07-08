@@ -5,13 +5,28 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 
 <!-- END:nextjs-agent-rules -->
-<!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## Project Overview
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This is a social media management marketing application. It primarily serves marketing pages (home, about, and related static pages) and rarely talks to an external backend API (e.g. the blog).
 
-<!-- END:nextjs-agent-rules -->
+Stack and design workflow:
+
+- Tailwind CSS and shadcn/ui are the component library and design system.
+- Custom color variables live in `globals.css` so tokens can match the Figma design.
+- Frontend UI is built from Figma frames created by the design team; use the Figma MCP to reference those frames when implementing components.
+
+## Image Assets
+
+Images from Figma (backgrounds, graphics, icons) are manually downloaded into `public/images/pages/{page}/` on a per-page basis (e.g. `public/images/pages/home/`).
+
+When the app supports dark mode, each page folder may contain at most these three subfolders:
+
+- `white/` — light-mode assets
+- `dark/` — dark-mode assets
+- `shared/` — assets used in both themes
+
+When the app does not support dark mode, store all images directly under the page directory (e.g. `public/images/pages/home/`) with no theme subfolders.
 
 ## Global Rules
 
