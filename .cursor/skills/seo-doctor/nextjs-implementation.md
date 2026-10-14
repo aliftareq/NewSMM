@@ -1,6 +1,40 @@
 # Next.js App Router — SEO implementation map
 
-Use when **fixing** issues found by seo-doctor. Discover `app/` vs `src/app/` and follow the clone’s folder conventions (e.g. `src/components/shared/`, feature modules).
+Use when **fixing** issues (especially **`seo-doctor fix`**). Discover `app/` vs `src/app/` and follow the clone’s folder conventions (e.g. `src/components/shared/`, feature modules). Workflow: [fix-workflow.md](fix-workflow.md).
+
+## Fix mode patterns
+
+### Site URL and canonical base
+
+- Add env-driven site URL (e.g. `NEXT_PUBLIC_SITE_URL` in `.env.example`) and read it from `src/config/site.ts` or `src/lib/seo/site.ts`.
+- Use the same base for `metadata.alternates.canonical`, `sitemap.ts` absolute URLs, and `robots.ts` sitemap reference.
+- Do not hardcode production domains in source; use env with a sensible dev default only in examples.
+
+### Missing marketing / legal routes
+
+When handover item 3 fails, scaffold minimal routes (e.g. `about`, `contact`, `terms`, `privacy`) with:
+
+- `page.tsx` + one H1
+- Route-level `metadata` or `generateMetadata` (unique title/description placeholders from product context when available)
+- Link from a shared header/footer once those exist
+
+Place routes per project structure (`app/(marketing)/...` or `src/app/...`).
+
+### Shared SEO utilities
+
+- `components/shared/JsonLd.tsx` — server component accepting a serializable schema object; render `<script type="application/ld+json">`.
+- Optional `src/lib/seo/metadata.ts` — helpers for default title template, canonical, and Open Graph.
+- Homepage: Organization + WebSite + WebPage JSON-LD when appropriate; add LocalBusiness / AggregateRating only when real data exists on the page.
+
+### Indexation files
+
+- `sitemap.ts` — list only indexable routes; update when adding marketing pages.
+- `robots.ts` — allow public paths; point to sitemap URL using site base from config.
+- `not-found.tsx` at app root for proper 404.
+
+### Internal linking
+
+- Shared layout footer/nav linking to About, Contact, Terms, Privacy, and key hubs using the project `LinkTo` (or equivalent) wrapper.
 
 ## Metadata
 

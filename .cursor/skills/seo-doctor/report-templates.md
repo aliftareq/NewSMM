@@ -160,3 +160,32 @@ Use the template matching the active mode. Replace placeholders; attach URL inve
 
 1.
 ```
+
+---
+
+## Fix report (`seo-doctor fix`)
+
+**Required format:** exactly **two sentences** (no heading required), then a markdown table. One row per atomic issue discovered during the fix run’s audit phase.
+
+**Status column** must start with one of:
+
+- `Fixed`
+- `Not fixed — …`
+- `Unable to verify — …`
+
+```markdown
+[Sentence 1: Scope — e.g. site-wide fix after handover + audit on n indexable URLs, or single URL /about.]
+
+[Sentence 2: Outcome — e.g. X fixed, Y not fixed, Z unable to verify.]
+
+| Issue | Status |
+|-------|--------|
+| Missing app/sitemap.ts | Fixed |
+| Default Create Next App title on / | Fixed |
+| About page missing final copy | Not fixed — needs content |
+| GA4 property not connected | Not fixed — manual / devops |
+| Homepage PSI mobile score above 80 | Unable to verify — no staging URL |
+| JSON-LD Organization on homepage | Fixed |
+```
+
+Optional columns: **URL** (`Site-wide` or path), **Evidence** (file or tool). Keep the table the primary deliverable for fix mode.
