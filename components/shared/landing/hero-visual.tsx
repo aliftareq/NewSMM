@@ -9,7 +9,7 @@ type HeroVisualProps = {
 
 export function HeroVisual({ visual, spriteSrc }: HeroVisualProps) {
   return (
-    <div className="relative mx-auto h-[560px] w-full max-w-[480px] overflow-hidden rounded-[24px] bg-white">
+    <div className="relative mx-auto h-[560px] w-full max-w-[480px] overflow-visible rounded-[24px] bg-white">
       <div
         className="absolute top-0 right-0 h-[560px] w-[238px] bg-blue-brand"
         aria-hidden
@@ -31,7 +31,7 @@ export function HeroVisual({ visual, spriteSrc }: HeroVisualProps) {
         />
       </div>
 
-      <div className="absolute top-[535px] left-[47px] rounded-[20.321px] border border-[#0087d4] bg-white/[0.08] px-[23.708px] py-[16.934px] backdrop-blur-[2px]">
+      <div className="absolute top-[535px] left-[47px] z-10 rounded-[20.321px] border-[0.847px] border-solid border-[#0087d4] bg-white/[0.08] px-[23.708px] py-[16.934px] backdrop-blur-[2px]">
         <div className="flex items-center gap-[20.66px]">
           {visual.socialBarIcons.map((icon) => (
             <span

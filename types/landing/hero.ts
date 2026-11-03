@@ -84,7 +84,8 @@ export type LandingHeroContent = {
     socialBarIcons: HeroSocialBarIcon[]
   }
   assets: {
-    backgroundFade: string
+    /** Figma 27512:5881 — grid, highlight squares, bottom arc glow */
+    backgroundHero: string
     socialIconsSprite: string
     chevronDown: string
   }

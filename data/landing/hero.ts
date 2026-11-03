@@ -4,7 +4,7 @@ const SPRITE = "/images/landing/social-icons-sprite.png"
 
 export const landingHeroContent: LandingHeroContent = {
   assets: {
-    backgroundFade: "/images/landing/hero-fade.png",
+    backgroundHero: "/images/landing/hero-background.png",
     socialIconsSprite: SPRITE,
     chevronDown: "/images/landing/chevron-down.svg",
   },

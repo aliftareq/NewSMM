@@ -1,0 +1,13 @@
+<svg width="93" height="93" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <circle cx="46.5" cy="46.5" r="46.5" fill="white" />
+  <g transform="translate(22.5 29.5)">
+    <path
+      d="M15.4992 0H36.5808L21.0816 22.9729H0L15.4992 0Z"
+      fill="#21AEFF"
+    />
+    <path
+      d="M16.4231 25.1022L10.4199 34.0002H32.5015L48.0007 11.0273H31.7031L22.2071 25.1022H16.4231Z"
+      fill="#004C71"
+    />
+  </g>
+</svg>
