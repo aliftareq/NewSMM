@@ -72,7 +72,7 @@ export type LandingFooterContent = {
   assets: {
     glowEllipse: string
     decorativeDots: string
-    glareLeft: { a: string; b: string }
-    glareRight: { a: string; b: string }
+    glareStarLeft: string
+    glareStarRight: string
   }
 }

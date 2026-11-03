@@ -2,6 +2,8 @@ import type { FooterNavLink } from "@/types/landing/footer"
 
 import { LinkTo } from "@/components/shared/link-to"
 
+import { cn } from "@/lib/utils"
+
 type FooterLinkColumnProps = {
   title: string
   links: FooterNavLink[]
@@ -14,9 +16,10 @@ export function FooterLinkColumn({
   className,
 }: FooterLinkColumnProps) {
   return (
-    <nav className={className} aria-label={title}>
-      <p className="mb-5 text-xl font-medium leading-normal text-white">{title}</p>
-      <ul className="flex flex-col gap-[15px]">
+    <nav className={cn("min-w-0", className)} aria-label={title}>
+      <div className="flex flex-col gap-5">
+        <p className="text-xl font-medium leading-6 text-white">{title}</p>
+        <ul className="flex flex-col gap-[15px]">
         {links.map((link) => (
           <li key={link.href}>
             <LinkTo
@@ -27,7 +30,8 @@ export function FooterLinkColumn({
             </LinkTo>
           </li>
         ))}
-      </ul>
+        </ul>
+      </div>
     </nav>
   )
 }

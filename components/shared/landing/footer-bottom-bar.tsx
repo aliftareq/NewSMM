@@ -8,14 +8,15 @@ type FooterBottomBarProps = {
 
 export function FooterBottomBar({ legal }: FooterBottomBarProps) {
   return (
-    <div className="flex w-full flex-col items-start justify-between gap-4 text-sm leading-[1.3] text-dark-white md:flex-row md:items-center">
-      <p>
-        <span>{legal.copyrightPrefix}</span>
-        <span className="font-semibold leading-normal">{legal.copyrightBrand}</span>
-        <span>{legal.copyrightSuffix}</span>
+    <div className="flex w-full flex-col items-center justify-between gap-4 text-center text-sm leading-[1.3] text-dark-white sm:gap-6 md:flex-row md:items-center md:text-left">
+      <p className="max-w-full min-w-0">
+        <span className="leading-[1.3]">{legal.copyrightPrefix}</span>
+        <span className="font-semibold leading-[1.5]">{legal.copyrightBrand}</span>
+        <span className="leading-[1.3]"> </span>
+        <span className="leading-[1.3]">{legal.copyrightSuffix}</span>
       </p>
 
-      <div className="flex flex-wrap items-center gap-[63px]">
+      <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 md:justify-end md:gap-[63px]">
         {legal.links.map((link) => (
           <LinkTo
             key={link.href}

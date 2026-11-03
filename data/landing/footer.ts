@@ -6,14 +6,8 @@ export const landingFooterContent: LandingFooterContent = {
   assets: {
     glowEllipse: `${FOOTER_IMG}/glow-ellipse.svg`,
     decorativeDots: `${FOOTER_IMG}/decorative-dots.svg`,
-    glareLeft: {
-      a: `${FOOTER_IMG}/glare-a.svg`,
-      b: `${FOOTER_IMG}/glare-b.svg`,
-    },
-    glareRight: {
-      a: `${FOOTER_IMG}/glare-a.svg`,
-      b: `${FOOTER_IMG}/glare-b.svg`,
-    },
+    glareStarLeft: `${FOOTER_IMG}/glare-star-left.png`,
+    glareStarRight: `${FOOTER_IMG}/glare-star-right.png`,
   },
   cta: {
     headingLines: ["Your Social Media Growth", "Starts Here"],
@@ -97,7 +91,7 @@ export const landingFooterContent: LandingFooterContent = {
       {
         id: "location",
         iconSrc: `${FOOTER_IMG}/location.svg`,
-        text: "2900 Ritter Street, Huntsville, AL 35802",
+        text: "4093 Overlook Drive, Richmond, IN 47374",
         multiline: true,
       },
     ],

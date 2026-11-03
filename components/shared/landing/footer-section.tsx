@@ -17,26 +17,36 @@ export function FooterSection({
   content = landingFooterContent,
 }: FooterSectionProps) {
   return (
-    <footer className="relative overflow-hidden bg-primary-black pt-[100px] text-white">
+    <footer className="relative isolate overflow-clip bg-primary-black pt-12 text-white sm:pt-16 md:pt-20 xl:pt-[100px]">
       <FooterDecorations assets={content.assets} />
 
-      <div className="info-container relative flex flex-col gap-[68px]">
-        <FooterCta cta={content.cta} />
+      <div className="info-container relative z-[6] flex flex-col items-center gap-10 px-4 sm:gap-12 sm:px-6 lg:px-8 xl:gap-[68px]">
+        <FooterCta
+          cta={content.cta}
+          glareStarLeft={content.assets.glareStarLeft}
+          glareStarRight={content.assets.glareStarRight}
+        />
 
-        <div className="flex flex-col gap-[60px] pb-12">
-          <div className="flex flex-col gap-10 xl:flex-row xl:items-start xl:justify-between">
+        <div className="flex w-full flex-col items-center gap-10 pb-8 sm:gap-12 sm:pb-10 xl:gap-[60px] xl:pb-12">
+          <div className="flex w-full flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-[133px]">
             <FooterBrandColumn brand={content.brand} />
-            <FooterLinkColumn
-              title={content.quickLinks.title}
-              links={content.quickLinks.links}
-              className="w-[160px] shrink-0"
-            />
-            <FooterLinkColumn
-              title={content.services.title}
-              links={content.services.links}
-              className="w-[173px] shrink-0"
-            />
-            <FooterContactColumn contact={content.contact} />
+
+            <div className="grid w-full min-w-0 grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-8 md:gap-x-12 xl:contents">
+              <FooterLinkColumn
+                title={content.quickLinks.title}
+                links={content.quickLinks.links}
+                className="w-full min-w-0 xl:w-[160px] xl:shrink-0"
+              />
+              <FooterLinkColumn
+                title={content.services.title}
+                links={content.services.links}
+                className="w-full min-w-0 xl:w-[173px] xl:shrink-0"
+              />
+              <FooterContactColumn
+                contact={content.contact}
+                className="sm:col-span-2 xl:col-span-1"
+              />
+            </div>
           </div>
 
           <FooterTrustBadges badges={content.trustBadges} />
