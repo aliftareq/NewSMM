@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -43,7 +43,7 @@ export default function RootLayout({
     >
       <body
         suppressHydrationWarning
-        className="min-h-full flex flex-col"
+        className="min-h-full flex flex-col font-sans antialiased"
       >
         {children}
       </body>
