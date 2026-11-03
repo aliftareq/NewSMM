@@ -1,0 +1,19 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1971.78" height="1508.98" viewBox="0 0 1971.78 1508.98" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Ellipse 43642" filter="url(#filter0_f_0_9)" style="mix-blend-mode:plus-lighter">
+<mask id="stroke0_0_9" fill="white">
+<path d="M1960.81 754.49C1960.81 1165.12 1524.33 1498.01 985.892 1498.01C447.458 1498.01 10.9714 1165.12 10.9714 754.49C10.9714 343.856 447.458 10.9714 985.892 10.9714C1524.33 10.9714 1960.81 343.856 1960.81 754.49Z"/>
+</mask>
+<path d="M1960.81 754.49C1960.81 1165.12 1524.33 1498.01 985.892 1498.01C447.458 1498.01 10.9714 1165.12 10.9714 754.49C10.9714 343.856 447.458 10.9714 985.892 10.9714C1524.33 10.9714 1960.81 343.856 1960.81 754.49Z" stroke-width="1.82857" stroke="url(#paint0_linear_0_9)" mask="url(#stroke0_0_9)"/>
+</g>
+<defs>
+<filter id="filter0_f_0_9" x="0" y="0" width="1971.78" height="1508.98" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="5.48571" result="effect1_foregroundBlur_0_9"/>
+</filter>
+<linearGradient id="paint0_linear_0_9" x1="985.892" y1="10.9714" x2="985.498" y2="99.704" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>
