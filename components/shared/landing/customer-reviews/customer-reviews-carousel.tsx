@@ -22,7 +22,7 @@ export function CustomerReviewsCarousel({
       aria-label="Customer reviews"
       role="region"
     >
-      <div className="customer-reviews-marquee-track flex w-max items-center gap-5">
+      <div className="customer-reviews-marquee-track flex w-max items-center gap-5 will-change-transform">
         {loop.map((review, index) => (
           <CustomerReviewCard
             key={`${review.id}-${index}`}

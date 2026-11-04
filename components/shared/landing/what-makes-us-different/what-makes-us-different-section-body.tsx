@@ -1,5 +1,6 @@
 import { ComparisonPanel } from "@/components/shared/landing/what-makes-us-different/comparison-panel"
 import { ComparisonVsBadge } from "@/components/shared/landing/what-makes-us-different/comparison-vs-badge"
+import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
 import type { WhatMakesUsDifferentContent } from "@/types/landing/what-makes-us-different"
 
@@ -52,19 +53,7 @@ export function WhatMakesUsDifferentHeader({
 }: WhatMakesUsDifferentHeaderProps) {
   return (
     <div className="flex w-full max-w-[760px] flex-col items-center gap-3 text-center">
-      <div className="rounded-[33px] border-[0.5px] border-[#e8e8e3] bg-white/50 p-1">
-        <div className="rounded-full border border-white bg-[#fafafa] px-3 py-1.5 shadow-[0px_2px_3px_rgba(183,183,183,0.25)]">
-          <div className="flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="size-1 shrink-0 rounded-full border-2 border-[rgba(96,96,171,0.15)] bg-[#21aeff]"
-            />
-            <p className="text-xs leading-normal font-medium text-[#21aeff]">
-              {content.badgeLabel}
-            </p>
-          </div>
-        </div>
-      </div>
+      <LandingSectionBadge label={content.badgeLabel} />
 
       <h2
         id="landing-what-makes-us-different-heading"

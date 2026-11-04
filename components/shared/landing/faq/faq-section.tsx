@@ -1,3 +1,4 @@
+import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { FaqAccordion } from "@/components/shared/landing/faq/faq-accordion"
 import { landingFaqContent } from "@/data/landing/faq"
 import { cn } from "@/lib/utils"
@@ -21,19 +22,7 @@ export function FaqSection({
     >
       <div className="info-container flex flex-col items-center gap-12 px-4 py-16 sm:px-6 sm:py-16 md:py-20 xl:py-[80px]">
         <div className="flex w-full max-w-[723px] flex-col items-center gap-3 text-center">
-          <div className="rounded-[33px] border-[0.5px] border-[#e8e8e3] bg-white/50 p-1">
-            <div className="rounded-full border border-white bg-[#fafafa] px-3 py-1.5 shadow-[0px_2px_3px_rgba(183,183,183,0.25)]">
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="size-1 shrink-0 rounded-full border-2 border-[rgba(96,96,171,0.15)] bg-[#21aeff]"
-                />
-                <p className="text-xs leading-normal font-medium text-[#21aeff]">
-                  {content.badgeLabel}
-                </p>
-              </div>
-            </div>
-          </div>
+          <LandingSectionBadge label={content.badgeLabel} />
 
           <h2
             id="landing-faq-heading"
