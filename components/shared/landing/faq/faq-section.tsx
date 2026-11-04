@@ -20,7 +20,7 @@ export function FaqSection({
       aria-labelledby="landing-faq-heading"
     >
       <div className="info-container flex flex-col items-center gap-12 px-4 py-16 sm:px-6 sm:py-16 md:py-20 xl:py-[80px]">
-        <div className="flex max-w-[723px] flex-col items-center gap-3 text-center">
+        <div className="flex w-full max-w-[723px] flex-col items-center gap-3 text-center">
           <div className="rounded-[33px] border-[0.5px] border-[#e8e8e3] bg-white/50 p-1">
             <div className="rounded-full border border-white bg-[#fafafa] px-3 py-1.5 shadow-[0px_2px_3px_rgba(183,183,183,0.25)]">
               <div className="flex items-center gap-2">
@@ -43,7 +43,7 @@ export function FaqSection({
             <span className="text-[#21aeff]">{content.headingAccent}</span>
           </h2>
 
-          <p className="text-base leading-normal font-normal text-[#343e56]">
+          <p className="w-full text-base leading-normal font-normal text-pretty text-[#343e56]">
             {content.description}
           </p>
         </div>
