@@ -77,25 +77,87 @@ export const landingHeroContent: LandingHeroContent = {
     platformField: {
       id: "platform",
       label: "Select platform",
-      value: "Instagram",
-      spriteIcon: {
-        left: "-343.53%",
-        top: "-48.82%",
-        width: "787.4%",
-        height: "639.76%",
-      },
     },
     serviceField: {
       id: "service",
       label: "Select a service",
-      value: "Instagram followers",
-      icon: {
-        src: "/images/landing/instagram-followers-icon.png",
-        width: 20.195,
-        height: 18,
-        className:
-          "absolute h-[144.68%] left-[-45.65%] max-w-none top-[-22.34%] w-[193.48%]",
+    },
+    defaultPlatformId: "instagram",
+    defaultServiceId: "instagram-followers",
+    platforms: [
+      {
+        id: "instagram",
+        label: "Instagram",
+        spriteIcon: {
+          left: "-343.53%",
+          top: "-48.82%",
+          width: "787.4%",
+          height: "639.76%",
+        },
       },
+      {
+        id: "tiktok",
+        label: "TikTok",
+        spriteIcon: {
+          left: "-195.87%",
+          top: "-196.09%",
+          width: "787.4%",
+          height: "639.76%",
+        },
+      },
+      {
+        id: "youtube",
+        label: "YouTube",
+        spriteIcon: {
+          left: "-195.92%",
+          top: "-48.82%",
+          width: "787.4%",
+          height: "639.76%",
+        },
+      },
+      {
+        id: "facebook",
+        label: "Facebook",
+        spriteIcon: {
+          left: "-48.43%",
+          top: "-48.82%",
+          width: "787.4%",
+          height: "639.76%",
+        },
+      },
+    ],
+    servicesByPlatform: {
+      instagram: [
+        {
+          id: "instagram-followers",
+          label: "Instagram followers",
+          icon: {
+            src: "/images/landing/instagram-followers-icon.png",
+            width: 20.195,
+            height: 18,
+            className:
+              "absolute h-[144.68%] left-[-45.65%] max-w-none top-[-22.34%] w-[193.48%]",
+          },
+        },
+        { id: "instagram-likes", label: "Instagram likes" },
+        { id: "instagram-views", label: "Instagram views" },
+        { id: "instagram-comments", label: "Instagram comments" },
+      ],
+      tiktok: [
+        { id: "tiktok-followers", label: "TikTok followers" },
+        { id: "tiktok-likes", label: "TikTok likes" },
+        { id: "tiktok-views", label: "TikTok views" },
+      ],
+      youtube: [
+        { id: "youtube-subscribers", label: "YouTube subscribers" },
+        { id: "youtube-views", label: "YouTube views" },
+        { id: "youtube-likes", label: "YouTube likes" },
+      ],
+      facebook: [
+        { id: "facebook-followers", label: "Facebook followers" },
+        { id: "facebook-likes", label: "Facebook likes" },
+        { id: "facebook-views", label: "Facebook views" },
+      ],
     },
     submitLabel: "Get started now",
   },

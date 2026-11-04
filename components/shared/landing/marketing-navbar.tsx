@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { usePathname } from "next/navigation"
 
 import { landingNavbarContent } from "@/data/landing/navbar"
 import type { LandingNavbarContent } from "@/types/landing/navbar"
 import { LinkTo } from "@/components/shared/link-to"
+import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import { cn } from "@/lib/utils"
 
 type MarketingNavbarProps = {
@@ -24,6 +26,7 @@ export function MarketingNavbar({
   className,
 }: MarketingNavbarProps) {
   const pathname = usePathname()
+  const [servicesModalOpen, setServicesModalOpen] = useState(false)
 
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
@@ -46,8 +49,9 @@ export function MarketingNavbar({
             />
           </LinkTo>
 
-          <LinkTo
-            href={content.servicesMenu.href}
+          <button
+            type="button"
+            onClick={() => setServicesModalOpen(true)}
             className="hidden items-center gap-2 rounded-xl bg-white px-4 py-3 sm:inline-flex"
           >
             <span className="relative size-5 shrink-0 overflow-hidden">
@@ -69,7 +73,8 @@ export function MarketingNavbar({
                 className="absolute inset-[21.49%_0_21.5%_0] block size-auto max-w-none"
               />
             </span>
-          </LinkTo>
+          </button>
+          <OurServicesModal open={servicesModalOpen} onOpenChange={setServicesModalOpen} />
         </div>
 
         <nav

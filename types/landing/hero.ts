@@ -41,10 +41,27 @@ export type HeroSpriteCrop = {
   height: string
 }
 
+export type HeroOrderPlatformOption = {
+  id: string
+  label: string
+  spriteIcon: HeroSpriteCrop
+}
+
+export type HeroOrderServiceOption = {
+  id: string
+  label: string
+  icon?: {
+    src: string
+    width: number
+    height: number
+    className?: string
+  }
+}
+
 export type HeroSelectField = {
   id: string
   label: string
-  value: string
+  value?: string
   icon?: {
     src: string
     width: number
@@ -67,8 +84,12 @@ export type LandingHeroContent = {
   }
   description: string
   orderCard: {
-    platformField: HeroSelectField
-    serviceField: HeroSelectField
+    platformField: Pick<HeroSelectField, "id" | "label">
+    serviceField: Pick<HeroSelectField, "id" | "label">
+    defaultPlatformId: string
+    defaultServiceId: string
+    platforms: HeroOrderPlatformOption[]
+    servicesByPlatform: Record<string, HeroOrderServiceOption[]>
     submitLabel: string
   }
   visual: {
