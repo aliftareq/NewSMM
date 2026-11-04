@@ -25,6 +25,12 @@ type HeroOrderCardProps = {
 const triggerClassName =
   "h-auto min-h-[63px] w-full max-w-none justify-between gap-3 rounded-xl border border-n20 bg-n20 px-5 py-[18px] text-lg font-medium text-n600 shadow-none focus-visible:border-[#8ad8ff] focus-visible:ring-[3px] focus-visible:ring-[#8ad8ff]/30 data-[size=default]:h-auto [&>svg]:hidden"
 
+const menuClassName =
+  "max-h-60 w-(--anchor-width) rounded-xl border border-[#8ad8ff] bg-white p-1.5 text-n600 shadow-[0px_8px_24px_rgba(38,157,231,0.14)] ring-0"
+
+const menuItemClassName =
+  "rounded-lg py-2.5 pr-8 pl-3 text-base font-medium text-n600 data-highlighted:bg-[#eaf6fd] data-highlighted:text-button data-selected:bg-[#eaf6fd] data-selected:text-button focus:bg-[#eaf6fd] focus:text-button [&_[data-slot=select-item-indicator]_svg]:text-button"
+
 function ServiceLeadingIcon({ service }: { service: HeroOrderServiceOption }) {
   if (!service.icon) {
     return null
@@ -50,25 +56,29 @@ function HeroSelectField({
   value,
   onValueChange,
   children,
+  renderValue,
 }: {
   label: string
   chevronSrc: string
   value: string
   onValueChange: (value: string | null) => void
   children: React.ReactNode
+  renderValue: (value: string) => React.ReactNode
 }) {
   return (
     <div className="flex w-full flex-col gap-2">
       <p className="text-base font-medium leading-[1.35] text-n500">{label}</p>
       <Select value={value} onValueChange={onValueChange}>
         <SelectTrigger className={triggerClassName} size="default">
-          <SelectValue className="flex flex-1 items-center gap-1.5 text-lg font-medium leading-normal text-n600" />
+          <SelectValue className="flex min-w-0 flex-1 items-center gap-1.5 text-lg font-medium leading-normal text-n600">
+            {(selected) => renderValue(selected ?? value)}
+          </SelectValue>
           <span className="relative size-6 shrink-0 rotate-180 -scale-y-100" aria-hidden>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img alt="" src={chevronSrc} className="block size-full max-w-none" />
           </span>
         </SelectTrigger>
-        <SelectContent align="start" className="max-h-60 w-(--anchor-width)">
+        <SelectContent align="start" className={menuClassName}>
           {children}
         </SelectContent>
       </Select>
@@ -99,6 +109,16 @@ export function HeroOrderCard({
     [platformId, servicesByPlatform]
   )
 
+  const selectedPlatform = useMemo(
+    () => platforms.find((p) => p.id === platformId),
+    [platformId, platforms]
+  )
+
+  const selectedService = useMemo(
+    () => services.find((s) => s.id === serviceId),
+    [serviceId, services]
+  )
+
   const handlePlatformChange = (nextPlatformId: string | null) => {
     if (!nextPlatformId) return
     setPlatformId(nextPlatformId)
@@ -120,9 +140,20 @@ export function HeroOrderCard({
             chevronSrc={chevronSrc}
             value={platformId}
             onValueChange={handlePlatformChange}
+            renderValue={(id) => {
+              const platform = platforms.find((p) => p.id === id) ?? selectedPlatform
+              if (!platform) return id
+              return (
+                <PlatformOptionContent platform={platform} spriteSrc={spriteSrc} />
+              )
+            }}
           >
             {platforms.map((platform) => (
-              <SelectItem key={platform.id} value={platform.id}>
+              <SelectItem
+                key={platform.id}
+                value={platform.id}
+                className={menuItemClassName}
+              >
                 <PlatformOptionContent platform={platform} spriteSrc={spriteSrc} />
               </SelectItem>
             ))}
@@ -133,9 +164,23 @@ export function HeroOrderCard({
             chevronSrc={chevronSrc}
             value={serviceId}
             onValueChange={handleServiceChange}
+            renderValue={(id) => {
+              const service = services.find((s) => s.id === id) ?? selectedService
+              if (!service) return id
+              return (
+                <span className="flex items-center gap-1.5">
+                  <ServiceLeadingIcon service={service} />
+                  {service.label}
+                </span>
+              )
+            }}
           >
             {services.map((service) => (
-              <SelectItem key={service.id} value={service.id}>
+              <SelectItem
+                key={service.id}
+                value={service.id}
+                className={menuItemClassName}
+              >
                 <span className="flex items-center gap-1.5">
                   <ServiceLeadingIcon service={service} />
                   {service.label}

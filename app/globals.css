@@ -73,6 +73,7 @@
 
   --animate-stats-avatar-marquee-ltr: stats-avatar-marquee-ltr 28s linear infinite;
   --animate-stats-avatar-marquee-rtl: stats-avatar-marquee-rtl 28s linear infinite;
+  --animate-skeleton-shimmer: skeleton-shimmer 1.8s ease-in-out infinite;
 }
 
 :root {
@@ -218,6 +219,16 @@
   }
 }
 
+@keyframes hero-social-idle-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.04);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-stats-avatar-marquee-ltr,
   .animate-stats-avatar-marquee-rtl,
@@ -230,6 +241,10 @@
     animation: none !important;
     opacity: 0.55;
     transform: scale(2.25);
+  }
+
+  .hero-social-idle-float {
+    animation: none !important;
   }
 }
 
@@ -280,5 +295,171 @@
   .stats-avatar-marquee-rtl {
     animation: stats-avatar-marquee-rtl 28s linear infinite;
     will-change: transform;
+  }
+
+  .hero-social-idle-float {
+    animation: hero-social-idle-float 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95)
+      infinite;
+  }
+}
+
+@media (max-width: 63.999rem), (hover: none), (pointer: coarse) {
+  .hero-social-tooltip {
+    display: none !important;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes how-it-works-chart-line-draw {
+  0% {
+    stroke-dashoffset: 120;
+    opacity: 0.25;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.7;
+  }
+}
+
+@layer components {
+  .how-it-works-skeleton-chart-line {
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+    animation: how-it-works-chart-line-draw 2.4s ease-in-out infinite alternate;
+  }
+
+  .how-it-works-skeleton-shimmer {
+    mix-blend-mode: overlay;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  /* Step 03 — border draw + check (play once when `.how-it-works-step03-in-view`) */
+  .how-it-works-step03-card-border {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .how-it-works-step03-check-badge {
+    transform-box: fill-box;
+    transform-origin: 109.979px 16.378px;
+    opacity: 0;
+    transform: scale(0.35);
+  }
+
+  .how-it-works-step03-check-mark {
+    fill: none;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .how-it-works-step03-in-view .how-it-works-step03-card-border {
+    animation: hiw-step03-border-draw 2.2s ease-in-out forwards;
+  }
+
+  .how-it-works-step03-in-view .how-it-works-step03-check-badge {
+    animation: hiw-step03-check-pop 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) 1.85s
+      forwards;
+  }
+
+  .how-it-works-step03-in-view .how-it-works-step03-check-mark {
+    animation: hiw-step03-check-draw 0.4s ease-out 2.15s forwards;
+  }
+
+  .how-it-works-step03-heart {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hiw-step03-heart-pulse 1.75s ease-in-out infinite;
+  }
+}
+
+@keyframes hiw-step03-border-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hiw-step03-check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes hiw-step03-check-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hiw-step03-heart-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-it-works-skeleton-shimmer,
+  .how-it-works-icon-shimmer,
+  .how-it-works-skeleton-chart-line,
+  .how-it-works-step03-card-border,
+  .how-it-works-step03-check-badge,
+  .how-it-works-step03-check-mark {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .how-it-works-step03-heart {
+    animation: none !important;
+    transform: none;
+  }
+
+  .how-it-works-skeleton-shimmer,
+  .how-it-works-icon-shimmer {
+    opacity: 0;
+  }
+
+  .how-it-works-step03-card-border {
+    stroke-dashoffset: 0;
+  }
+
+  .how-it-works-step03-check-badge {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .how-it-works-step03-check-mark {
+    stroke-dashoffset: 0;
+  }
+
+  .how-it-works-skeleton-chart-line {
+    stroke-dashoffset: 0;
+    opacity: 0.7;
   }
 }

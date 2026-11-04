@@ -1,6 +1,12 @@
+"use client"
+
+import { useState } from "react"
+import { motion, useReducedMotion } from "motion/react"
+
 import type { LandingHeroContent } from "@/types/landing/hero"
 
-import { HeroSpriteIcon } from "@/components/shared/landing/hero-sprite-icon"
+import { HeroSocialDock } from "@/components/shared/landing/hero-social-dock"
+import { HeroVerticalTitle } from "@/components/shared/landing/hero-vertical-title"
 
 type HeroVisualProps = {
   visual: LandingHeroContent["visual"]
@@ -8,18 +14,32 @@ type HeroVisualProps = {
 }
 
 export function HeroVisual({ visual, spriteSrc }: HeroVisualProps) {
+  const reduceMotion = useReducedMotion()
+  const [titleReady, setTitleReady] = useState(Boolean(reduceMotion))
+
   return (
     <div className="relative mx-auto h-[560px] w-full max-w-[480px] overflow-visible rounded-[24px] bg-white">
-      <div
-        className="absolute top-0 right-0 h-[560px] w-[238px] bg-blue-brand"
+      <motion.div
+        className="absolute top-0 right-0 h-[560px] w-[238px] origin-bottom bg-blue-brand"
         aria-hidden
+        initial={reduceMotion ? false : { scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        transition={
+          reduceMotion
+            ? { duration: 0 }
+            : { duration: 0.85, ease: [0.22, 1, 0.36, 1] }
+        }
+        onAnimationComplete={() => {
+          if (!reduceMotion) setTitleReady(true)
+        }}
       />
 
       <div className="absolute top-[10px] right-0 flex h-[529px] w-20 items-center justify-center">
-        <p className="-rotate-90 text-[80px] font-bold leading-none whitespace-nowrap text-white">
-          <span>{visual.verticalTitle.social}</span>
-          <span className="text-[#202020]">{visual.verticalTitle.growth}</span>
-        </p>
+        <HeroVerticalTitle
+          social={visual.verticalTitle.social}
+          growth={visual.verticalTitle.growth}
+          ready={titleReady}
+        />
       </div>
 
       <div className="absolute top-[15px] left-[23px] h-[548px] w-[404px] overflow-hidden">
@@ -31,22 +51,7 @@ export function HeroVisual({ visual, spriteSrc }: HeroVisualProps) {
         />
       </div>
 
-      <div className="absolute top-[535px] left-[47px] z-10 rounded-[20.321px] border-[0.847px] border-solid border-[#0087d4] bg-white/[0.08] px-[23.708px] py-[16.934px] backdrop-blur-[2px]">
-        <div className="flex items-center gap-[20.66px]">
-          {visual.socialBarIcons.map((icon) => (
-            <span
-              key={icon.id}
-              className="flex size-[51.65px] items-center justify-center"
-            >
-              <HeroSpriteIcon
-                spriteSrc={spriteSrc}
-                crop={icon.sprite}
-                containerClassName="size-[49.584px]"
-              />
-            </span>
-          ))}
-        </div>
-      </div>
+      <HeroSocialDock icons={visual.socialBarIcons} spriteSrc={spriteSrc} />
     </div>
   )
 }
