@@ -1,3 +1,4 @@
+import { WhatMakesUsDifferentSection } from "@/components/shared/landing/what-makes-us-different/what-makes-us-different-section"
 import { CustomerReviewsSection } from "@/components/shared/landing/customer-reviews/customer-reviews-section"
 import { WhyChooseUsSection } from "@/components/shared/landing/why-choose-us/why-choose-us-section"
 import { FaqSection } from "@/components/shared/landing/faq/faq-section"
@@ -12,6 +13,7 @@ export default function MarketingLayout({
   return (
     <div className="flex min-h-full flex-col overflow-x-clip">
       <div className="flex-1">{children}</div>
+      <WhatMakesUsDifferentSection />
       <WhyChooseUsSection />
       <CustomerReviewsSection />
       <FaqSection />
