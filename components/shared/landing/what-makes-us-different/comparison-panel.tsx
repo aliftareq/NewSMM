@@ -38,14 +38,19 @@ export function ComparisonPanel({
       positiveBrandLineAccent={positiveBrandLineAccent}
       negativeHeaderTitle={negativeHeaderTitle}
     >
-      <ComparisonFeatureList features={features} iconSrc={iconSrc} />
+      <ComparisonFeatureList
+        features={features}
+        iconSrc={iconSrc}
+        variant={variant}
+      />
     </ComparisonCard>
   );
 
   return (
     <div
       className={cn(
-        "flex w-full max-w-[460px] flex-col items-stretch xl:flex-row xl:items-center",
+        "mx-auto flex w-full min-w-0 max-w-[400px] flex-col items-stretch",
+        "xl:mx-0 xl:max-w-[460px] xl:flex-row xl:items-center",
       )}
     >
       <ComparisonSideLabel
@@ -56,7 +61,7 @@ export function ComparisonPanel({
 
       <div
         className={cn(
-          "flex min-w-0 flex-1 flex-col",
+          "flex min-w-0 w-full flex-1 flex-col",
           isPositive ? "order-last xl:order-first" : "order-last",
         )}
       >
@@ -86,7 +91,7 @@ function ComparisonCard({
   return (
     <article
       className={cn(
-        "box-border w-full max-w-[400px] rounded-b-[20px] rounded-t-none border border-[#ebecef] bg-white px-1 pb-8 pt-1 xl:rounded-[20px]",
+        "box-border w-full min-w-0 rounded-b-[20px] rounded-t-none border border-[#ebecef] bg-white px-1 pb-8 pt-1 xl:rounded-[20px]",
         isPositive
           ? "shadow-[0px_6px_20px_-12px_rgba(192,232,255,0.51)]"
           : "shadow-[0px_6px_56px_-12px_#ffecf0]",
@@ -94,12 +99,12 @@ function ComparisonCard({
     >
       <div
         className={cn(
-          "mb-6 flex items-center rounded-2xl p-6 sm:p-8",
+          "mb-6 flex items-center rounded-2xl p-5 sm:p-6 xl:p-8",
           isPositive ? "bg-[#e1f4ff]" : "bg-[#ffeded]",
         )}
       >
         {isPositive ? (
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             <div className="relative h-[39px] w-[50px] shrink-0">
               <Image
                 src={logomarkSrc}
@@ -109,13 +114,13 @@ function ComparisonCard({
                 className="size-full object-contain"
               />
             </div>
-            <p className="text-xl font-semibold leading-[1.35] text-[#202020]">
+            <p className="min-w-0 text-lg font-semibold leading-[1.35] text-[#202020] sm:text-xl">
               {positiveBrandLinePrimary}
               <span className="text-[#21aeff]">{positiveBrandLineAccent}</span>
             </p>
           </div>
         ) : (
-          <p className="bg-gradient-to-b from-[#f25b7a] to-[#ea3418] bg-clip-text text-xl font-semibold uppercase leading-[1.4] tracking-[-0.02em] text-transparent">
+          <p className="min-w-0 bg-gradient-to-b from-[#f25b7a] to-[#ea3418] bg-clip-text text-lg font-semibold uppercase leading-[1.4] tracking-[-0.02em] text-transparent sm:text-xl">
             {negativeHeaderTitle}
           </p>
         )}
