@@ -12,7 +12,9 @@ export function HeroSpriteIcon({
   containerClassName = "size-[18px]",
 }: HeroSpriteIconProps) {
   return (
-    <span className={`relative shrink-0 overflow-hidden ${containerClassName}`}>
+    <span
+      className={`relative inline-block shrink-0 overflow-hidden ${containerClassName}`}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         alt=""

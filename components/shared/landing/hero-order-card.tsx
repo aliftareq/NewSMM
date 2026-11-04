@@ -1,7 +1,20 @@
-import type { ReactNode } from "react"
-import type { LandingHeroContent } from "@/types/landing/hero"
+"use client"
 
+import { useMemo, useState } from "react"
+
+import type {
+  HeroOrderPlatformOption,
+  HeroOrderServiceOption,
+  LandingHeroContent,
+} from "@/types/landing/hero"
 import { HeroSpriteIcon } from "@/components/shared/landing/hero-sprite-icon"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type HeroOrderCardProps = {
   orderCard: LandingHeroContent["orderCard"]
@@ -9,32 +22,66 @@ type HeroOrderCardProps = {
   spriteSrc: string
 }
 
-function HeroSelectRow({
+const triggerClassName =
+  "h-auto min-h-[63px] w-full max-w-none justify-between gap-3 rounded-xl border border-n20 bg-n20 px-5 py-[18px] text-lg font-medium text-n600 shadow-none focus-visible:border-[#8ad8ff] focus-visible:ring-[3px] focus-visible:ring-[#8ad8ff]/30 data-[size=default]:h-auto [&>svg]:hidden"
+
+const menuClassName =
+  "max-h-60 w-(--anchor-width) rounded-xl border border-[#8ad8ff] bg-white p-1.5 text-n600 shadow-[0px_8px_24px_rgba(38,157,231,0.14)] ring-0"
+
+const menuItemClassName =
+  "rounded-lg py-2.5 pr-8 pl-3 text-base font-medium text-n600 data-highlighted:bg-[#eaf6fd] data-highlighted:text-button data-selected:bg-[#eaf6fd] data-selected:text-button focus:bg-[#eaf6fd] focus:text-button [&_[data-slot=select-item-indicator]_svg]:text-button"
+
+function ServiceLeadingIcon({ service }: { service: HeroOrderServiceOption }) {
+  if (!service.icon) {
+    return null
+  }
+
+  return (
+    <span className="relative h-[18px] w-[20.195px] shrink-0 overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt=""
+        src={service.icon.src}
+        width={service.icon.width}
+        height={service.icon.height}
+        className={service.icon.className}
+      />
+    </span>
+  )
+}
+
+function HeroSelectField({
   label,
-  value,
   chevronSrc,
-  leading,
+  value,
+  onValueChange,
+  children,
+  renderValue,
 }: {
   label: string
-  value: string
   chevronSrc: string
-  leading: ReactNode
+  value: string
+  onValueChange: (value: string | null) => void
+  children: React.ReactNode
+  renderValue: (value: string) => React.ReactNode
 }) {
   return (
     <div className="flex w-full flex-col gap-2">
       <p className="text-base font-medium leading-[1.35] text-n500">{label}</p>
-      <div className="flex min-h-[63px] w-full items-center justify-between rounded-xl border border-n20 bg-n20 px-5 py-[18px]">
-        <div className="flex items-center gap-1.5">
-          {leading}
-          <span className="whitespace-nowrap text-lg font-medium leading-normal text-n600">
-            {value}
+      <Select value={value} onValueChange={onValueChange}>
+        <SelectTrigger className={triggerClassName} size="default">
+          <SelectValue className="flex min-w-0 flex-1 items-center gap-1.5 text-lg font-medium leading-normal text-n600">
+            {(selected) => renderValue(selected ?? value)}
+          </SelectValue>
+          <span className="relative size-6 shrink-0 rotate-180 -scale-y-100" aria-hidden>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img alt="" src={chevronSrc} className="block size-full max-w-none" />
           </span>
-        </div>
-        <span className="relative size-6 shrink-0 rotate-180 -scale-y-100">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="" src={chevronSrc} className="block size-full max-w-none" />
-        </span>
-      </div>
+        </SelectTrigger>
+        <SelectContent align="start" className={menuClassName}>
+          {children}
+        </SelectContent>
+      </Select>
     </div>
   )
 }
@@ -44,44 +91,103 @@ export function HeroOrderCard({
   chevronSrc,
   spriteSrc,
 }: HeroOrderCardProps) {
-  const { platformField, serviceField, submitLabel } = orderCard
+  const {
+    platformField,
+    serviceField,
+    defaultPlatformId,
+    defaultServiceId,
+    platforms,
+    servicesByPlatform,
+    submitLabel,
+  } = orderCard
+
+  const [platformId, setPlatformId] = useState(defaultPlatformId)
+  const [serviceId, setServiceId] = useState(defaultServiceId)
+
+  const services = useMemo(
+    () => servicesByPlatform[platformId] ?? [],
+    [platformId, servicesByPlatform]
+  )
+
+  const selectedPlatform = useMemo(
+    () => platforms.find((p) => p.id === platformId),
+    [platformId, platforms]
+  )
+
+  const selectedService = useMemo(
+    () => services.find((s) => s.id === serviceId),
+    [serviceId, services]
+  )
+
+  const handlePlatformChange = (nextPlatformId: string | null) => {
+    if (!nextPlatformId) return
+    setPlatformId(nextPlatformId)
+    const nextServices = servicesByPlatform[nextPlatformId] ?? []
+    setServiceId(nextServices[0]?.id ?? "")
+  }
+
+  const handleServiceChange = (nextServiceId: string | null) => {
+    if (!nextServiceId) return
+    setServiceId(nextServiceId)
+  }
 
   return (
     <div className="h-[325.6px] w-full shrink-0 overflow-hidden rounded-2xl border-[1.3px] border-[#8ad8ff] bg-white">
       <div className="flex flex-col gap-5 p-5">
         <div className="flex flex-col gap-4">
-          <HeroSelectRow
+          <HeroSelectField
             label={platformField.label}
-            value={platformField.value}
             chevronSrc={chevronSrc}
-            leading={
-              platformField.spriteIcon ? (
-                <HeroSpriteIcon
-                  spriteSrc={spriteSrc}
-                  crop={platformField.spriteIcon}
-                />
-              ) : null
-            }
-          />
-          <HeroSelectRow
+            value={platformId}
+            onValueChange={handlePlatformChange}
+            renderValue={(id) => {
+              const platform = platforms.find((p) => p.id === id) ?? selectedPlatform
+              if (!platform) return id
+              return (
+                <PlatformOptionContent platform={platform} spriteSrc={spriteSrc} />
+              )
+            }}
+          >
+            {platforms.map((platform) => (
+              <SelectItem
+                key={platform.id}
+                value={platform.id}
+                className={menuItemClassName}
+              >
+                <PlatformOptionContent platform={platform} spriteSrc={spriteSrc} />
+              </SelectItem>
+            ))}
+          </HeroSelectField>
+
+          <HeroSelectField
             label={serviceField.label}
-            value={serviceField.value}
             chevronSrc={chevronSrc}
-            leading={
-              serviceField.icon ? (
-                <span className="relative h-[18px] w-[20.195px] shrink-0 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    alt=""
-                    src={serviceField.icon.src}
-                    width={serviceField.icon.width}
-                    height={serviceField.icon.height}
-                    className={serviceField.icon.className}
-                  />
+            value={serviceId}
+            onValueChange={handleServiceChange}
+            renderValue={(id) => {
+              const service = services.find((s) => s.id === id) ?? selectedService
+              if (!service) return id
+              return (
+                <span className="flex items-center gap-1.5">
+                  <ServiceLeadingIcon service={service} />
+                  {service.label}
                 </span>
-              ) : null
-            }
-          />
+              )
+            }}
+          >
+            {services.map((service) => (
+              <SelectItem
+                key={service.id}
+                value={service.id}
+                className={menuItemClassName}
+              >
+                <span className="flex items-center gap-1.5">
+                  <ServiceLeadingIcon service={service} />
+                  {service.label}
+                </span>
+              </SelectItem>
+            ))}
+          </HeroSelectField>
         </div>
 
         <button
@@ -92,5 +198,20 @@ export function HeroOrderCard({
         </button>
       </div>
     </div>
+  )
+}
+
+function PlatformOptionContent({
+  platform,
+  spriteSrc,
+}: {
+  platform: HeroOrderPlatformOption
+  spriteSrc: string
+}) {
+  return (
+    <span className="flex items-center gap-1.5">
+      <HeroSpriteIcon spriteSrc={spriteSrc} crop={platform.spriteIcon} />
+      {platform.label}
+    </span>
   )
 }
