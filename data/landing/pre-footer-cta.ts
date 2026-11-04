@@ -5,10 +5,8 @@ const CTA_IMG = "/images/landing/pre-footer-cta"
 export const preFooterCtaContent: PreFooterCtaContent = {
   headingLines: ["Ready to Grow Your Social", "Media Presence?"],
   headingLineTwoPrefix: " ",
-  descriptionLines: [
-    "Explore social media services for followers, likes, views, and more. Choose your preferred platform ",
-    "and find the right services to support your online goals.",
-  ],
+  description:
+    "Explore social media services for followers, likes, views, and more. Choose your preferred platform and find the right services to support your online goals.",
   primaryButton: { label: "Start your order", href: "/order" },
   secondaryButton: { label: "Browse all Services", href: "/services" },
   assets: {

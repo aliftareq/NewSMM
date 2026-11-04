@@ -13,23 +13,22 @@ import { CtaFigmaLayers } from "@/components/shared/landing/pre-footer-cta-figma
 import { cn } from "@/lib/utils"
 
 export const CTA_DESIGN_WIDTH = 1280
-export const CTA_DESIGN_HEIGHT = 414.171
+export const CTA_DESIGN_HEIGHT = 414.17
 
+/** Dev Mode — CTA fill */
 export const CTA_CARD_GRADIENT =
-  "linear-gradient(176.14deg, #F2FDFF 0%, #018ACF 100%)"
+  "linear-gradient(168.22deg, #F2FDFF -11.71%, #018ACF 88.72%)"
 
 export const CTA_CARD_SHADOW =
-  "0px 16px 30px -10.971px rgba(173, 175, 238, 0.6)"
+  "0px 16px 30px -10.9714px rgba(173, 175, 238, 0.6)"
 
-const CTA_CARD_RADIUS = "36.571px"
+export const CTA_CARD_RADIUS = "36.5714px"
 
-/** Figma 27516:8351 — Inter Semi Bold 40 / tracking 0.4px / lh 1.35 */
 const CTA_HEADING_CLASS =
-  "max-w-[518px] font-sans text-[clamp(1.375rem,4.2cqw,2.5rem)] font-semibold leading-[1.35] tracking-[0.01em] @min-[900px]/cta:tracking-[0.4px]"
+  "w-full max-w-[518px] font-sans text-[clamp(1.375rem,4.2cqw,2.5rem)] font-semibold leading-[1.35] tracking-[0.01em] text-white"
 
-/** Figma 27516:8352 — Inter Medium 14.629 / lh 1.35 */
 const CTA_DESCRIPTION_CLASS =
-  "max-w-[691px] font-sans text-[clamp(0.75rem,1.35cqw,0.9143125rem)] font-medium leading-[1.35]"
+  "w-full max-w-[691px] font-sans text-[clamp(0.75rem,1.35cqw,0.9143125rem)] font-medium leading-[1.35] text-white"
 
 type PreFooterCtaCardProps = {
   content?: PreFooterCtaContent
@@ -44,7 +43,7 @@ function CtaCopyBlock({
   headingId?: string
 }) {
   return (
-    <div className="flex flex-col items-center gap-[clamp(0.75rem,2cqw,0.9143125rem)] text-center text-white">
+    <div className="flex w-full max-w-[691px] flex-col items-center gap-[14.629px] text-center">
       <h2 id={headingId} className={CTA_HEADING_CLASS}>
         <span className="block @min-[720px]/cta:whitespace-pre">
           {content.headingLines[0]}
@@ -54,31 +53,19 @@ function CtaCopyBlock({
           {content.headingLines[1]}
         </span>
       </h2>
-      <p className={CTA_DESCRIPTION_CLASS}>
-        <span className="block @min-[640px]/cta:inline">
-          {content.descriptionLines[0]}
-        </span>
-        <span className="block @min-[640px]/cta:inline">
-          {content.descriptionLines[1]}
-        </span>
-      </p>
+      <p className={CTA_DESCRIPTION_CLASS}>{content.description}</p>
     </div>
   )
 }
 
 function CtaButtons({ content }: { content: PreFooterCtaContent }) {
   return (
-    <div
-      className={cn(
-        "flex w-full max-w-[691px] flex-col items-center justify-center gap-3",
-        "@min-[520px]/cta:flex-row @min-[520px]/cta:gap-[14.629px]"
-      )}
-    >
+    <div className="flex flex-row flex-wrap items-center justify-center gap-[14.629px]">
       <LinkTo
         href={content.primaryButton.href}
         className={cn(
           buttonVariants({ variant: "default", size: "default" }),
-          "w-full font-sans @min-[520px]/cta:w-auto"
+          "w-auto shrink-0 font-sans"
         )}
       >
         {content.primaryButton.label}
@@ -88,7 +75,7 @@ function CtaButtons({ content }: { content: PreFooterCtaContent }) {
         href={content.secondaryButton.href}
         className={cn(
           buttonVariants({ variant: "outline", size: "default" }),
-          "relative w-full font-sans @min-[520px]/cta:w-auto"
+          "relative w-auto shrink-0 font-sans"
         )}
       >
         {content.secondaryButton.label}
@@ -106,8 +93,7 @@ export function PreFooterCtaCard({
     <div
       className={cn(
         "@container/cta relative isolate w-full max-w-[1280px] overflow-clip font-sans",
-        "max-sm:min-h-[340px]",
-        "sm:aspect-[1280/414.171] sm:min-h-0"
+        "aspect-[1280/414.17] max-sm:min-h-[340px] max-sm:aspect-auto"
       )}
       style={{
         borderRadius: CTA_CARD_RADIUS,
@@ -119,17 +105,16 @@ export function PreFooterCtaCard({
 
       <div
         className={cn(
-          "relative z-10 flex flex-col items-center font-sans",
-          "max-sm:px-4 max-sm:pb-10 max-sm:pt-8",
-          "sm:absolute sm:inset-0 sm:justify-center sm:px-4 sm:py-4",
-          "md:px-6",
-          "lg:px-8"
+          "relative z-10 flex w-full flex-col items-center font-sans",
+          "max-sm:px-4 max-sm:py-8",
+          "sm:absolute sm:inset-0 sm:justify-center sm:px-0 sm:py-0"
         )}
       >
         <div
           className={cn(
             "flex w-full max-w-[691px] flex-col items-center",
-            "gap-[clamp(1.25rem,3.5cqw,1.8285625rem)]"
+            "gap-[clamp(1rem,3.5cqw,1.82875rem)]",
+            "@min-[1280px]/cta:gap-[29.26px]"
           )}
         >
           <CtaCopyBlock content={content} headingId={headingId} />

@@ -14,7 +14,7 @@ const buttonVariants = cva(
         default:
           "rounded-[10.971px] bg-[#269de7] font-medium text-white hover:bg-[#2296d4]",
         outline:
-          "rounded-[10.971px] border-[1.371px] border-solid border-[#1698e3] bg-white font-medium text-[#1698e3] shadow-[inset_0px_0px_7.314px_0px_rgba(255,255,255,0.5)] hover:bg-[#f8fcff]",
+          "rounded-[10.971px] border-[1.371px] border-solid border-[#1698e3] bg-white font-medium text-[#1698e3] shadow-[inset_0px_0px_7.314px_0.914286px_rgba(255,255,255,0.5)] hover:bg-[#f8fcff]",
         secondary:
           "rounded-4xl text-sm bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:

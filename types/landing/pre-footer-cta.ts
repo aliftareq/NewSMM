@@ -2,7 +2,7 @@ export type PreFooterCtaContent = {
   headingLines: [string, string]
   /** Leading space before line two matches Figma (` Media Presence?`). */
   headingLineTwoPrefix: string
-  descriptionLines: [string, string]
+  description: string
   primaryButton: { label: string; href: string }
   secondaryButton: { label: string; href: string }
   assets: {
