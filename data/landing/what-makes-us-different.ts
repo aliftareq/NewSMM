@@ -1,6 +1,6 @@
-import type { WhatMakesUsDifferentContent } from "@/types/landing/what-makes-us-different"
+import type { WhatMakesUsDifferentContent } from "@/types/landing/what-makes-us-different";
 
-const ASSET_BASE = "/images/landing/what-makes-us-different"
+const ASSET_BASE = "/images/landing/what-makes-us-different";
 
 export const landingWhatMakesUsDifferentContent: WhatMakesUsDifferentContent = {
   badgeLabel: "Different",
@@ -28,4 +28,4 @@ export const landingWhatMakesUsDifferentContent: WhatMakesUsDifferentContent = {
     crossIconSrc: `${ASSET_BASE}/cross-icon.svg`,
     logomarkSrc: "/images/landing/navbar/logomark.svg",
   },
-}
+};

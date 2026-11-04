@@ -1,20 +1,20 @@
-import Image from "next/image"
+import Image from "next/image";
 
-import { ComparisonFeatureList } from "@/components/shared/landing/what-makes-us-different/comparison-feature-list"
-import { ComparisonSideLabel } from "@/components/shared/landing/what-makes-us-different/comparison-side-label"
-import { cn } from "@/lib/utils"
+import { ComparisonFeatureList } from "@/components/shared/landing/what-makes-us-different/comparison-feature-list";
+import { ComparisonSideLabel } from "@/components/shared/landing/what-makes-us-different/comparison-side-label";
+import { cn } from "@/lib/utils";
 
 type ComparisonPanelProps = {
-  variant: "positive" | "negative"
-  sideLabel: string
-  features: readonly string[]
-  checkIconSrc: string
-  crossIconSrc: string
-  logomarkSrc: string
-  positiveBrandLinePrimary: string
-  positiveBrandLineAccent: string
-  negativeHeaderTitle: string
-}
+  variant: "positive" | "negative";
+  sideLabel: string;
+  features: readonly string[];
+  checkIconSrc: string;
+  crossIconSrc: string;
+  logomarkSrc: string;
+  positiveBrandLinePrimary: string;
+  positiveBrandLineAccent: string;
+  negativeHeaderTitle: string;
+};
 
 export function ComparisonPanel({
   variant,
@@ -27,8 +27,8 @@ export function ComparisonPanel({
   positiveBrandLineAccent,
   negativeHeaderTitle,
 }: ComparisonPanelProps) {
-  const isPositive = variant === "positive"
-  const iconSrc = isPositive ? checkIconSrc : crossIconSrc
+  const isPositive = variant === "positive";
+  const iconSrc = isPositive ? checkIconSrc : crossIconSrc;
 
   const card = (
     <ComparisonCard
@@ -40,7 +40,7 @@ export function ComparisonPanel({
     >
       <ComparisonFeatureList features={features} iconSrc={iconSrc} />
     </ComparisonCard>
-  )
+  );
 
   return (
     <div
@@ -63,7 +63,7 @@ export function ComparisonPanel({
         {card}
       </div>
     </div>
-  )
+  );
 }
 
 function ComparisonCard({
@@ -74,14 +74,14 @@ function ComparisonCard({
   positiveBrandLineAccent,
   negativeHeaderTitle,
 }: {
-  variant: "positive" | "negative"
-  children: React.ReactNode
-  logomarkSrc: string
-  positiveBrandLinePrimary: string
-  positiveBrandLineAccent: string
-  negativeHeaderTitle: string
+  variant: "positive" | "negative";
+  children: React.ReactNode;
+  logomarkSrc: string;
+  positiveBrandLinePrimary: string;
+  positiveBrandLineAccent: string;
+  negativeHeaderTitle: string;
 }) {
-  const isPositive = variant === "positive"
+  const isPositive = variant === "positive";
 
   return (
     <article
@@ -122,5 +122,5 @@ function ComparisonCard({
       </div>
       {children}
     </article>
-  )
+  );
 }

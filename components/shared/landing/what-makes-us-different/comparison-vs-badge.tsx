@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /** Figma export — Group 2087326518 (25704:30726); VS is separate text layer in Figma */
-const VS_SPHERES_SRC = "/images/landing/what-makes-us-different/vs-badge.svg"
+const VS_SPHERES_SRC = "/images/landing/what-makes-us-different/vs-badge.svg";
 
 /**
  * Figma 25704:30721 → 30723
@@ -49,5 +49,5 @@ export function ComparisonVsBadge({ className }: { className?: string }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

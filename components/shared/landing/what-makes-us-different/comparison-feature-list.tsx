@@ -1,12 +1,12 @@
-import Image from "next/image"
+import Image from "next/image";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 type ComparisonFeatureListProps = {
-  features: readonly string[]
-  iconSrc: string
-  className?: string
-}
+  features: readonly string[];
+  iconSrc: string;
+  className?: string;
+};
 
 export function ComparisonFeatureList({
   features,
@@ -39,5 +39,5 @@ export function ComparisonFeatureList({
         </li>
       ))}
     </ul>
-  )
+  );
 }
