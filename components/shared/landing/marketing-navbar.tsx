@@ -88,17 +88,23 @@ export function MarketingNavbar({
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "relative text-sm font-medium leading-[1.6] whitespace-nowrap transition-colors",
+                  "relative inline-flex items-center justify-center text-sm font-medium leading-[1.6] whitespace-nowrap transition-colors",
                   active
-                    ? "rounded-xl px-4 py-[7px] text-white shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.6)]"
-                    : "text-[#020618] hover:text-n600"
+                    ? "rounded-[12px] px-4 py-[7px] text-white drop-shadow-[0px_0px_1px_rgba(0,0,0,0.04),0px_1px_0px_rgba(0,0,0,0.06)]"
+                    : "text-[#020618] hover:text-n600",
                 )}
               >
                 {active ? (
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 rounded-xl bg-blue-brand"
-                  />
+                  <>
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-[12px] bg-blue-brand"
+                    />
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-[12px] shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.6)]"
+                    />
+                  </>
                 ) : null}
                 <span className="relative">{link.label}</span>
               </LinkTo>

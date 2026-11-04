@@ -11,7 +11,29 @@ type ParsedStatValue = {
 }
 
 function parseStatValue(value: string): ParsedStatValue {
-  const match = value.trim().match(/^([\d,]+)(K\+|\+)$/)
+  const trimmed = value.trim()
+
+  const plusWithLabelMatch = trimmed.match(/^([\d,]+)\+\s+(.+)$/)
+  if (plusWithLabelMatch) {
+    const rawNumberPart = plusWithLabelMatch[1]
+    const trailingLabel = plusWithLabelMatch[2]
+    const target = Number(rawNumberPart.replace(/,/g, ""))
+
+    return {
+      target,
+      format: (current: number) => {
+        const rounded = Math.round(current)
+        const numberPart =
+          rawNumberPart.includes(",") || rounded >= 1000
+            ? rounded.toLocaleString("en-US")
+            : `${rounded}`
+
+        return `${numberPart}+ ${trailingLabel}`
+      },
+    }
+  }
+
+  const match = trimmed.match(/^([\d,]+)(K\+|\+)$/)
 
   if (!match) {
     return {

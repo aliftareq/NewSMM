@@ -51,13 +51,11 @@ export function StatsHighlightAvatarCard({
   return (
     <article
       data-slot="stats-highlight-avatar-card"
-      className={cn("relative h-[300px] overflow-hidden rounded-2xl", className)}
+      className={cn(
+        "relative h-[300px] overflow-hidden rounded-2xl border border-[rgba(134,134,134,0.18)] bg-white shadow-[0px_2px_6px_0px_rgba(83,83,83,0.12)]",
+        className,
+      )}
     >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 rounded-2xl border-b border-[rgba(0,0,0,0.09)] bg-white"
-      />
-
       <div className="absolute inset-x-0 top-0 z-10 h-[130px] overflow-hidden">
         <div className="stats-avatar-marquee-ltr absolute top-[18px] left-[-14px] w-max will-change-transform">
           <StatsHighlightAvatarMarquee avatars={rowOneAvatars} />
@@ -71,13 +69,13 @@ export function StatsHighlightAvatarCard({
       <CardEdgeFade side="left" />
       <CardEdgeFade side="right" />
 
-      <div className="absolute top-[214px] left-[25px] z-30 flex w-[169px] flex-col gap-2">
-        <p className="text-base leading-normal font-medium text-[rgba(0,0,0,0.5)]">
+      <div className="absolute bottom-6 left-[17px] z-30 flex flex-col gap-2">
+        <p className="text-base font-medium leading-[1.35] text-[rgba(0,0,0,0.5)]">
           {stat.label}
         </p>
         <StatsHighlightCountUp
           value={stat.value}
-          className="font-heading text-[30px] leading-[1.4] font-semibold tracking-[-0.56px] text-[#202020] capitalize md:text-[28px]"
+          className="font-heading text-[28px] font-semibold leading-normal capitalize tracking-[-0.56px] text-[#202020]"
         />
       </div>
     </article>
