@@ -342,36 +342,45 @@
     pointer-events: none;
   }
 
-  /* Step 03 — border draw + check (play once when `.how-it-works-step03-in-view`) */
-  .how-it-works-step03-card-border {
+  /* Steps 02 & 03 — border draw + check (replay when in view) */
+  .how-it-works-illustration-card-border {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
 
+  .how-it-works-step02-check-badge,
   .how-it-works-step03-check-badge {
     transform-box: fill-box;
-    transform-origin: 109.979px 16.378px;
     opacity: 0;
     transform: scale(0.35);
   }
 
-  .how-it-works-step03-check-mark {
+  .how-it-works-step02-check-badge {
+    transform-origin: 194.336px 31.995px;
+  }
+
+  .how-it-works-step03-check-badge {
+    transform-origin: 109.979px 16.378px;
+  }
+
+  .how-it-works-illustration-check-mark {
     fill: none;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }
 
-  .how-it-works-step03-in-view .how-it-works-step03-card-border {
-    animation: hiw-step03-border-draw 2.2s ease-in-out forwards;
+  .how-it-works-illustration-in-view .how-it-works-illustration-card-border {
+    animation: hiw-illustration-border-draw 2.2s ease-in-out forwards;
   }
 
-  .how-it-works-step03-in-view .how-it-works-step03-check-badge {
-    animation: hiw-step03-check-pop 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) 1.85s
-      forwards;
+  .how-it-works-illustration-in-view .how-it-works-step02-check-badge,
+  .how-it-works-illustration-in-view .how-it-works-step03-check-badge {
+    animation: hiw-illustration-check-pop 0.5s cubic-bezier(0.34, 1.4, 0.64, 1)
+      1.85s forwards;
   }
 
-  .how-it-works-step03-in-view .how-it-works-step03-check-mark {
-    animation: hiw-step03-check-draw 0.4s ease-out 2.15s forwards;
+  .how-it-works-illustration-in-view .how-it-works-illustration-check-mark {
+    animation: hiw-illustration-check-draw 0.4s ease-out 2.15s forwards;
   }
 
   .how-it-works-step03-heart {
@@ -381,7 +390,7 @@
   }
 }
 
-@keyframes hiw-step03-border-draw {
+@keyframes hiw-illustration-border-draw {
   from {
     stroke-dashoffset: 1;
   }
@@ -390,7 +399,7 @@
   }
 }
 
-@keyframes hiw-step03-check-pop {
+@keyframes hiw-illustration-check-pop {
   0% {
     opacity: 0;
     transform: scale(0.35);
@@ -405,7 +414,7 @@
   }
 }
 
-@keyframes hiw-step03-check-draw {
+@keyframes hiw-illustration-check-draw {
   from {
     stroke-dashoffset: 1;
   }
@@ -428,9 +437,10 @@
   .how-it-works-skeleton-shimmer,
   .how-it-works-icon-shimmer,
   .how-it-works-skeleton-chart-line,
-  .how-it-works-step03-card-border,
+  .how-it-works-illustration-card-border,
+  .how-it-works-step02-check-badge,
   .how-it-works-step03-check-badge,
-  .how-it-works-step03-check-mark {
+  .how-it-works-illustration-check-mark {
     animation: none !important;
     opacity: 1;
   }
@@ -445,16 +455,17 @@
     opacity: 0;
   }
 
-  .how-it-works-step03-card-border {
+  .how-it-works-illustration-card-border {
     stroke-dashoffset: 0;
   }
 
+  .how-it-works-step02-check-badge,
   .how-it-works-step03-check-badge {
     opacity: 1;
     transform: scale(1);
   }
 
-  .how-it-works-step03-check-mark {
+  .how-it-works-illustration-check-mark {
     stroke-dashoffset: 0;
   }
 

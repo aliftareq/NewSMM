@@ -1,16 +1,32 @@
 "use client"
 
+import { useRef } from "react"
+
 import { HowItWorksInstagramIcon } from "@/components/shared/landing/how-it-works/how-it-works-instagram-icon"
 import { HowItWorksSkeletonPath } from "@/components/shared/landing/how-it-works/how-it-works-skeleton-path"
+import { useHowItWorksIllustrationInView } from "@/components/shared/landing/how-it-works/use-how-it-works-illustration-in-view"
+import { cn } from "@/lib/utils"
+
+const CARD_BORDER_D =
+  "M196.607 1.31515H19.4818C9.44864 1.31515 1.31515 9.45492 1.31515 19.4958V44.4943C1.31515 54.5352 9.44864 62.6749 19.4818 62.6749H196.607C206.64 62.6749 214.773 54.5352 214.773 44.4943V19.4958C214.773 9.45492 206.64 1.31515 196.607 1.31515Z"
+
+const CHECK_STROKE_D = "M190.249 31.995L193.201 34.9494L198.196 29.0407"
 
 /** Figma step 02 — username field with skeleton bars + Instagram + green check */
 export function HowItWorksEnterUsernameIllustration() {
+  const svgRef = useRef<SVGSVGElement>(null)
+  const inView = useHowItWorksIllustrationInView(svgRef)
+
   return (
     <svg
+      ref={svgRef}
       viewBox="0 0 219.315 69.4927"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="mx-auto h-auto w-full max-h-[72px] max-w-[218px]"
+      className={cn(
+        "mx-auto h-auto w-full max-h-[72px] max-w-[218px]",
+        inView && "how-it-works-illustration-in-view",
+      )}
       aria-hidden
     >
       <path
@@ -19,10 +35,13 @@ export function HowItWorksEnterUsernameIllustration() {
         fill="#D3EBFB"
       />
       <path
-        d="M196.607 1.31515H19.4818C9.44864 1.31515 1.31515 9.45492 1.31515 19.4958V44.4943C1.31515 54.5352 9.44864 62.6749 19.4818 62.6749H196.607C206.64 62.6749 214.773 54.5352 214.773 44.4943V19.4958C214.773 9.45492 206.64 1.31515 196.607 1.31515Z"
+        d={CARD_BORDER_D}
         fill="url(#hiw-step02-card)"
+        pathLength={1}
         stroke="#20A7EE"
-        strokeWidth="2.63031"
+        strokeWidth={2.63031}
+        strokeLinejoin="round"
+        className="how-it-works-illustration-card-border"
       />
       <HowItWorksInstagramIcon />
       <HowItWorksSkeletonPath
@@ -40,21 +59,25 @@ export function HowItWorksEnterUsernameIllustration() {
         fill="#20A7EE"
         d="M143.924 18.7004C143.924 17.8846 143.263 17.2232 142.448 17.2232C141.632 17.2232 140.972 17.8846 140.972 18.7004V43.0171C140.972 43.8329 141.632 44.4943 142.448 44.4943C143.263 44.4943 143.924 43.8329 143.924 43.0171V18.7004Z"
       />
-      <path
-        d="M194.336 45.6306C201.861 45.6306 207.961 39.5257 207.961 31.9951C207.961 24.4644 201.861 18.3596 194.336 18.3596C186.811 18.3596 180.711 24.4644 180.711 31.9951C180.711 39.5257 186.811 45.6306 194.336 45.6306Z"
-        fill="#E6F8EF"
-      />
-      <path
-        d="M194.336 41.6535C199.666 41.6535 203.987 37.3293 203.987 31.995C203.987 26.6608 199.666 22.3366 194.336 22.3366C189.006 22.3366 184.685 26.6608 184.685 31.995C184.685 37.3293 189.006 41.6535 194.336 41.6535Z"
-        fill="#22B573"
-      />
-      <path
-        d="M190.249 31.995L193.201 34.9494L198.196 29.0407"
-        stroke="white"
-        strokeWidth="2.10424"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <g className="how-it-works-step02-check-badge">
+        <path
+          d="M194.336 45.6306C201.861 45.6306 207.961 39.5257 207.961 31.9951C207.961 24.4644 201.861 18.3596 194.336 18.3596C186.811 18.3596 180.711 24.4644 180.711 31.9951C180.711 39.5257 186.811 45.6306 194.336 45.6306Z"
+          fill="#E6F8EF"
+        />
+        <path
+          d="M194.336 41.6535C199.666 41.6535 203.987 37.3293 203.987 31.995C203.987 26.6608 199.666 22.3366 194.336 22.3366C189.006 22.3366 184.685 26.6608 184.685 31.995C184.685 37.3293 189.006 41.6535 194.336 41.6535Z"
+          fill="#22B573"
+        />
+        <path
+          d={CHECK_STROKE_D}
+          pathLength={1}
+          stroke="white"
+          strokeWidth={2.10424}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="how-it-works-illustration-check-mark"
+        />
+      </g>
       <defs>
         <linearGradient
           id="hiw-step02-card"

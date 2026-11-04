@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 
 import { HowItWorksSkeletonPath } from "@/components/shared/landing/how-it-works/how-it-works-skeleton-path"
+import { useHowItWorksIllustrationInView } from "@/components/shared/landing/how-it-works/use-how-it-works-illustration-in-view"
 import { cn } from "@/lib/utils"
 
 const CARD_BORDER_D =
@@ -13,32 +14,7 @@ const CHECK_STROKE_D = "M104.935 16.3779L108.718 20.1575L115.022 12.5984"
 /** Figma step 03 — growth card with skeleton lines + chart + heart + blue check */
 export function HowItWorksWatchGrowIllustration() {
   const svgRef = useRef<SVGSVGElement>(null)
-  const [playOnce, setPlayOnce] = useState(false)
-
-  useEffect(() => {
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches
-    if (reduceMotion) {
-      setPlayOnce(true)
-      return undefined
-    }
-
-    const node = svgRef.current
-    if (!node) return undefined
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
-        setPlayOnce(true)
-        observer.disconnect()
-      },
-      { threshold: 0.35, rootMargin: "0px 0px -8% 0px" },
-    )
-
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
+  const inView = useHowItWorksIllustrationInView(svgRef)
 
   return (
     <svg
@@ -48,7 +24,7 @@ export function HowItWorksWatchGrowIllustration() {
       xmlns="http://www.w3.org/2000/svg"
       className={cn(
         "mx-auto h-auto w-full max-h-[160px] max-w-[125px]",
-        playOnce && "how-it-works-step03-in-view",
+        inView && "how-it-works-illustration-in-view",
       )}
       aria-hidden
     >
@@ -64,7 +40,7 @@ export function HowItWorksWatchGrowIllustration() {
         stroke="#20A7EE"
         strokeWidth={3.08785}
         strokeLinejoin="round"
-        className="how-it-works-step03-card-border"
+        className="how-it-works-illustration-card-border"
       />
       <path
         d="M28.0221 50.3937C33.593 50.3937 38.1091 45.8813 38.1091 40.3149C38.1091 34.7486 33.593 30.2362 28.0221 30.2362C22.4512 30.2362 17.9352 34.7486 17.9352 40.3149C17.9352 45.8813 22.4512 50.3937 28.0221 50.3937Z"
@@ -129,7 +105,7 @@ export function HowItWorksWatchGrowIllustration() {
           strokeWidth={2.47028}
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="how-it-works-step03-check-mark"
+          className="how-it-works-illustration-check-mark"
         />
       </g>
       <defs>

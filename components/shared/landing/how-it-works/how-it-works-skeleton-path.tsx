@@ -9,9 +9,9 @@ type HowItWorksSkeletonPathProps = {
   delay?: number
 }
 
-const SHIMMER_DUR = "5s"
-/** L→R sweep, instant reset, short idle before next pass */
-const SHIMMER_KEY = "0;0.8;0.805;1"
+const SHIMMER_DUR = "2.8s"
+/** L→R sweep, instant reset, brief idle (~0.06s) before next pass */
+const SHIMMER_KEY = "0;0.965;0.985;1"
 const SHIMMER_SPLINE = "0.42 0 0.58 1; 0 0 0 0; 0 0 0 0"
 const SHIMMER_TRANSLATE =
   "-1.15 0; 1.15 0; -1.15 0; -1.15 0"
