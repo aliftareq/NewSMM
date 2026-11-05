@@ -69,75 +69,87 @@ export function WhoItsForCardsStage({
       gsap.set(stepper, { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" })
     }
 
-    const revealStepper = () => {
-      setStepperRevealed(true)
-      if (!stepper) {
-        setLogomarkSplitReveal(true)
-        return
-      }
-      gsap.fromTo(
-        stepper,
-        { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.75,
-          ease: "power2.out",
-          clearProps: "transform,opacity",
-          onComplete: () => setLogomarkSplitReveal(true),
-        },
-      )
-    }
-
     const ctx = gsap.context(() => {
-      const runSpread = () => {
+      const runSequence = () => {
         if (hasPlayedRef.current) return
         hasPlayedRef.current = true
 
         spreadTimelineRef.current?.kill()
         gsap.killTweensOf(cards)
+        if (stepper) gsap.killTweensOf(stepper)
 
         const rootRect = root.getBoundingClientRect()
-        const centerX = rootRect.width / 2
-        const centerY = rootRect.height / 2
+        const anchor = stepper?.querySelector(
+          '[data-slot="who-its-for-logomark-anchor"]',
+        ) as HTMLElement | null
+
+        let originX = rootRect.width / 2
+        let originY = rootRect.height / 2
+        if (anchor) {
+          const anchorRect = anchor.getBoundingClientRect()
+          if (anchorRect.width > 0 && anchorRect.height > 0) {
+            originX = anchorRect.left + anchorRect.width / 2 - rootRect.left
+            originY = anchorRect.top + anchorRect.height / 2 - rootRect.top
+          }
+        }
 
         const offsets = cards.map((el) => {
           const rect = el.getBoundingClientRect()
           const cardCenterX = rect.left + rect.width / 2 - rootRect.left
           const cardCenterY = rect.top + rect.height / 2 - rootRect.top
           return {
-            x: centerX - cardCenterX,
-            y: centerY - cardCenterY,
+            x: originX - cardCenterX,
+            y: originY - cardCenterY,
           }
         })
 
         gsap.set(cards, {
           x: (i) => offsets[i]?.x ?? 0,
           y: (i) => offsets[i]?.y ?? 0,
+          opacity: 0,
           zIndex: (i) => 20 + i,
           force3D: true,
         })
 
+        setStepperRevealed(true)
+
         const tl = gsap.timeline({
           onComplete: () => {
-            gsap.set(cards, { clearProps: "transform,zIndex" })
-            revealStepper()
+            gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
+            if (stepper) {
+              gsap.set(stepper, { clearProps: "transform,opacity" })
+            }
             spreadTimelineRef.current = null
           },
         })
 
         spreadTimelineRef.current = tl
 
+        if (stepper) {
+          tl.fromTo(
+            stepper,
+            { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" },
+            {
+              opacity: 1,
+              scale: 1,
+              duration: 0.75,
+              ease: "power2.out",
+            },
+          )
+        }
+
+        tl.call(() => setLogomarkSplitReveal(true))
+
         const spreadToSlot = {
           x: 0,
           y: 0,
+          opacity: 1,
           duration: 1.5,
           ease: "power2.inOut",
         }
 
-        // Diagonal pairs from center stack — same motion for each pair (0↔3, 1↔2)
-        tl.to([cards[0], cards[3]], spreadToSlot, 0)
-        tl.to([cards[1], cards[2]], spreadToSlot, 0)
+        tl.to([cards[0], cards[3]], spreadToSlot, "+=0.3")
+        tl.to([cards[1], cards[2]], spreadToSlot, "<")
       }
 
       const trigger = ScrollTrigger.create({
@@ -145,14 +157,14 @@ export function WhoItsForCardsStage({
         start: "top 82%",
         once: true,
         onEnter: () => {
-          requestAnimationFrame(runSpread)
+          requestAnimationFrame(runSequence)
         },
       })
 
       ScrollTrigger.refresh()
 
       if (trigger.isActive) {
-        requestAnimationFrame(runSpread)
+        requestAnimationFrame(runSequence)
       }
     }, root)
 

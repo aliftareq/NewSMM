@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils"
 type WhoItsForCenterStepperProps = {
   stepperSrc: string
   className?: string
-  /** Stepper + logomark visible after card spread. */
+  /** Mount logomark in stacked state before center reveal animation. */
   revealed?: boolean
-  /** Run logomark layer split when stepper is revealed. */
+  /** Run logomark layer split after center column is visible. */
   logomarkSplitReveal?: boolean
 }
 
@@ -34,7 +34,6 @@ export const WhoItsForCenterStepper = forwardRef<
         "relative hidden w-9 shrink-0 self-center lg:block",
         className,
       )}
-      style={revealed ? undefined : { opacity: 0 }}
       data-slot="who-its-for-center-stepper"
     >
       <div className="relative mx-auto h-[342px] w-9">
@@ -46,7 +45,10 @@ export const WhoItsForCenterStepper = forwardRef<
           className="size-full object-contain"
           unoptimized
         />
-        <div className="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-visible rounded-xl border border-[#86d3ff] bg-white">
+        <div
+          data-slot="who-its-for-logomark-anchor"
+          className="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-visible rounded-xl border border-[#86d3ff] bg-white"
+        >
           <div className="relative h-9 w-[46px] overflow-visible">
             <BrandLogomarkSplit
               {...WHO_ITS_FOR_CENTER_LOGOMARK}
