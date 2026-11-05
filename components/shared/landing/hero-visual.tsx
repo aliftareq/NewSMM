@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion, useReducedMotion } from "motion/react"
 
 import type { LandingHeroContent } from "@/types/landing/hero"
@@ -11,11 +11,29 @@ import { HeroVerticalTitle } from "@/components/shared/landing/hero-vertical-tit
 type HeroVisualProps = {
   visual: LandingHeroContent["visual"]
   spriteSrc: string
+  /** When true, blue panel + fold text run (after hero column entrance). */
+  panelAnimationReady?: boolean
 }
 
-export function HeroVisual({ visual, spriteSrc }: HeroVisualProps) {
+export function HeroVisual({
+  visual,
+  spriteSrc,
+  panelAnimationReady = false,
+}: HeroVisualProps) {
   const reduceMotion = useReducedMotion()
-  const [titleReady, setTitleReady] = useState(Boolean(reduceMotion))
+  const [titleReady, setTitleReady] = useState(false)
+
+  useEffect(() => {
+    if (!panelAnimationReady) {
+      setTitleReady(false)
+      return
+    }
+    if (reduceMotion) {
+      setTitleReady(true)
+    }
+  }, [panelAnimationReady, reduceMotion])
+
+  const panelOpen = panelAnimationReady || reduceMotion
 
   return (
     <div className="relative mx-auto h-[560px] w-full max-w-[480px] overflow-visible rounded-[24px] bg-white">
@@ -23,14 +41,14 @@ export function HeroVisual({ visual, spriteSrc }: HeroVisualProps) {
         className="absolute top-0 right-0 h-[560px] w-[238px] origin-bottom bg-blue-brand"
         aria-hidden
         initial={reduceMotion ? false : { scaleY: 0 }}
-        animate={{ scaleY: 1 }}
+        animate={panelOpen ? { scaleY: 1 } : { scaleY: 0 }}
         transition={
           reduceMotion
             ? { duration: 0 }
             : { duration: 0.85, ease: [0.22, 1, 0.36, 1] }
         }
         onAnimationComplete={() => {
-          if (!reduceMotion) setTitleReady(true)
+          if (panelOpen && !reduceMotion) setTitleReady(true)
         }}
       />
 

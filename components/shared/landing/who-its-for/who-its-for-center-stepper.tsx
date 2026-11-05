@@ -1,19 +1,30 @@
 import Image from "next/image"
+import { forwardRef } from "react"
+
+import { cn } from "@/lib/utils"
 
 type WhoItsForCenterStepperProps = {
   stepperSrc: string
   logomarkSrc: string
+  className?: string
 }
 
 /** Figma 25704:30539–30548 — vertical stepper + center logomark */
-export function WhoItsForCenterStepper({
-  stepperSrc,
-  logomarkSrc,
-}: WhoItsForCenterStepperProps) {
+export const WhoItsForCenterStepper = forwardRef<
+  HTMLDivElement,
+  WhoItsForCenterStepperProps
+>(function WhoItsForCenterStepper(
+  { stepperSrc, logomarkSrc, className },
+  ref,
+) {
   return (
     <div
+      ref={ref}
       aria-hidden
-      className="relative hidden w-9 shrink-0 self-center lg:block"
+      className={cn(
+        "relative hidden w-9 shrink-0 self-center lg:block",
+        className,
+      )}
       data-slot="who-its-for-center-stepper"
     >
       <div className="relative mx-auto h-[342px] w-9">
@@ -40,4 +51,6 @@ export function WhoItsForCenterStepper({
       </div>
     </div>
   )
-}
+})
+
+WhoItsForCenterStepper.displayName = "WhoItsForCenterStepper"

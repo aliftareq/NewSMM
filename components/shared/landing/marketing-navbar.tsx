@@ -6,12 +6,16 @@ import { usePathname } from "next/navigation"
 import { landingNavbarContent } from "@/data/landing/navbar"
 import type { LandingNavbarContent } from "@/types/landing/navbar"
 import { LinkTo } from "@/components/shared/link-to"
+import { AnimatedContent } from "@/components/shared/animated-content"
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import { cn } from "@/lib/utils"
 
 type MarketingNavbarProps = {
   content?: LandingNavbarContent
   className?: string
+  /** Hero landing: nav bar slides in from the top on mount. */
+  mountReveal?: boolean
+  onMountRevealComplete?: () => void
 }
 
 function isNavLinkActive(pathname: string, href: string) {
@@ -24,6 +28,8 @@ function isNavLinkActive(pathname: string, href: string) {
 export function MarketingNavbar({
   content = landingNavbarContent,
   className,
+  mountReveal = false,
+  onMountRevealComplete,
 }: MarketingNavbarProps) {
   const pathname = usePathname()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
@@ -31,15 +37,9 @@ export function MarketingNavbar({
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
 
-  return (
-    <header
-      className={cn(
-        "relative z-20 w-full bg-transparent py-6",
-        className
-      )}
-    >
-      <div className="info-container flex h-[52px] items-center justify-between gap-4">
-        <div className="flex shrink-0 items-center gap-3">
+  const bar = (
+    <>
+      <div className="flex shrink-0 items-center gap-3">
           <LinkTo href={content.logo.href} className="relative block h-[39px] w-[50px] shrink-0 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -155,7 +155,35 @@ export function MarketingNavbar({
             ) : null}
           </div>
         </div>
-      </div>
+    </>
+  )
+
+  return (
+    <header
+      className={cn(
+        "relative z-20 w-full bg-transparent py-6",
+        className
+      )}
+    >
+      {mountReveal ? (
+        <AnimatedContent
+          className="info-container flex h-[52px] items-center justify-between gap-4"
+          trigger="mount"
+          direction="vertical"
+          reverse
+          distance={100}
+          duration={0.8}
+          ease="power3.out"
+          threshold={0.1}
+          onComplete={onMountRevealComplete}
+        >
+          {bar}
+        </AnimatedContent>
+      ) : (
+        <div className="info-container flex h-[52px] items-center justify-between gap-4">
+          {bar}
+        </div>
+      )}
     </header>
   )
 }

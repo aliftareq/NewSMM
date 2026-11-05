@@ -1,4 +1,5 @@
 import { ServicesExplorerCard } from "@/components/shared/landing/services-explorer/services-explorer-card"
+import { LandingSectionHeadingReveal } from "@/components/shared/landing/landing-section-heading-reveal"
 import { landingExploreAllServicesData } from "@/data/landing/explore-all-services"
 import { cn } from "@/lib/utils"
 import type { ExploreAllServicesData } from "@/types/landing/explore-all-services"
@@ -21,7 +22,7 @@ export function ExploreAllServicesSection({
       className={cn("relative w-full bg-[rgba(27,171,243,0.08)]", className)}
     >
       <div className="info-container flex flex-col items-center gap-[60px] py-16 md:py-20 lg:py-20">
-        <div className="flex max-w-[914px] flex-col items-center gap-3 text-center">
+        <LandingSectionHeadingReveal className="flex max-w-[914px] flex-col items-center gap-3 text-center">
           <div className="stats-highlight-subheading shrink-0 overflow-visible rounded-[33px] border-[0.5px] border-[#e8e8e3] bg-white/50 px-2 py-1">
             <div className="overflow-visible rounded-full border border-white bg-[#fafafa] px-3 py-1.5 shadow-[0px_2px_1.5px_0px_rgba(183,183,183,0.25)]">
               <div className="flex items-center gap-2">
@@ -46,7 +47,7 @@ export function ExploreAllServicesSection({
           </h2>
 
           <p className="text-base leading-normal text-n600">{intro.description}</p>
-        </div>
+        </LandingSectionHeadingReveal>
 
         <ServicesExplorerCard />
       </div>

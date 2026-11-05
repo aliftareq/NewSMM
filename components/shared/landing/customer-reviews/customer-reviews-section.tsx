@@ -1,5 +1,6 @@
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
+import { LandingSectionHeadingReveal } from "@/components/shared/landing/landing-section-heading-reveal"
 import { CustomerReviewsCarousel } from "@/components/shared/landing/customer-reviews/customer-reviews-carousel"
 import { CustomerReviewsSectionDecoration } from "@/components/shared/landing/customer-reviews/customer-reviews-section-decoration"
 import { landingCustomerReviewsContent } from "@/data/landing/customer-reviews"
@@ -26,7 +27,7 @@ export function CustomerReviewsSection({
 
       <div className="relative z-[2] flex flex-col items-center gap-12 py-16 md:py-20 xl:gap-[60px] xl:py-[100px]">
         <div className="info-container flex w-full flex-col items-center px-4 sm:px-6">
-          <div className="flex w-full max-w-[723px] flex-col items-center gap-3 text-center">
+          <LandingSectionHeadingReveal className="flex w-full max-w-[723px] flex-col items-center gap-3 text-center">
             <LandingSectionBadge label={content.badgeLabel} />
 
             <h2
@@ -38,7 +39,7 @@ export function CustomerReviewsSection({
             </h2>
 
             <LandingSectionDescription>{content.description}</LandingSectionDescription>
-          </div>
+          </LandingSectionHeadingReveal>
         </div>
 
         <CustomerReviewsCarousel

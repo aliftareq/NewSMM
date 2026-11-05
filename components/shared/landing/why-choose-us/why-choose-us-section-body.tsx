@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react"
 
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
+import { LandingSectionHeadingReveal } from "@/components/shared/landing/landing-section-heading-reveal"
 import {
   WhyChooseUsCarousel,
   type WhyChooseUsCarouselHandle,
@@ -29,7 +30,7 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
 
   return (
     <div className="relative z-[1] flex w-full flex-col gap-12 py-16 md:py-20 xl:py-[80px]">
-      <div className="info-container flex w-full flex-col items-center gap-6 px-4 text-center sm:px-6 md:items-stretch md:text-left">
+      <LandingSectionHeadingReveal className="info-container flex w-full flex-col items-center gap-6 px-4 text-center sm:px-6 md:items-stretch md:text-left">
         <div className="flex w-full flex-col items-center justify-between gap-6 md:flex-row md:items-start md:gap-3">
           <LandingSectionBadge label={content.badgeLabel} />
 
@@ -62,7 +63,7 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
             onNext={() => carouselRef.current?.scrollNext()}
           />
         </div>
-      </div>
+      </LandingSectionHeadingReveal>
 
       <WhyChooseUsCarousel
         ref={carouselRef}
