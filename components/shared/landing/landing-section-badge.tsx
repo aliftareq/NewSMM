@@ -5,7 +5,7 @@ type LandingSectionBadgeProps = {
   className?: string
 }
 
-/** Section pill badge with dual ripple dot (matches Payment Methods / stats highlight). */
+/** Ripple pill badge shared across landing sections (Payment Methods, Who it’s for, …). */
 export function LandingSectionBadge({
   label,
   className,
@@ -27,7 +27,9 @@ export function LandingSectionBadge({
             <span className="section-heading-dot-ripple section-heading-dot-ripple--delayed" />
             <span className="relative z-1 block size-1 rounded-full bg-button shadow-[0_0_4px_2px_rgba(38,157,231,0.45)]" />
           </span>
-          <p className="section-subtitle-label text-button font-medium">{label}</p>
+          <p className="section-subtitle-label text-button font-medium">
+            {label}
+          </p>
         </div>
       </div>
     </div>

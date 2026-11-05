@@ -73,6 +73,7 @@
 
   --animate-stats-avatar-marquee-ltr: stats-avatar-marquee-ltr 28s linear infinite;
   --animate-stats-avatar-marquee-rtl: stats-avatar-marquee-rtl 28s linear infinite;
+  --animate-customer-reviews-marquee: customer-reviews-marquee 50s linear infinite;
   --animate-skeleton-shimmer: skeleton-shimmer 1.8s ease-in-out infinite;
 }
 
@@ -200,6 +201,15 @@
 }
 
 @keyframes stats-avatar-marquee-rtl {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-33.3333%, 0, 0);
+  }
+}
+
+@keyframes customer-reviews-marquee {
   from {
     transform: translate3d(0, 0, 0);
   }
@@ -386,15 +396,7 @@
     will-change: transform;
   }
 
-  @keyframes customer-reviews-marquee {
-    from {
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      transform: translate3d(-33.3333%, 0, 0);
-    }
-  }
-
+  /* Customer reviews — track is tripled; -33.333% loops seamlessly (@keyframes at root) */
   .customer-reviews-marquee-track {
     animation: customer-reviews-marquee 50s linear infinite;
     will-change: transform;

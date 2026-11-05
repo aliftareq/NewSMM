@@ -1,5 +1,5 @@
-import { FaqAccordion } from "@/components/shared/landing/faq/faq-accordion"
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
+import { FaqAccordion } from "@/components/shared/landing/faq/faq-accordion"
 import { landingFaqContent } from "@/data/landing/faq"
 import { cn } from "@/lib/utils"
 import type { LandingFaqContent } from "@/types/landing/faq"

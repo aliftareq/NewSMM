@@ -1,5 +1,5 @@
-import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
+import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
 import { CustomerReviewsCarousel } from "@/components/shared/landing/customer-reviews/customer-reviews-carousel"
 import { CustomerReviewsSectionDecoration } from "@/components/shared/landing/customer-reviews/customer-reviews-section-decoration"
 import { landingCustomerReviewsContent } from "@/data/landing/customer-reviews"
