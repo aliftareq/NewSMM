@@ -1,6 +1,8 @@
 import { landingFooterContent } from "@/data/landing/footer"
 import type { LandingFooterContent } from "@/types/landing/footer"
 
+import { AnimatedContent } from "@/components/shared/animated-content"
+import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
 import { FooterBottomBar } from "@/components/shared/landing/footer-bottom-bar"
 import { FooterBrandColumn } from "@/components/shared/landing/footer-brand-column"
 import { FooterContactColumn } from "@/components/shared/landing/footer-contact-column"
@@ -21,14 +23,20 @@ export function FooterSection({
       <FooterDecorations assets={content.assets} />
 
       <div className="info-container relative z-[6] flex flex-col items-center gap-10 px-4 sm:gap-12 sm:px-6 lg:px-8 xl:gap-[68px]">
-        <FooterCta
-          cta={content.cta}
-          glareStarLeft={content.assets.glareStarLeft}
-          glareStarRight={content.assets.glareStarRight}
-        />
+        <AnimatedContent className="w-full" {...landingScrollRevealProps}>
+          <FooterCta
+            cta={content.cta}
+            glareStarLeft={content.assets.glareStarLeft}
+            glareStarRight={content.assets.glareStarRight}
+          />
+        </AnimatedContent>
 
         <div className="flex w-full flex-col items-center gap-10 pb-8 sm:gap-12 sm:pb-10 xl:gap-[60px] xl:pb-12">
-          <div className="flex w-full flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-[133px]">
+          <AnimatedContent
+            className="flex w-full flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-[133px]"
+            {...landingScrollRevealProps}
+            delay={0.05}
+          >
             <FooterBrandColumn brand={content.brand} />
 
             <div className="grid w-full min-w-0 grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-8 md:gap-x-12 xl:contents">
@@ -47,10 +55,14 @@ export function FooterSection({
                 className="sm:col-span-2 xl:col-span-1"
               />
             </div>
-          </div>
+          </AnimatedContent>
 
-          <FooterTrustBadges badges={content.trustBadges} />
-          <FooterBottomBar legal={content.legal} />
+          <AnimatedContent className="w-full" {...landingScrollRevealProps} delay={0.08}>
+            <FooterTrustBadges badges={content.trustBadges} />
+          </AnimatedContent>
+          <AnimatedContent className="w-full" {...landingScrollRevealProps} delay={0.1}>
+            <FooterBottomBar legal={content.legal} />
+          </AnimatedContent>
         </div>
       </div>
     </footer>

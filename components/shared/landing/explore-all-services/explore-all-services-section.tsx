@@ -1,5 +1,9 @@
 import { ServicesExplorerCard } from "@/components/shared/landing/services-explorer/services-explorer-card"
-import { LandingSectionHeadingReveal } from "@/components/shared/landing/landing-section-heading-reveal"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import {
+  LandingSectionHeadingReveal,
+  landingScrollRevealProps,
+} from "@/components/shared/landing/landing-section-heading-reveal"
 import { landingExploreAllServicesData } from "@/data/landing/explore-all-services"
 import { cn } from "@/lib/utils"
 import type { ExploreAllServicesData } from "@/types/landing/explore-all-services"
@@ -49,7 +53,9 @@ export function ExploreAllServicesSection({
           <p className="text-base leading-normal text-n600">{intro.description}</p>
         </LandingSectionHeadingReveal>
 
-        <ServicesExplorerCard />
+        <AnimatedContent className="w-full" {...landingScrollRevealProps}>
+          <ServicesExplorerCard />
+        </AnimatedContent>
       </div>
     </section>
   )

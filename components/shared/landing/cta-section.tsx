@@ -1,4 +1,6 @@
 import { PreFooterCtaCard } from "@/components/shared/landing/pre-footer-cta-card"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
 import type { PreFooterCtaContent } from "@/types/landing/pre-footer-cta"
 
 type CtaSectionProps = {
@@ -13,7 +15,9 @@ export function CtaSection({ content }: CtaSectionProps) {
       aria-labelledby="pre-footer-cta-heading"
     >
       <div className="info-container flex w-full flex-col items-center px-4 sm:px-6 lg:px-8">
-        <PreFooterCtaCard content={content} headingId="pre-footer-cta-heading" />
+        <AnimatedContent className="w-full" {...landingScrollRevealProps}>
+          <PreFooterCtaCard content={content} headingId="pre-footer-cta-heading" />
+        </AnimatedContent>
       </div>
     </section>
   )
