@@ -18,85 +18,120 @@ Stack and design workflow:
 
 ## Image Assets
 
-Images from Figma (backgrounds, graphics, icons) are manually downloaded into `public/images/pages/{page}/` on a per-page basis (e.g. `public/images/pages/home/`).
+Images from Figma (backgrounds, graphics, icons) are manually downloaded under `public/images/`, grouped by **marketing area** and **section** — not under a generic `pages/` folder.
 
-When the app supports dark mode, each page folder may contain at most these three subfolders:
+| Path | Purpose |
+|------|---------|
+| `public/images/landing/` | Landing and shared marketing chrome (hero, footer, section art) |
+| `public/images/landing/{section}/` | Assets for one landing section (e.g. `faq/`, `how-it-works/`) — mirrors `components/shared/landing/{section}/` when the section has its own folder |
+| `public/images/landing/shared/` | Landing assets reused across multiple sections |
+| `public/images/ui/` | Global UI assets (icons, sprites) not tied to one page |
 
-- `white/` — light-mode assets
-- `dark/` — dark-mode assets
-- `shared/` — assets used in both themes
+When a new marketing route is added (e.g. service), use the same pattern: `public/images/{route-area}/` and optional `{section}/` subfolders. Reference paths in `data/` as root-relative strings (e.g. `"/images/landing/hero-background.png"`).
 
-When the app does not support dark mode, store all images directly under the page directory (e.g. `public/images/pages/home/`) with no theme subfolders.
+When the app supports dark mode, a section folder may use `white/`, `dark/`, and `shared/` subfolders. This project is currently light-mode only — store files directly in the section folder with no theme subfolders unless dark mode is introduced.
 
 ## Global Rules
 
-- Always use the custom `LinkTo` component instead of importing `Link` from `next/link` directly. `LinkTo` is a wrapper around `next/link` and supports the same props (`href` etc.). If it's missing a prop or behavior you need, extend `LinkTo` itself rather than falling back to `next/link` directly.
+- **Imports:** Use the `@/` alias (`@/*` → project root). Do not introduce a `src/` directory; this repo keeps `app/`, `components/`, `lib/`, etc. at the repository root.
+- **File names:** Use kebab-case for all new `.ts` / `.tsx` files (e.g. `hero-section.tsx`, `customer-reviews-section.tsx`).
+- **Links:** Always use the custom `LinkTo` component (`@/components/shared/link-to`) instead of importing `Link` from `next/link` directly. Extend `LinkTo` if a prop is missing — do not bypass it.
 
 ## Project Directory Structure (Next.js App Router)
 
-This project follows a strict, opinionated folder structure. Always adhere to it when creating, moving, or refactoring files. Do not deviate from this structure without explicit instruction.
+This project follows a strict, opinionated folder structure. **Match the existing tree before adding files.** Do not deviate without explicit instruction.
+
+There is **no** `src/` prefix. The canonical layout is below.
 
 ### Rules
 
-1. **`src/app/` is routing-only.** Only place `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, and route groups/segments here. Never put business logic, data-fetching utilities, or reusable components directly in `app/` outside of colocated private folders.
+1. **`app/` is routing-only.** Only `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`, route groups, and `globals.css` live here. No reusable UI, static copy, or types — except colocated `_components/` (see rule 2).
 
-2. **Colocate route-specific components** in a `_components/` private folder inside the relevant route segment (e.g. `app/dashboard/_components/`). The underscore prefix opts the folder out of routing — never omit it.
+2. **Colocate route-only UI** in `app/<segment>/_components/` (underscore prefix = not a URL segment). Use this for components used on a single route and nowhere else. Marketing sections that appear on multiple routes belong under `components/shared/` instead.
 
-3. **Use route groups** `(groupName)` to organize routes without affecting the URL, and to apply different root layouts to sections of the app (e.g. `(marketing)`, `(auth)`).
+3. **Route groups** `(name)` organize URLs and layouts without changing the path:
+   - `(marketing)` — shared marketing shell (e.g. pre-footer CTA + footer in `app/(marketing)/layout.tsx`).
+   - Nested groups like `(landing)` are allowed when a group needs its own `page.tsx` at `/` while sibling routes stay under the same marketing layout.
 
-4. **Shared, reusable components** go in `src/components/`:
-   - `components/ui/` — low-level design-system primitives (buttons, inputs, etc.)
-   - `components/shared/` — higher-level components composed from `ui/` and used across multiple features
+4. **`components/`**
+   - `components/ui/` — shadcn/ui primitives only; extend via composition, never fork in place (see Component Creation Policy).
+   - `components/shared/` — app-wide or cross-route UI.
+   - `components/shared/landing/` — landing page sections and marketing chrome (navbar, hero, footer pieces, etc.).
+   - `components/shared/{area}/` — same pattern for other marketing areas (e.g. `service/` when that page grows).
+   - **Section folders:** For a large Figma section, use `components/shared/{area}/{section-name}/` with a `{section-name}-section.tsx` entry component and smaller siblings in that folder (e.g. `faq/faq-section.tsx`, `faq/faq-accordion.tsx`). Simpler sections can stay as single files at the `{area}/` level (e.g. `cta-section.tsx`).
 
-5. **Feature-based modules** go in `src/features/<feature-name>/`, each containing its own `components/`, `hooks/`, `actions.ts` (server actions), and `types.ts`. Use this for any domain/feature with enough surface area to warrant grouping (auth, billing, etc.) rather than scattering related files across `components/`, `hooks/`, and `app/`.
+5. **`data/` — static content and asset paths.** Marketing copy, lists, and image URL strings live here, not inline in components. Mirror the area in a subfolder:
+   - `data/landing/{section}.ts` exports a typed constant (e.g. `landingHeroContent`).
+   - `data/service/` — same for the service route as it is built out.
+   - One file per major section; keep Figma-driven text and `/images/...` paths in data, not hard-coded in JSX.
 
-6. **Framework-agnostic logic** (DB clients, API wrappers, validation schemas, utility functions) goes in `src/lib/`.
+6. **`types/` — TypeScript shapes for `data/`.** Mirror `data/` paths:
+   - `types/landing/{section}.ts` defines types imported by both `data/landing/{section}.ts` and section components.
+   - Do not duplicate domain types in random component files if they describe shared content.
 
-7. **Shared custom hooks** not tied to a specific feature go in `src/hooks/`.
+7. **`lib/`** — framework-agnostic helpers (`cn`, formatters, API clients, validation). **`hooks/`** — shared React hooks not tied to one route.
 
-8. **Shared TypeScript types** not tied to a specific feature go in `src/types/`.
+8. **`features/<feature-name>/`** — optional future home for large domains (auth, billing) with local `components/`, `hooks/`, `actions.ts`, `types.ts`. Prefer `data/` + `components/shared/{area}/` for marketing pages until a feature justifies its own module.
 
-9. **App-wide constants/config** go in `src/config/`.
+9. **`config/`** — optional app-wide constants when needed.
 
-10. **Route handlers** live under `src/app/api/<resource>/route.ts`.
+10. **API routes:** `app/api/<resource>/route.ts`.
 
-11. When deciding where a new file goes, ask: "Is this routing, a route-specific UI piece, a shared UI piece, feature logic, or app-wide logic?" — then place it in the corresponding location above.
+11. **Placement checklist:** routing → `app/`; route-only UI → `app/.../_components/`; marketing section UI → `components/shared/{area}/`; copy + asset paths → `data/{area}/`; types for that copy → `types/{area}/`; primitives → `components/ui/`; utilities → `lib/`.
 
-### Reference structure
+### Marketing page module pattern
 
-\```
-src/
+For each Figma section on a marketing page, keep the same three-part split:
+
+1. `types/{area}/{section}.ts` — content types.
+2. `data/{area}/{section}.ts` — default content implementing those types.
+3. `components/shared/{area}/...` — presentation; default-import content from `@/data/...`, accept optional `content` prop for overrides/tests.
+
+Wire sections in the route `page.tsx` as a ordered list of section components. Shared chrome across routes (e.g. CTA + footer) belongs in the route-group `layout.tsx`, not duplicated on every page.
+
+### Reference structure (this repo)
+
+```
+./
 ├── app/
-│ ├── (marketing)/
-│ ├── (auth)/
-│ │ ├── login/
-│ │ └── register/
-│ ├── dashboard/
-│ │ ├── layout.tsx
-│ │ ├── page.tsx
-│ │ ├── loading.tsx
-│ │ ├── error.tsx
-│ │ └── \_components/
-│ ├── api/
-│ │ └── users/route.ts
-│ ├── layout.tsx
-│ └── globals.css
+│   ├── layout.tsx
+│   ├── globals.css
+│   └── (marketing)/
+│       ├── layout.tsx          # shared CTA + footer
+│       ├── (landing)/
+│       │   └── page.tsx        # `/` — composes landing sections
+│       └── service/
+│           └── page.tsx        # `/service`
 ├── components/
-│ ├── ui/
-│ └── shared/
-├── features/
-│ └── auth/
-│ ├── components/
-│ ├── hooks/
-│ ├── actions.ts
-│ └── types.ts
+│   ├── ui/                     # shadcn primitives
+│   └── shared/
+│       ├── link-to.tsx
+│       └── landing/
+│           ├── hero-section.tsx
+│           ├── cta-section.tsx
+│           ├── footer-section.tsx
+│           └── faq/
+│               ├── faq-section.tsx
+│               └── faq-accordion.tsx
+├── data/
+│   └── landing/
+│       ├── hero.ts
+│       └── faq.ts
+├── types/
+│   └── landing/
+│       ├── hero.ts
+│       └── faq.ts
 ├── lib/
+│   └── utils.ts
 ├── hooks/
-├── config/
-└── types/
-\```
+├── public/
+│   └── images/
+│       ├── landing/
+│       └── ui/
+└── (optional later: features/, config/, app/api/)
+```
 
-If a new file doesn't clearly fit one of these locations, ask before creating it rather than guessing.
+If a new file does not clearly fit, ask before creating it rather than guessing.
 
 ## Component Creation Policy (shadcn/ui)
 

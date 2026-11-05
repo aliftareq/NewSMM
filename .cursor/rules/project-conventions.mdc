@@ -1,0 +1,20 @@
+---
+description: Project folder structure, data/types pattern, and coding conventions — follow AGENTS.md
+alwaysApply: true
+---
+
+# Project conventions
+
+**Authoritative guide:** [AGENTS.md](../../AGENTS.md) at the repository root. Read it before creating, moving, or refactoring files. Do not contradict it unless the user explicitly overrides it.
+
+## Non-negotiables
+
+- **No `src/` directory** — `app/`, `components/`, `data/`, `types/`, `lib/`, `hooks/` live at repo root; imports use `@/`.
+- **`app/` is routing-only** — pages, layouts, route handlers; marketing UI lives in `components/shared/{area}/`.
+- **Marketing content:** mirror paths in `types/{area}/{section}.ts`, `data/{area}/{section}.ts`, and section components under `components/shared/{area}/`.
+- **Images:** `public/images/{area}/` (e.g. `landing/`, section subfolders); paths referenced from `data/`, not hard-coded in JSX.
+- **Links:** use `@/components/shared/link-to` (`LinkTo`), not `next/link` directly.
+- **UI:** shadcn/ui in `components/ui/` — extend via composition; do not fork primitives in place.
+- **File names:** kebab-case for new `.ts` / `.tsx` files.
+
+When placement is unclear, match the nearest existing section in the tree and ask before inventing a new pattern.
