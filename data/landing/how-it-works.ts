@@ -29,6 +29,7 @@ export const landingHowItWorksData: HowItWorksData = {
       title: "Enter your username",
       description:
         "Add your public username or link. We never ask for your password or any account access.",
+      illustrationKind: "enter-username",
       illustrationSrc: `${IMG}/step-02-illustration.svg`,
       illustrationWidth: 218,
       illustrationHeight: 68,
@@ -39,6 +40,7 @@ export const landingHowItWorksData: HowItWorksData = {
       title: "Watch it grow",
       description:
         "Pay securely and real engagement starts landing within minutes — steady and natural.",
+      illustrationKind: "watch-grow",
       illustrationSrc: `${IMG}/step-03-illustration.svg`,
       illustrationWidth: 125,
       illustrationHeight: 160,

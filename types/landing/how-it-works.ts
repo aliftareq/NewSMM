@@ -1,4 +1,10 @@
-export type HowItWorksIllustrationKind = "static" | "pick-service-carousel"
+export type HowItWorksIllustrationKind =
+  | "static"
+  | "pick-service-carousel"
+  | "enter-username"
+  | "watch-grow"
+  | "confirm-profile"
+  | "complete-checkout"
 
 export type HowItWorksStep = {
   id: string

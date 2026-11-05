@@ -4,6 +4,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
   type CSSProperties,
   type ReactNode,
 } from "react"
@@ -100,6 +101,8 @@ export function AnimatedContent({
   const isLgViewport = useLandingLgViewport()
   const effectiveTrigger = resolveLandingRevealTrigger(trigger, isLgViewport)
   const ref = useRef<HTMLDivElement>(null)
+  /** Keep visibility in React state so re-renders do not undo GSAP's reveal. */
+  const [containerVisible, setContainerVisible] = useState(false)
   const callbacksRef = useRef({
     onStart,
     onComplete,
@@ -110,6 +113,8 @@ export function AnimatedContent({
   useIsomorphicLayoutEffect(() => {
     const el = ref.current
     if (!el) return undefined
+
+    setContainerVisible(false)
 
     const scroller: HTMLElement | Element | null =
       typeof container === "string"
@@ -130,6 +135,7 @@ export function AnimatedContent({
       const mask = wipe !== "none" ? WIPES[wipe] : undefined
 
       gsap.set(el, { visibility: "visible" })
+      setContainerVisible(true)
 
       if (reduce) {
         gsap.set(targets, { clearProps: "all" })
@@ -248,7 +254,10 @@ export function AnimatedContent({
 
     ScrollTrigger.refresh()
 
-    return () => ctx.revert()
+    return () => {
+      ctx.revert()
+      setContainerVisible(false)
+    }
   }, [
     isLgViewport,
     effectiveTrigger,
@@ -280,7 +289,7 @@ export function AnimatedContent({
     <div
       ref={ref}
       className={className}
-      style={{ visibility: "hidden", ...style }}
+      style={{ visibility: containerVisible ? "visible" : "hidden", ...style }}
     >
       {children}
     </div>
