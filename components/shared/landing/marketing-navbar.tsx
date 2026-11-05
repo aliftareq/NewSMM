@@ -115,6 +115,7 @@ export function MarketingNavbar({
         onOpenChange={setMobileMenuOpen}
         content={content}
         pathname={pathname}
+        navActiveReady={mounted}
         isNavLinkActive={isNavLinkActive}
         onOpenServices={() => setServicesModalOpen(true)}
       />
@@ -124,7 +125,8 @@ export function MarketingNavbar({
           className="hidden items-center gap-8 overflow-hidden rounded-2xl bg-white py-2 pr-6 pl-2 shadow-[0px_2px_4px_0px_rgba(39,83,132,0.12)] lg:flex"
         >
           {content.navLinks.map((link) => {
-            const active = isNavLinkActive(pathname, link.href)
+            const active =
+              mounted && isNavLinkActive(pathname, link.href)
             return (
               <LinkTo
                 key={link.href}
@@ -133,7 +135,7 @@ export function MarketingNavbar({
                   "relative inline-flex items-center justify-center text-sm font-medium leading-[1.6] whitespace-nowrap transition-colors",
                   active
                     ? "rounded-[12px] px-4 py-[7px] text-white drop-shadow-[0px_0px_1px_rgba(0,0,0,0.04),0px_1px_0px_rgba(0,0,0,0.06)]"
-                    : "text-[#020618] hover:text-n600",
+                    : "px-2 py-[7px] text-[#020618] hover:text-n600",
                 )}
               >
                 {active ? (
