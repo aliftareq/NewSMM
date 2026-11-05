@@ -10,17 +10,10 @@ import { HeroOrderCard } from "@/components/shared/landing/hero-order-card"
 import { HeroReviews } from "@/components/shared/landing/hero-reviews"
 import { HeroVisual } from "@/components/shared/landing/hero-visual"
 import { MarketingNavbar } from "@/components/shared/landing/marketing-navbar"
+import { HERO_ENTRANCE } from "@/components/shared/landing/hero-entrance"
 import type { LandingHeroContent } from "@/types/landing/hero"
 
-const HERO_ENTRANCE = {
-  trigger: "mount" as const,
-  distance: 100,
-  duration: 0.8,
-  ease: "power3.out",
-  threshold: 0.1,
-  delay: 0,
-  stagger: 0,
-}
+const HERO_ENTRANCE_PROPS = HERO_ENTRANCE
 
 type HeroSectionContentProps = {
   content: LandingHeroContent
@@ -61,7 +54,7 @@ export function HeroSectionContent({ content }: HeroSectionContentProps) {
           direction="horizontal"
           reverse
           onComplete={markEntranceLayerComplete}
-          {...HERO_ENTRANCE}
+          {...HERO_ENTRANCE_PROPS}
         >
           <div className="flex flex-col gap-2.5 sm:gap-5">
             <HeroReviews reviews={content.reviews} />
@@ -87,7 +80,7 @@ export function HeroSectionContent({ content }: HeroSectionContentProps) {
           className="relative mx-auto w-full max-w-[480px] justify-self-center overflow-visible lg:mx-0 lg:justify-self-end"
           direction="horizontal"
           onComplete={markEntranceLayerComplete}
-          {...HERO_ENTRANCE}
+          {...HERO_ENTRANCE_PROPS}
         >
           <HeroVisual
             visual={content.visual}

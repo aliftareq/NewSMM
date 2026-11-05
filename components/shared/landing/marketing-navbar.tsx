@@ -16,6 +16,7 @@ import {
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import { cn } from "@/lib/utils"
 import { useLandingLgViewport } from "@/lib/landing-animation-trigger"
+import { HERO_ENTRANCE } from "@/components/shared/landing/hero-entrance"
 
 type MarketingNavbarProps = {
   content?: LandingNavbarContent
@@ -236,10 +237,10 @@ export function MarketingNavbar({
       trigger="mount"
       direction="vertical"
       reverse
-      distance={100}
-      duration={0.8}
-      ease="power3.out"
-      threshold={0.1}
+      distance={HERO_ENTRANCE.distance}
+      duration={HERO_ENTRANCE.duration}
+      ease={HERO_ENTRANCE.ease}
+      threshold={HERO_ENTRANCE.threshold}
       onComplete={handleNavRevealComplete}
     >
       {barShell}
