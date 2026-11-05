@@ -1,4 +1,4 @@
-import type { PreFooterCtaContent } from "@/types/landing/pre-footer-cta"
+import type { CtaContent } from "@/types/landing/cta"
 
 import { cn } from "@/lib/utils"
 
@@ -9,14 +9,14 @@ const BLEND_LAYERS = [
   { key: "curveBlend4", inset: "inset-[-0.25%_-0.19%]", blur: "blur-[1.829px]" },
   { key: "curveBlend5", inset: "inset-[-0.25%_-0.19%]", blur: "blur-[1.829px]", opacity: 0.2 },
 ] as const satisfies ReadonlyArray<{
-  key: keyof PreFooterCtaContent["assets"]
+  key: keyof CtaContent["assets"]
   inset: string
   blur: string
   opacity?: number
 }>
 
 type CtaFigmaLayersProps = {
-  assets: PreFooterCtaContent["assets"]
+  assets: CtaContent["assets"]
 }
 
 /** Dev Mode — % positions match 1280×414.17 artboard at any card width */

@@ -1,4 +1,4 @@
-export type PreFooterCtaContent = {
+export type CtaContent = {
   headingLines: [string, string]
   /** Leading space before line two matches Figma (` Media Presence?`). */
   headingLineTwoPrefix: string

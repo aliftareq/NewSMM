@@ -16,7 +16,7 @@ export function ComparisonSideLabel({
       {/* Desktop: vertical tab attached to card */}
       <div
         className={cn(
-          "hidden h-[455px] w-[60px] shrink-0 flex-col items-center justify-center xl:flex",
+          "hidden h-[455px] w-[60px] shrink-0 flex-col items-center justify-center py-[149px] xl:flex",
           variant === "positive"
             ? "rounded-br-[20px] rounded-tr-[20px] bg-gradient-to-b from-[#38b5e6] to-[#30a3f4] pl-[11px] pr-2.5"
             : "rounded-bl-[20px] rounded-tl-[20px] bg-gradient-to-b from-[#ff6889] to-[#e11d48] pl-2.5 pr-[11px]",

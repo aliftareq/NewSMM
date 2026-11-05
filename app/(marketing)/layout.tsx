@@ -1,5 +1,5 @@
-import { FooterSection } from "@/components/shared/landing/footer-section"
 import { CtaSection } from "@/components/shared/landing/cta-section"
+import { FooterSection } from "@/components/shared/landing/footer-section"
 
 export default function MarketingLayout({
   children,
