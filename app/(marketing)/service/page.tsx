@@ -1,5 +1,6 @@
 import { ServiceHeroSection } from "@/components/shared/service/service-hero-section"
 import { ServiceHowItWorksSection } from "@/components/shared/service/service-how-it-works-section"
+import { ServiceFollowerComparisonSection } from "@/components/shared/service/service-follower-comparison-section"
 import { ServiceGrowthPackageSection } from "@/components/shared/service/service-growth-package-section"
 
 export default function ServicePage() {
@@ -8,6 +9,7 @@ export default function ServicePage() {
       <ServiceHeroSection />
       <ServiceHowItWorksSection />
       <ServiceGrowthPackageSection />
+      <ServiceFollowerComparisonSection />
     </main>
   )
 }

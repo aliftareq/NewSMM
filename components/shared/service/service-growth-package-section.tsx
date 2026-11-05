@@ -19,6 +19,7 @@ export function ServiceGrowthPackageSection({
 
   return (
     <section
+      id="growth-package"
       data-slot="service-growth-package-section"
       className={cn("relative w-full bg-[#edf8fe]", className)}
     >
