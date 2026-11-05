@@ -1,65 +1,123 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
-import { AnimatedContent } from "@/components/shared/animated-content"
 import { HowItWorksStepColumn } from "@/components/shared/landing/how-it-works/how-it-works-step-column"
-import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
+import {
+  clearHowItWorksItemMotionStyles,
+  playHowItWorksEnterAnimation,
+} from "@/components/shared/landing/how-it-works/how-it-works-enter-animation"
 import type { HowItWorksStep } from "@/types/landing/how-it-works"
-
-/** Matches Tailwind `md` — stacked steps below, 3-column grid at md+. */
-const HOW_IT_WORKS_DESKTOP_MEDIA = "(min-width: 768px)"
-
-function useHowItWorksDesktopViewport(): boolean {
-  // Mobile layout first so SSR and the first client render match (avoids hydration errors).
-  const [isDesktop, setIsDesktop] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia(HOW_IT_WORKS_DESKTOP_MEDIA)
-    const update = () => setIsDesktop(mq.matches)
-    update()
-    mq.addEventListener("change", update)
-    return () => mq.removeEventListener("change", update)
-  }, [])
-
-  return isDesktop
-}
 
 type HowItWorksStepsGridProps = {
   steps: HowItWorksStep[]
 }
 
 /**
- * Mobile: each step scroll-reveals when it enters the viewport (stacked layout).
- * md+: single staggered reveal when the row enters view (unchanged).
+ * Step columns rise from below the viewport, staggered left → right (UK Boost pattern).
  */
 export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
-  const isDesktop = useHowItWorksDesktopViewport()
+  const gridRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<(HTMLElement | null)[]>([])
+  const isAnimatingRef = useRef(false)
+  const completeTimeoutRef = useRef<number | null>(null)
+  const [hideUntilAnimated, setHideUntilAnimated] = useState(true)
 
-  if (isDesktop) {
-    return (
-      <AnimatedContent
-        className="grid w-full grid-cols-1 gap-4 md:grid-cols-3"
-        {...landingScrollRevealProps}
-      >
-        {steps.map((step) => (
-          <HowItWorksStepColumn key={step.id} step={step} />
-        ))}
-      </AnimatedContent>
+  useEffect(() => {
+    const grid = gridRef.current
+    if (!grid) return undefined
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches
+
+    const getItems = () =>
+      steps
+        .map((_, index) => itemRefs.current[index])
+        .filter((item): item is HTMLElement => item != null)
+
+    const clearCompleteTimeout = () => {
+      if (completeTimeoutRef.current != null) {
+        window.clearTimeout(completeTimeoutRef.current)
+        completeTimeoutRef.current = null
+      }
+    }
+
+    const resetForReplay = () => {
+      clearCompleteTimeout()
+      isAnimatingRef.current = false
+      setHideUntilAnimated(true)
+      clearHowItWorksItemMotionStyles(getItems())
+    }
+
+    const revealImmediately = () => {
+      clearCompleteTimeout()
+      isAnimatingRef.current = false
+      setHideUntilAnimated(false)
+      clearHowItWorksItemMotionStyles(getItems())
+    }
+
+    const playFromViewportBottom = () => {
+      if (isAnimatingRef.current) return
+
+      const items = getItems()
+      if (items.length === 0) return
+
+      isAnimatingRef.current = true
+      setHideUntilAnimated(false)
+
+      clearCompleteTimeout()
+      playHowItWorksEnterAnimation(
+        items,
+        () => {
+          completeTimeoutRef.current = null
+          isAnimatingRef.current = false
+          clearHowItWorksItemMotionStyles(items)
+        },
+        (timeoutId) => {
+          completeTimeoutRef.current = timeoutId
+        },
+      )
+    }
+
+    if (reducedMotion) {
+      revealImmediately()
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          playFromViewportBottom()
+        } else {
+          resetForReplay()
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" },
     )
-  }
+
+    observer.observe(grid)
+
+    return () => {
+      observer.disconnect()
+      clearCompleteTimeout()
+    }
+  }, [steps])
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4">
-      {steps.map((step) => (
-        <AnimatedContent
+    <div
+      ref={gridRef}
+      className="grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+    >
+      {steps.map((step, index) => (
+        <HowItWorksStepColumn
           key={step.id}
-          className="w-full min-w-0"
-          {...landingScrollRevealProps}
-          stagger={0}
-        >
-          <HowItWorksStepColumn step={step} />
-        </AnimatedContent>
+          ref={(node) => {
+            itemRefs.current[index] = node
+          }}
+          step={step}
+          hideUntilAnimated={hideUntilAnimated}
+        />
       ))}
     </div>
   )
