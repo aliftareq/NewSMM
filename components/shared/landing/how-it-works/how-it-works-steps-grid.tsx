@@ -10,13 +10,9 @@ import type { HowItWorksStep } from "@/types/landing/how-it-works"
 /** Matches Tailwind `md` — stacked steps below, 3-column grid at md+. */
 const HOW_IT_WORKS_DESKTOP_MEDIA = "(min-width: 768px)"
 
-function readHowItWorksDesktopViewport(): boolean {
-  if (typeof window === "undefined") return false
-  return window.matchMedia(HOW_IT_WORKS_DESKTOP_MEDIA).matches
-}
-
 function useHowItWorksDesktopViewport(): boolean {
-  const [isDesktop, setIsDesktop] = useState(readHowItWorksDesktopViewport)
+  // Mobile layout first so SSR and the first client render match (avoids hydration errors).
+  const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia(HOW_IT_WORKS_DESKTOP_MEDIA)

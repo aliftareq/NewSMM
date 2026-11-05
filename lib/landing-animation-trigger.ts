@@ -20,7 +20,8 @@ export function resolveLandingRevealTrigger(
 }
 
 export function useLandingLgViewport(): boolean {
-  const [isLg, setIsLg] = useState(readLandingLgViewport)
+  // Default false so SSR and the first client render agree (avoids hydration errors).
+  const [isLg, setIsLg] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia(LANDING_LG_MEDIA)
