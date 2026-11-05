@@ -27,6 +27,7 @@ export function ServicesExplorerCard({
     content.defaultPlatformId
   )
   const [slideDirection, setSlideDirection] = useState(0)
+  const [panelScrollRevealDone, setPanelScrollRevealDone] = useState(false)
 
   const defaultIndex = useMemo(
     () =>
@@ -61,7 +62,12 @@ export function ServicesExplorerCard({
           onSelect={handleSelect}
         />
       </AnimatedContent>
-      <AnimatedServicesPanel platform={activePlatform} direction={slideDirection} />
+      <AnimatedServicesPanel
+        platform={activePlatform}
+        direction={slideDirection}
+        enableScrollReveal={!panelScrollRevealDone}
+        onScrollRevealComplete={() => setPanelScrollRevealDone(true)}
+      />
     </div>
   )
 }

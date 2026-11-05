@@ -295,81 +295,113 @@ export function PlatformTabsRow({
   )
 }
 
-export function ServicesPanel({ platform }: { platform: ServicesModalPlatform }) {
+export function ServicesPanel({
+  platform,
+  enableScrollReveal = true,
+  onScrollRevealComplete,
+}: {
+  platform: ServicesModalPlatform
+  enableScrollReveal?: boolean
+  onScrollRevealComplete?: () => void
+}) {
   const headerIcon = platform.headerIcon ?? platform.icon
   const reveal = landingScrollRevealProps
 
+  const wrap = (
+    className: string,
+    content: React.ReactNode,
+    options?: { delay?: number; stagger?: number; onComplete?: () => void },
+  ) => {
+    if (!enableScrollReveal) {
+      return <div className={className}>{content}</div>
+    }
+    return (
+      <AnimatedContent
+        className={className}
+        {...reveal}
+        stagger={options?.stagger ?? reveal.stagger}
+        delay={options?.delay ?? 0}
+        onComplete={options?.onComplete}
+      >
+        {content}
+      </AnimatedContent>
+    )
+  }
+
+  const headerInner = (
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <PlatformIcon icon={headerIcon} size={37} />
+        <div>
+          <h3 className="text-xl font-semibold leading-[1.35] text-[#0f172a]">
+            {platform.label} Services
+          </h3>
+          <p className="text-sm leading-[1.3] text-n500">{platform.subtitle}</p>
+        </div>
+      </div>
+      <LinkTo
+        href={platform.allServicesHref}
+        className="relative inline-flex h-[49px] shrink-0 items-center justify-center gap-3 rounded-2xl px-6 py-1.5 shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
+        style={{ backgroundColor: platform.theme.allButtonBg }}
+      >
+        <span
+          className="text-sm font-semibold leading-normal"
+          style={{ color: platform.theme.allButtonText }}
+        >
+          {platform.allServicesLabel}
+        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt=""
+          src={SERVICES_EXPLORER_ARROW}
+          width={16}
+          height={16}
+          className="block"
+        />
+      </LinkTo>
+    </div>
+  )
+
+  const completeOnLast = enableScrollReveal ? onScrollRevealComplete : undefined
+
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-6">
-      <AnimatedContent className="w-full" {...reveal} stagger={0} delay={0.05}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <PlatformIcon icon={headerIcon} size={37} />
-            <div>
-              <h3 className="text-xl font-semibold leading-[1.35] text-[#0f172a]">
-                {platform.label} Services
-              </h3>
-              <p className="text-sm leading-[1.3] text-n500">{platform.subtitle}</p>
-            </div>
-          </div>
-          <LinkTo
-            href={platform.allServicesHref}
-            className="relative inline-flex h-[49px] shrink-0 items-center justify-center gap-3 rounded-2xl px-6 py-1.5 shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
-            style={{ backgroundColor: platform.theme.allButtonBg }}
-          >
-            <span
-              className="text-sm font-semibold leading-normal"
-              style={{ color: platform.theme.allButtonText }}
-            >
-              {platform.allServicesLabel}
-            </span>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt=""
-              src={SERVICES_EXPLORER_ARROW}
-              width={16}
-              height={16}
-              className="block"
-            />
-          </LinkTo>
-        </div>
-      </AnimatedContent>
+      {wrap("w-full", headerInner, { stagger: 0, delay: 0.05 })}
 
-      {platform.featured?.length ? (
-        <AnimatedContent
-          className="flex w-full flex-col gap-4 xl:flex-row"
-          {...reveal}
-          delay={0.1}
-        >
-          {platform.featured.map((service) => (
-            <FeaturedServiceCard key={service.id} service={service} platform={platform} />
-          ))}
-        </AnimatedContent>
-      ) : null}
+      {platform.featured?.length
+        ? wrap(
+            "flex w-full flex-col gap-4 xl:flex-row",
+            platform.featured.map((service) => (
+              <FeaturedServiceCard
+                key={service.id}
+                service={service}
+                platform={platform}
+              />
+            )),
+            { delay: 0.1 },
+          )
+        : null}
 
       {platform.grid?.length ? (
         <div className="flex flex-col gap-4">
-          <AnimatedContent
-            className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
-            {...reveal}
-            delay={0.14}
-          >
-            {platform.grid.slice(0, 4).map((service) => (
+          {wrap(
+            "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4",
+            platform.grid.slice(0, 4).map((service) => (
               <GridServiceCard key={service.id} service={service} platform={platform} />
-            ))}
-          </AnimatedContent>
-          <AnimatedContent
-            className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
-            {...reveal}
-            delay={0.18}
-          >
-            {platform.grid.slice(4).map((service) => (
+            )),
+            { delay: 0.14 },
+          )}
+          {wrap(
+            "grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4",
+            platform.grid.slice(4).map((service) => (
               <GridServiceCard key={service.id} service={service} platform={platform} />
-            ))}
-          </AnimatedContent>
+            )),
+            { delay: 0.18, onComplete: completeOnLast },
+          )}
         </div>
       ) : (
-        <AnimatedContent className="w-full" {...reveal} delay={0.1} stagger={0}>
+        wrap(
+          "w-full",
           <div className="rounded-2xl border border-[#ebecef] bg-[#f5f6f7] px-6 py-10 text-center">
             <p className="text-base font-medium text-[#0f172a]">
               Browse all {platform.label} packages
@@ -383,8 +415,9 @@ export function ServicesPanel({ platform }: { platform: ServicesModalPlatform })
             >
               {platform.allServicesLabel}
             </LinkTo>
-          </div>
-        </AnimatedContent>
+          </div>,
+          { delay: 0.1, stagger: 0, onComplete: completeOnLast },
+        )
       )}
     </div>
   )

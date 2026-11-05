@@ -32,9 +32,15 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
     setNavState(state)
   }, [])
 
+  const handleCarouselRevealComplete = useCallback(() => {
+    carouselRef.current?.reInit()
+    carouselRef.current?.resetScroll()
+  }, [])
+
   return (
     <div className="relative z-[1] flex w-full flex-col gap-12 py-16 md:py-20 xl:py-[80px]">
-      <LandingSectionHeadingReveal className="info-container flex w-full flex-col items-center gap-6 px-4 text-center sm:px-6 md:items-stretch md:text-left">
+      <div className="info-container flex w-full flex-col items-center px-4 sm:px-6">
+        <LandingSectionHeadingReveal className="flex w-full flex-col items-center gap-6 text-center md:items-stretch md:text-left">
         <div className="flex w-full flex-col items-center justify-between gap-6 md:flex-row md:items-start md:gap-3">
           <LandingSectionBadge label={content.badgeLabel} />
 
@@ -67,9 +73,15 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
             onNext={() => carouselRef.current?.scrollNext()}
           />
         </div>
-      </LandingSectionHeadingReveal>
+        </LandingSectionHeadingReveal>
+      </div>
 
-      <AnimatedContent className="relative w-full" {...landingScrollRevealProps}>
+      <AnimatedContent
+        className="relative w-full self-stretch"
+        {...landingScrollRevealProps}
+        stagger={0}
+        onComplete={handleCarouselRevealComplete}
+      >
         <WhyChooseUsCarousel
           ref={carouselRef}
           cards={content.cards}

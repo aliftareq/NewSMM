@@ -98,13 +98,26 @@ export function AnimatedPlatformTabs({
 type AnimatedServicesPanelProps = {
   platform: ServicesModalPlatform
   direction: number
+  enableScrollReveal?: boolean
+  onScrollRevealComplete?: () => void
 }
 
-export function AnimatedServicesPanel({ platform, direction }: AnimatedServicesPanelProps) {
+export function AnimatedServicesPanel({
+  platform,
+  direction,
+  enableScrollReveal = true,
+  onScrollRevealComplete,
+}: AnimatedServicesPanelProps) {
   const reduceMotion = useReducedMotion()
 
+  const panelProps = {
+    platform,
+    enableScrollReveal,
+    onScrollRevealComplete,
+  }
+
   if (reduceMotion) {
-    return <ServicesPanel platform={platform} />
+    return <ServicesPanel {...panelProps} />
   }
 
   return (
@@ -124,7 +137,7 @@ export function AnimatedServicesPanel({ platform, direction }: AnimatedServicesP
           }}
           className="min-w-0"
         >
-          <ServicesPanel platform={platform} />
+          <ServicesPanel {...panelProps} />
         </motion.div>
       </AnimatePresence>
     </div>
