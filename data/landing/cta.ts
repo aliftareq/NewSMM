@@ -1,8 +1,8 @@
-import type { PreFooterCtaContent } from "@/types/landing/pre-footer-cta"
+import type { CtaContent } from "@/types/landing/cta"
 
 const CTA_IMG = "/images/landing/pre-footer-cta"
 
-export const preFooterCtaContent: PreFooterCtaContent = {
+export const ctaContent: CtaContent = {
   headingLines: ["Ready to Grow Your Social", "Media Presence?"],
   headingLineTwoPrefix: " ",
   description:

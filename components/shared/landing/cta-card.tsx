@@ -1,7 +1,7 @@
 "use client"
 
-import { preFooterCtaContent } from "@/data/landing/pre-footer-cta"
-import type { PreFooterCtaContent } from "@/types/landing/pre-footer-cta"
+import { ctaContent } from "@/data/landing/cta"
+import type { CtaContent } from "@/types/landing/cta"
 
 import {
   buttonVariants,
@@ -9,7 +9,7 @@ import {
   PrimaryButtonArrow,
 } from "@/components/ui/button"
 import { LinkTo } from "@/components/shared/link-to"
-import { CtaFigmaLayers } from "@/components/shared/landing/pre-footer-cta-figma-layers"
+import { CtaFigmaLayers } from "@/components/shared/landing/cta-figma-layers"
 import { cn } from "@/lib/utils"
 
 export const CTA_DESIGN_WIDTH = 1280
@@ -30,8 +30,8 @@ const CTA_HEADING_CLASS =
 const CTA_DESCRIPTION_CLASS =
   "w-full max-w-[691px] font-sans text-[clamp(0.75rem,1.35cqw,0.9143125rem)] font-medium leading-[1.35] text-white"
 
-type PreFooterCtaCardProps = {
-  content?: PreFooterCtaContent
+type CtaCardProps = {
+  content?: CtaContent
   headingId?: string
 }
 
@@ -39,7 +39,7 @@ function CtaCopyBlock({
   content,
   headingId,
 }: {
-  content: PreFooterCtaContent
+  content: CtaContent
   headingId?: string
 }) {
   return (
@@ -58,7 +58,7 @@ function CtaCopyBlock({
   )
 }
 
-function CtaButtons({ content }: { content: PreFooterCtaContent }) {
+function CtaButtons({ content }: { content: CtaContent }) {
   return (
     <div className="flex flex-row flex-wrap items-center justify-center gap-[14.629px]">
       <LinkTo
@@ -85,10 +85,10 @@ function CtaButtons({ content }: { content: PreFooterCtaContent }) {
   )
 }
 
-export function PreFooterCtaCard({
-  content = preFooterCtaContent,
-  headingId = "pre-footer-cta-heading",
-}: PreFooterCtaCardProps) {
+export function CtaCard({
+  content = ctaContent,
+  headingId = "landing-cta-heading",
+}: CtaCardProps) {
   return (
     <div
       className={cn(
