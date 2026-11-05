@@ -132,6 +132,7 @@ export function WhoItsForCardsStage({
 }: WhoItsForCardsStageProps) {
   const isDesktop = useLandingLgViewport()
   const rootRef = useRef<HTMLDivElement>(null)
+  const stageRowRef = useRef<HTMLDivElement>(null)
   const stepperRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const spreadTimelineRef = useRef<gsap.core.Timeline | null>(null)
@@ -152,9 +153,10 @@ export function WhoItsForCardsStage({
     }
 
     const root = rootRef.current
+    const stageRow = stageRowRef.current
     const stepper = stepperRef.current
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
-    if (!root || cards.length === 0) return undefined
+    if (!root || !stageRow || cards.length === 0) return undefined
 
     hasPlayedRef.current = false
     setStepperRevealed(false)
@@ -171,7 +173,7 @@ export function WhoItsForCardsStage({
       return undefined
     }
 
-    gsap.set(cards, { clearProps: "transform,zIndex" })
+    gsap.set(cards, { clearProps: "transform,zIndex", opacity: 0 })
     if (stepper) {
       gsap.set(stepper, { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" })
       const { topClip, bottomClip } = getStepperLineClips(stepper)
@@ -290,8 +292,8 @@ export function WhoItsForCardsStage({
       }
 
       const trigger = ScrollTrigger.create({
-        trigger: root,
-        start: "top 82%",
+        trigger: stageRow,
+        start: "center center",
         once: true,
         onEnter: () => {
           requestAnimationFrame(runSequence)
@@ -317,7 +319,10 @@ export function WhoItsForCardsStage({
       className="relative w-full max-w-[1320px]"
       data-slot="who-its-for-cards-stage"
     >
-      <div className="relative flex w-full flex-col gap-5 lg:flex-row lg:items-stretch lg:justify-between">
+      <div
+        ref={stageRowRef}
+        className="relative flex w-full flex-col gap-5 lg:flex-row lg:items-stretch lg:justify-between"
+      >
         <div className="relative z-10 flex flex-1 flex-col gap-5 lg:max-w-[582px]">
           {audiencesLeft.map((audience, index) => (
             <WhoItsForCardSlot
