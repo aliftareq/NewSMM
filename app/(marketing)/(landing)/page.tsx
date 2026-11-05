@@ -12,7 +12,7 @@ import { StatsHighlightSection } from "@/components/shared/landing/stats-highlig
 
 export default function LandingPage() {
   return (
-    <main>
+    <main className="m-0 p-0">
       <HeroSection />
       <StatsHighlightSection />
       <ExploreAllServicesSection />

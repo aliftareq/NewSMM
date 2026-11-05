@@ -7,15 +7,15 @@ type HeroSectionProps = {
   content?: LandingHeroContent
 }
 
-/** Figma: nav 100px tall, hero content starts at y=220 → 120px below nav */
-const HERO_CONTENT_OFFSET_PX = 120
+/** Figma: nav ~100px overlay + 120px gap → content starts 220px from section top */
+const HERO_CONTENT_PADDING_TOP_PX = 220
 
 export function HeroSection({ content = landingHeroContent }: HeroSectionProps) {
   return (
     <section className="landing-hero-shell relative isolate overflow-x-clip bg-white pb-[120px]">
       <HeroSectionContent
         content={content}
-        contentOffsetPx={HERO_CONTENT_OFFSET_PX}
+        contentPaddingTopPx={HERO_CONTENT_PADDING_TOP_PX}
       />
     </section>
   )

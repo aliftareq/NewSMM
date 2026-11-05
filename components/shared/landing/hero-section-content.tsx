@@ -24,12 +24,12 @@ const HERO_ENTRANCE = {
 
 type HeroSectionContentProps = {
   content: LandingHeroContent
-  contentOffsetPx: number
+  contentPaddingTopPx: number
 }
 
 export function HeroSectionContent({
   content,
-  contentOffsetPx,
+  contentPaddingTopPx,
 }: HeroSectionContentProps) {
   const reduceMotion = useReducedMotion()
   const [visualEffectsReady, setVisualEffectsReady] = useState(Boolean(reduceMotion))
@@ -54,14 +54,14 @@ export function HeroSectionContent({
       <HeroBackgroundLayer content={content.assets} />
 
       <MarketingNavbar
-        className="relative z-20"
+        overlay
         mountReveal
         onMountRevealComplete={markEntranceLayerComplete}
       />
 
       <div
         className="info-container relative z-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,684px)_minmax(0,480px)] lg:justify-between lg:gap-[156px]"
-        style={{ marginTop: contentOffsetPx }}
+        style={{ paddingTop: contentPaddingTopPx }}
       >
         <AnimatedContent
           className="flex w-full max-w-[684px] flex-col gap-7"
