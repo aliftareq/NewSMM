@@ -15,21 +15,11 @@ import type { WhoItsForAudience } from "@/types/landing/who-its-for"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const SPREAD_DURATION = 1
-const SPREAD_EASE = "power3.out"
-
 type WhoItsForCardsStageProps = {
   audiencesLeft: WhoItsForAudience[]
   audiencesRight: WhoItsForAudience[]
   dividerSrc: string
   stepperSrc: string
-}
-
-type CardSlotMetrics = {
-  left: number
-  top: number
-  width: number
-  height: number
 }
 
 function setCardRef(
@@ -47,7 +37,6 @@ export function WhoItsForCardsStage({
   stepperSrc,
 }: WhoItsForCardsStageProps) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const layoutRef = useRef<HTMLDivElement>(null)
   const stepperRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const spreadTimelineRef = useRef<gsap.core.Timeline | null>(null)
@@ -58,10 +47,9 @@ export function WhoItsForCardsStage({
 
   useLayoutEffect(() => {
     const root = rootRef.current
-    const layout = layoutRef.current
     const stepper = stepperRef.current
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
-    if (!root || !layout || cards.length === 0) return undefined
+    if (!root || cards.length === 0) return undefined
 
     hasPlayedRef.current = false
     setStepperRevealed(false)
@@ -76,8 +64,7 @@ export function WhoItsForCardsStage({
       return undefined
     }
 
-    gsap.set(cards, { clearProps: "all" })
-    gsap.set(layout, { clearProps: "minHeight" })
+    gsap.set(cards, { clearProps: "transform,zIndex" })
     if (stepper) {
       gsap.set(stepper, { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" })
     }
@@ -103,53 +90,6 @@ export function WhoItsForCardsStage({
     }
 
     const ctx = gsap.context(() => {
-      const measureSlots = (): CardSlotMetrics[] => {
-        const layoutRect = layout.getBoundingClientRect()
-        return cards.map((el) => {
-          const rect = el.getBoundingClientRect()
-          return {
-            left: rect.left - layoutRect.left,
-            top: rect.top - layoutRect.top,
-            width: rect.width,
-            height: rect.height,
-          }
-        })
-      }
-
-      const stackCards = (slots: CardSlotMetrics[]) => {
-        const layoutWidth = layout.offsetWidth
-        const layoutHeight = layout.offsetHeight
-        const centerX = layoutWidth / 2
-        const centerY = layoutHeight / 2
-        const maxW = Math.max(...slots.map((s) => s.width))
-        const maxH = Math.max(...slots.map((s) => s.height))
-        const stackLeft = centerX - maxW / 2
-        const stackTop = centerY - maxH / 2
-
-        gsap.set(layout, {
-          position: "relative",
-          minHeight: layoutHeight,
-        })
-
-        cards.forEach((el, i) => {
-          gsap.set(el, {
-            position: "absolute",
-            left: stackLeft + (maxW - slots[i].width) / 2,
-            top: stackTop + (maxH - slots[i].height) / 2,
-            width: slots[i].width,
-            margin: 0,
-            zIndex: 20 + i,
-            x: 0,
-            y: 0,
-            scale: 0.96,
-            opacity: 0.92,
-            force3D: true,
-          })
-        })
-
-        return slots
-      }
-
       const runSpread = () => {
         if (hasPlayedRef.current) return
         hasPlayedRef.current = true
@@ -157,13 +97,30 @@ export function WhoItsForCardsStage({
         spreadTimelineRef.current?.kill()
         gsap.killTweensOf(cards)
 
-        const slots = measureSlots()
-        stackCards(slots)
+        const rootRect = root.getBoundingClientRect()
+        const centerX = rootRect.width / 2
+        const centerY = rootRect.height / 2
+
+        const offsets = cards.map((el, index) => {
+          const rect = el.getBoundingClientRect()
+          const cardCenterX = rect.left + rect.width / 2 - rootRect.left
+          const cardCenterY = rect.top + rect.height / 2 - rootRect.top
+          return {
+            x: centerX - cardCenterX,
+            y: centerY - cardCenterY + index * 6,
+          }
+        })
+
+        gsap.set(cards, {
+          x: (i) => offsets[i]?.x ?? 0,
+          y: (i) => offsets[i]?.y ?? 0,
+          zIndex: (i) => 20 + i,
+          force3D: true,
+        })
 
         const tl = gsap.timeline({
           onComplete: () => {
-            gsap.set(cards, { clearProps: "all" })
-            gsap.set(layout, { clearProps: "minHeight,position" })
+            gsap.set(cards, { clearProps: "transform,zIndex" })
             revealStepper()
             spreadTimelineRef.current = null
           },
@@ -171,19 +128,13 @@ export function WhoItsForCardsStage({
 
         spreadTimelineRef.current = tl
 
-        tl.to(
-          cards,
-          {
-            left: (i) => slots[i]?.left ?? 0,
-            top: (i) => slots[i]?.top ?? 0,
-            scale: 1,
-            opacity: 1,
-            duration: SPREAD_DURATION,
-            ease: SPREAD_EASE,
-            overwrite: "auto",
-          },
-          0,
-        )
+        tl.to(cards, {
+          x: 0,
+          y: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: { each: 0.09, from: "center" },
+        })
       }
 
       const trigger = ScrollTrigger.create({
@@ -214,16 +165,13 @@ export function WhoItsForCardsStage({
       className="relative w-full max-w-[1320px]"
       data-slot="who-its-for-cards-stage"
     >
-      <div
-        ref={layoutRef}
-        className="relative flex w-full flex-col gap-5 lg:flex-row lg:items-stretch lg:justify-between"
-      >
+      <div className="relative flex w-full flex-col gap-5 lg:flex-row lg:items-stretch lg:justify-between">
         <div className="relative z-10 flex flex-1 flex-col gap-5 lg:max-w-[582px]">
           {audiencesLeft.map((audience, index) => (
             <div
               key={audience.id}
               ref={(node) => setCardRef(cardRefs, index, node)}
-              className="will-change-[left,top,transform,opacity]"
+              className="will-change-transform"
             >
               <WhoItsForAudienceCard
                 audience={audience}
@@ -248,7 +196,7 @@ export function WhoItsForCardsStage({
               ref={(node) =>
                 setCardRef(cardRefs, index + audiencesLeft.length, node)
               }
-              className="will-change-[left,top,transform,opacity]"
+              className="will-change-transform"
             >
               <WhoItsForAudienceCard
                 audience={audience}
