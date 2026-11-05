@@ -35,13 +35,14 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
 
           <h2
             id="landing-why-choose-us-heading"
-            className="text-center text-[32px] leading-[39px] font-semibold text-black md:text-right"
+            className="text-center text-[32px] leading-[39px] font-semibold text-black md:flex md:flex-col md:items-end"
           >
-            {content.headingLineOnePrimary}
-            <br className="md:hidden" aria-hidden />
-            <span className="text-[#21aeff]">{content.headingLineOneAccent}</span>
-            <br className="hidden md:block" aria-hidden />
-            <span className="text-[#21aeff] max-md:before:content-['\00a0'] md:before:content-none">
+            <span className="md:block md:w-full md:text-right">
+              {content.headingLineOnePrimary}
+              <br className="md:hidden" aria-hidden />
+              <span className="text-[#21aeff]">{content.headingLineOneAccent}</span>
+            </span>
+            <span className="text-[#21aeff] max-md:before:content-['\00a0'] md:block md:w-full md:self-start md:text-left">
               {content.headingLineTwoAccent}
             </span>
           </h2>

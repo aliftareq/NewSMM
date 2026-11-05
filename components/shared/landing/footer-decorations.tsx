@@ -1,5 +1,7 @@
 import type { LandingFooterContent } from "@/types/landing/footer"
 
+import { cn } from "@/lib/utils"
+
 type FooterDecorationsProps = {
   assets: LandingFooterContent["assets"]
 }
@@ -16,9 +18,11 @@ function GlassStripe() {
 function GlareStar({
   className,
   src,
+  shineDelay = "a",
 }: {
   className: string
   src: string
+  shineDelay?: "a" | "b"
 }) {
   return (
     <div className={className} aria-hidden>
@@ -28,7 +32,12 @@ function GlareStar({
         src={src}
         width={136}
         height={144}
-        className="block h-[52px] w-[49px] max-w-none object-contain sm:h-[71.619px] sm:w-[67.882px]"
+        className={cn(
+          "footer-glare-star block h-[52px] w-[49px] max-w-none object-contain sm:h-[71.619px] sm:w-[67.882px]",
+          shineDelay === "b"
+            ? "footer-glare-star--delay-b"
+            : "footer-glare-star--delay-a",
+        )}
       />
     </div>
   )
@@ -81,12 +90,14 @@ export function FooterDecorations({ assets }: FooterDecorationsProps) {
       <GlareStar
         className="pointer-events-none absolute top-[209px] left-[max(1rem,calc(50%-960px+161px))] z-[3] hidden min-[1920px]:left-[161px] xl:block"
         src={assets.glareStarLeft}
+        shineDelay="a"
       />
 
       {/* z-4 — CTA area top-right sparkle (desktop) */}
       <GlareStar
         className="pointer-events-none absolute top-[42px] right-[max(1rem,calc(50%-960px+98px))] z-[4] hidden min-[1920px]:right-[98px] xl:block"
         src={assets.glareStarRight}
+        shineDelay="b"
       />
     </>
   )

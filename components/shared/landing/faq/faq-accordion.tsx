@@ -7,12 +7,12 @@ import type { LandingFaqContent } from "@/types/landing/faq"
 
 type FaqAccordionProps = {
   content: Pick<LandingFaqContent, "leftColumn" | "rightColumn">
-  defaultOpenId?: string
+  defaultOpenId?: string | null
 }
 
 export function FaqAccordion({
   content,
-  defaultOpenId = "legal-bangladesh",
+  defaultOpenId = null,
 }: FaqAccordionProps) {
   const [openId, setOpenId] = useState<string | null>(defaultOpenId)
 

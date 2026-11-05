@@ -38,13 +38,13 @@ export function ComparisonSideLabel({
       {/* Mobile / tablet: horizontal strip above card */}
       <div
         className={cn(
-          "flex w-full items-center justify-center rounded-t-[20px] px-4 py-3 xl:hidden",
+          "flex w-full min-w-0 items-center justify-center rounded-t-[20px] px-4 py-3 xl:hidden",
           variant === "positive"
             ? "bg-gradient-to-r from-[#38b5e6] to-[#30a3f4]"
             : "bg-gradient-to-r from-[#ff6889] to-[#e11d48]",
         )}
       >
-        <span className="text-center text-lg font-semibold capitalize text-white sm:text-xl">
+        <span className="text-center text-base font-semibold capitalize text-white sm:text-lg md:text-xl">
           {label}
         </span>
       </div>

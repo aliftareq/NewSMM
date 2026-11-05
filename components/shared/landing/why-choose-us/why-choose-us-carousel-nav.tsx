@@ -15,11 +15,11 @@ type WhyChooseUsCarouselNavProps = Pick<
 }
 
 const navButtonClassName = cn(
-  "group flex size-10 shrink-0 items-center justify-center rounded-full border border-[#1698e3] bg-white p-2",
-  "transition-colors duration-150 outline-none select-none",
+  "why-choose-us-carousel-nav__button group flex size-10 shrink-0 items-center justify-center rounded-full border border-[#1698e3] bg-white p-2",
+  "touch-manipulation transition-colors duration-150 outline-none select-none",
   "hover:enabled:bg-[#1698e3] active:enabled:bg-[#1698e3]",
   "focus-visible:ring-[3px] focus-visible:ring-[#1698e3]/35",
-  "disabled:pointer-events-none disabled:border-[#b8dff5] disabled:bg-white"
+  "disabled:pointer-events-none disabled:border-[#b8dff5] disabled:bg-white",
 )
 
 type NavChevronProps = {
@@ -46,7 +46,7 @@ function NavChevron({
         height={23}
         unoptimized
         className={cn(
-          "size-[22px] transition-opacity duration-150",
+          "why-choose-us-carousel-nav__icon-default size-[22px] transition-opacity duration-150",
           enabled && "group-hover:opacity-0 group-active:opacity-0",
           !enabled && "opacity-40",
           defaultClassName
@@ -60,7 +60,7 @@ function NavChevron({
           height={23}
           unoptimized
           className={cn(
-            "absolute size-[22px] opacity-0 transition-opacity duration-150",
+            "why-choose-us-carousel-nav__icon-hover absolute size-[22px] opacity-0 transition-opacity duration-150",
             "group-hover:opacity-100 group-active:opacity-100",
             hoverClassName
           )}
@@ -80,7 +80,7 @@ export function WhyChooseUsCarouselNav({
   className,
 }: WhyChooseUsCarouselNavProps) {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("why-choose-us-carousel-nav flex items-center gap-2", className)}>
       <button
         type="button"
         aria-label="Previous services"

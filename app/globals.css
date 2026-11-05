@@ -239,6 +239,66 @@
   }
 }
 
+@keyframes comparison-vs-badge-ring-dash-spin {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes comparison-vs-badge-sphere-glow {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes comparison-vs-badge-sphere-halo {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(33, 174, 255, 0.45))
+      drop-shadow(0 0 22px rgba(22, 152, 227, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(33, 174, 255, 0.75))
+      drop-shadow(0 0 36px rgba(22, 152, 227, 0.45))
+      drop-shadow(0 0 52px rgba(38, 157, 231, 0.2));
+  }
+}
+
+@keyframes footer-glare-star-shine {
+  0%,
+  100% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.55))
+      drop-shadow(0 0 10px rgba(33, 174, 255, 0.35));
+    transform: scale(0.96);
+  }
+  35% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85))
+      drop-shadow(0 0 22px rgba(33, 174, 255, 0.65));
+    transform: scale(1.06);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 24px rgba(33, 174, 255, 0.9))
+      drop-shadow(0 0 40px rgba(255, 230, 160, 0.55));
+    transform: scale(1.14);
+  }
+  65% {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.75))
+      drop-shadow(0 0 18px rgba(33, 174, 255, 0.5));
+    transform: scale(1.04);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-stats-avatar-marquee-ltr,
   .animate-stats-avatar-marquee-rtl,
@@ -256,6 +316,34 @@
 
   .hero-social-idle-float {
     animation: none !important;
+  }
+
+  .comparison-vs-badge__ring-stroke,
+  .comparison-vs-badge__sphere-glow,
+  .comparison-vs-badge__sphere-halo {
+    animation: none !important;
+  }
+
+  .comparison-panel-entrance--left,
+  .comparison-panel-entrance--right {
+    opacity: 1;
+    transform: none;
+  }
+
+  .footer-glare-star {
+    animation: none !important;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
+  }
+
+  .comparison-vs-badge__sphere-glow {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+
+  .comparison-vs-badge__sphere-halo {
+    filter: drop-shadow(0 0 14px rgba(33, 174, 255, 0.5))
+      drop-shadow(0 0 28px rgba(22, 152, 227, 0.3));
   }
 }
 
@@ -368,6 +456,91 @@
   .hero-social-idle-float {
     animation: hero-social-idle-float 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95)
       infinite;
+  }
+
+  /* Match getEntranceOffsets() in what-makes-us-different-comparison.tsx */
+  .comparison-panel-entrance--left {
+    opacity: 0;
+    transform: translate3d(-56px, 24px, 0);
+  }
+
+  .comparison-panel-entrance--right {
+    opacity: 0;
+    transform: translate3d(56px, 24px, 0);
+  }
+
+  @media (min-width: 80rem) {
+    .comparison-panel-entrance--left {
+      transform: translate3d(-80px, 0, 0);
+    }
+
+    .comparison-panel-entrance--right {
+      transform: translate3d(80px, 0, 0);
+    }
+  }
+
+  .comparison-vs-badge__ring-stroke {
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: comparison-vs-badge-ring-dash-spin 4s linear infinite;
+  }
+
+  .comparison-vs-badge__sphere {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .comparison-vs-badge__sphere-glow {
+    position: absolute;
+    inset: -16%;
+    z-index: 0;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle,
+      rgba(33, 174, 255, 0.45) 0%,
+      rgba(33, 174, 255, 0.22) 42%,
+      rgba(22, 152, 227, 0.1) 58%,
+      transparent 74%
+    );
+    pointer-events: none;
+    transform-origin: center;
+    animation: comparison-vs-badge-sphere-glow 2.8s ease-in-out infinite;
+  }
+
+  .comparison-vs-badge__sphere-halo {
+    overflow: visible;
+    will-change: filter;
+    animation: comparison-vs-badge-sphere-halo 2.8s ease-in-out infinite;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .why-choose-us-carousel-nav__button:active:enabled {
+      background-color: #1698e3;
+    }
+
+    .why-choose-us-carousel-nav__button:active:enabled
+      .why-choose-us-carousel-nav__icon-default {
+      opacity: 0;
+    }
+
+    .why-choose-us-carousel-nav__button:active:enabled
+      .why-choose-us-carousel-nav__icon-hover {
+      opacity: 1;
+    }
+  }
+
+  .footer-glare-star {
+    transform-origin: center;
+    will-change: transform, opacity, filter;
+    animation: footer-glare-star-shine 2.4s ease-in-out infinite;
+  }
+
+  .footer-glare-star--delay-a {
+    animation-delay: 0s;
+  }
+
+  .footer-glare-star--delay-b {
+    animation-delay: 1.1s;
   }
 }
 

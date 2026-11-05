@@ -26,7 +26,7 @@ export function FooterCta({ cta, glareStarLeft, glareStarRight }: FooterCtaProps
           src={glareStarRight}
           width={136}
           height={144}
-          className="block h-[44px] w-[42px] object-contain sm:h-[52px] sm:w-[49px]"
+          className="footer-glare-star footer-glare-star--delay-b block h-[44px] w-[42px] object-contain sm:h-[52px] sm:w-[49px]"
         />
       </div>
       <div
@@ -39,7 +39,7 @@ export function FooterCta({ cta, glareStarLeft, glareStarRight }: FooterCtaProps
           src={glareStarLeft}
           width={136}
           height={144}
-          className="block h-[44px] w-[42px] object-contain sm:h-[52px] sm:w-[49px]"
+          className="footer-glare-star footer-glare-star--delay-a block h-[44px] w-[42px] object-contain sm:h-[52px] sm:w-[49px]"
         />
       </div>
 
