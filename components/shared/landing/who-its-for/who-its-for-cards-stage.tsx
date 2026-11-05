@@ -11,6 +11,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 import { WhoItsForAudienceCard } from "@/components/shared/landing/who-its-for/who-its-for-audience-card"
 import { WhoItsForCenterStepper } from "@/components/shared/landing/who-its-for/who-its-for-center-stepper"
+import {
+  WHO_ITS_FOR_STEPPER_BOTTOM_CIRCLE_Y,
+  WHO_ITS_FOR_STEPPER_CENTER_Y,
+  WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
+  WHO_ITS_FOR_STEPPER_TOP_CIRCLE_Y,
+} from "@/components/shared/landing/who-its-for/who-its-for-center-stepper-graphic"
 import type { WhoItsForAudience } from "@/types/landing/who-its-for"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -19,7 +25,6 @@ type WhoItsForCardsStageProps = {
   audiencesLeft: WhoItsForAudience[]
   audiencesRight: WhoItsForAudience[]
   dividerSrc: string
-  stepperSrc: string
 }
 
 function setCardRef(
@@ -30,11 +35,54 @@ function setCardRef(
   refs.current[index] = node
 }
 
+function getStepperLineClips(stepper: HTMLDivElement | null) {
+  if (!stepper) return { topClip: null, bottomClip: null }
+  return {
+    topClip: stepper.querySelector(
+      '[data-slot="who-its-for-stepper-line-top-clip"]',
+    ) as SVGRectElement | null,
+    bottomClip: stepper.querySelector(
+      '[data-slot="who-its-for-stepper-line-bottom-clip"]',
+    ) as SVGRectElement | null,
+  }
+}
+
+function setStepperLinesHidden(topClip: SVGRectElement | null, bottomClip: SVGRectElement | null) {
+  if (topClip) {
+    gsap.set(topClip, {
+      attr: { y: WHO_ITS_FOR_STEPPER_TOP_CIRCLE_Y, height: 0 },
+    })
+  }
+  if (bottomClip) {
+    gsap.set(bottomClip, {
+      attr: { y: WHO_ITS_FOR_STEPPER_BOTTOM_CIRCLE_Y, height: 0 },
+    })
+  }
+}
+
+function setStepperLinesRevealed(topClip: SVGRectElement | null, bottomClip: SVGRectElement | null) {
+  if (topClip) {
+    gsap.set(topClip, {
+      attr: {
+        y: WHO_ITS_FOR_STEPPER_TOP_CIRCLE_Y,
+        height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
+      },
+    })
+  }
+  if (bottomClip) {
+    gsap.set(bottomClip, {
+      attr: {
+        y: WHO_ITS_FOR_STEPPER_CENTER_Y,
+        height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
+      },
+    })
+  }
+}
+
 export function WhoItsForCardsStage({
   audiencesLeft,
   audiencesRight,
   dividerSrc,
-  stepperSrc,
 }: WhoItsForCardsStageProps) {
   const rootRef = useRef<HTMLDivElement>(null)
   const stepperRef = useRef<HTMLDivElement>(null)
@@ -61,12 +109,16 @@ export function WhoItsForCardsStage({
     if (reduce) {
       setStepperRevealed(true)
       setLogomarkSplitReveal(true)
+      const { topClip, bottomClip } = getStepperLineClips(stepper)
+      setStepperLinesRevealed(topClip, bottomClip)
       return undefined
     }
 
     gsap.set(cards, { clearProps: "transform,zIndex" })
     if (stepper) {
       gsap.set(stepper, { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" })
+      const { topClip, bottomClip } = getStepperLineClips(stepper)
+      setStepperLinesHidden(topClip, bottomClip)
     }
 
     const ctx = gsap.context(() => {
@@ -125,6 +177,9 @@ export function WhoItsForCardsStage({
 
         spreadTimelineRef.current = tl
 
+        const { topClip, bottomClip } = getStepperLineClips(stepper ?? null)
+        setStepperLinesHidden(topClip, bottomClip)
+
         if (stepper) {
           tl.fromTo(
             stepper,
@@ -138,6 +193,31 @@ export function WhoItsForCardsStage({
           )
         }
 
+        const lineDuration = 0.85
+        if (topClip && bottomClip) {
+          tl.to(
+            topClip,
+            {
+              attr: { height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT },
+              duration: lineDuration,
+              ease: "power2.inOut",
+            },
+            "-=0.1",
+          )
+          tl.to(
+            bottomClip,
+            {
+              attr: {
+                y: WHO_ITS_FOR_STEPPER_CENTER_Y,
+                height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
+              },
+              duration: lineDuration,
+              ease: "power2.inOut",
+            },
+            "<",
+          )
+        }
+
         tl.call(() => setLogomarkSplitReveal(true))
 
         const spreadToSlot = {
@@ -148,7 +228,7 @@ export function WhoItsForCardsStage({
           ease: "power2.inOut",
         }
 
-        tl.to([cards[0], cards[3]], spreadToSlot, "+=0.3")
+        tl.to([cards[0], cards[3]], spreadToSlot, "+=0.25")
         tl.to([cards[1], cards[2]], spreadToSlot, "<")
       }
 
@@ -198,7 +278,6 @@ export function WhoItsForCardsStage({
 
         <WhoItsForCenterStepper
           ref={stepperRef}
-          stepperSrc={stepperSrc}
           revealed={stepperRevealed}
           logomarkSplitReveal={logomarkSplitReveal}
           className="z-0"

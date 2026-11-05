@@ -71,7 +71,6 @@ export function WhoItsForSection({
           audiencesLeft={audiencesLeft}
           audiencesRight={audiencesRight}
           dividerSrc={assets.cardDividerSrc}
-          stepperSrc={assets.centerStepperSrc}
         />
       </div>
     </section>

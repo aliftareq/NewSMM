@@ -1,16 +1,15 @@
 "use client"
 
-import Image from "next/image"
 import { forwardRef } from "react"
 
 import {
   BrandLogomarkSplit,
   WHO_ITS_FOR_CENTER_LOGOMARK,
 } from "@/components/shared/landing/brand-logomark-split"
+import { WhoItsForCenterStepperGraphic } from "@/components/shared/landing/who-its-for/who-its-for-center-stepper-graphic"
 import { cn } from "@/lib/utils"
 
 type WhoItsForCenterStepperProps = {
-  stepperSrc: string
   className?: string
   /** Mount logomark in stacked state before center reveal animation. */
   revealed?: boolean
@@ -23,7 +22,7 @@ export const WhoItsForCenterStepper = forwardRef<
   HTMLDivElement,
   WhoItsForCenterStepperProps
 >(function WhoItsForCenterStepper(
-  { stepperSrc, className, revealed = false, logomarkSplitReveal = false },
+  { className, revealed = false, logomarkSplitReveal = false },
   ref,
 ) {
   return (
@@ -37,17 +36,10 @@ export const WhoItsForCenterStepper = forwardRef<
       data-slot="who-its-for-center-stepper"
     >
       <div className="relative mx-auto h-[342px] w-9">
-        <Image
-          src={stepperSrc}
-          alt=""
-          width={36}
-          height={342}
-          className="size-full object-contain"
-          unoptimized
-        />
+        <WhoItsForCenterStepperGraphic />
         <div
           data-slot="who-its-for-logomark-anchor"
-          className="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-visible rounded-xl border border-[#86d3ff] bg-white"
+          className="absolute left-1/2 top-1/2 z-10 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-visible rounded-xl border border-[#86d3ff] bg-white"
         >
           <div className="relative h-9 w-[46px] overflow-visible">
             <BrandLogomarkSplit
