@@ -330,6 +330,11 @@
     transform: none;
   }
 
+  .footer-reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
   .footer-glare-star {
     animation: none !important;
     opacity: 0.85;
@@ -477,6 +482,11 @@
     .comparison-panel-entrance--right {
       transform: translate3d(80px, 0, 0);
     }
+  }
+
+  .footer-reveal-item {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
   }
 
   .comparison-vs-badge__ring-stroke {
