@@ -10,6 +10,11 @@ import {
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
+import {
+  resolveLandingRevealTrigger,
+  useLandingLgViewport,
+} from "@/lib/landing-animation-trigger"
+
 import "./fold-text.css"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -88,6 +93,11 @@ export function FoldText({
   className = "",
   style = {},
 }: FoldTextProps) {
+  const isLgViewport = useLandingLgViewport()
+  const effectiveTrigger =
+    trigger === "mount"
+      ? resolveLandingRevealTrigger("mount", isLgViewport)
+      : trigger
   const rootRef = useRef<HTMLSpanElement>(null)
   const safeHinge = HINGES[hinge] ? hinge : "top"
   const hingeConfig = HINGES[safeHinge]
@@ -98,7 +108,7 @@ export function FoldText({
   const safeDelay = Math.max(0, loopDelay)
   const safeRadius = Math.max(1, refoldRadius)
   const safeRefold = clamp(refoldAngle, 0, 180)
-  const startsFolded = trigger !== "hover"
+  const startsFolded = effectiveTrigger !== "hover"
 
   const segments = useMemo(() => {
     const renderPiece = (content: string, key: string, isLine = false) => (
@@ -308,10 +318,10 @@ export function FoldText({
 
     const handleEnter = () => play(false)
 
-    if (trigger === "hover") {
+    if (effectiveTrigger === "hover") {
       render()
       root.addEventListener("mouseenter", handleEnter)
-    } else if (trigger === "scroll") {
+    } else if (effectiveTrigger === "scroll") {
       render()
       scrollTrigger = ScrollTrigger.create({
         trigger: root,
@@ -319,8 +329,9 @@ export function FoldText({
         once: true,
         onEnter: handleEnter,
       })
+      ScrollTrigger.refresh()
     } else {
-      play(trigger === "loop")
+      play(effectiveTrigger === "loop")
     }
 
     let pointer: { x: number; y: number } | null = null
@@ -439,7 +450,8 @@ export function FoldText({
     safeAngle,
     ease,
     safeCrease,
-    trigger,
+    effectiveTrigger,
+    isLgViewport,
     safeDelay,
     hoverRefold,
     safeRadius,

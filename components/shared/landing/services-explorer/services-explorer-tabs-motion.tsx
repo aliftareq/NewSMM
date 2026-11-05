@@ -49,7 +49,7 @@ export function AnimatedPlatformTabs({
     <div
       role="tablist"
       aria-label="Social platforms"
-      className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 xl:grid xl:grid-cols-8 xl:overflow-visible"
+      className="-mx-1 grid grid-cols-2 gap-3 px-1 pb-1 xl:grid-cols-8"
     >
       {platforms.map((platform, index) => {
         const active = platform.id === activeId
@@ -63,7 +63,7 @@ export function AnimatedPlatformTabs({
             aria-selected={active}
             onClick={() => onSelect(platform.id, index)}
             className={cn(
-              "relative flex min-w-[120px] shrink-0 flex-1 flex-col items-center justify-center rounded-xl p-4 xl:min-w-0",
+              "relative flex w-full min-w-0 flex-col items-center justify-center rounded-xl p-3 xl:min-w-0 xl:p-4",
               active
                 ? "z-10 text-white"
                 : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
@@ -84,9 +84,9 @@ export function AnimatedPlatformTabs({
                 />
               )
             ) : null}
-            <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
+            <span className="relative z-10 flex items-center gap-2 whitespace-nowrap text-sm xl:text-base">
               <PlatformIcon icon={platform.icon} />
-              <span className="text-base font-medium leading-[1.35]">{label}</span>
+              <span className="font-medium leading-[1.35]">{label}</span>
             </span>
           </button>
         )

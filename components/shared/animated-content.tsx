@@ -10,6 +10,11 @@ import {
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
+import {
+  resolveLandingRevealTrigger,
+  useLandingLgViewport,
+} from "@/lib/landing-animation-trigger"
+
 gsap.registerPlugin(ScrollTrigger)
 
 const useIsomorphicLayoutEffect =
@@ -92,6 +97,8 @@ export function AnimatedContent({
   className = "",
   style,
 }: AnimatedContentProps) {
+  const isLgViewport = useLandingLgViewport()
+  const effectiveTrigger = resolveLandingRevealTrigger(trigger, isLgViewport)
   const ref = useRef<HTMLDivElement>(null)
   const callbacksRef = useRef({
     onStart,
@@ -203,7 +210,7 @@ export function AnimatedContent({
       })
       tl.fromTo(targets, from, to, scrub ? 0 : Math.max(delay, 0))
 
-      if (trigger === "mount") {
+      if (effectiveTrigger === "mount") {
         tl.play()
         return
       }
@@ -239,8 +246,12 @@ export function AnimatedContent({
       })
     }, el)
 
+    ScrollTrigger.refresh()
+
     return () => ctx.revert()
   }, [
+    isLgViewport,
+    effectiveTrigger,
     container,
     distance,
     direction,
@@ -258,7 +269,6 @@ export function AnimatedContent({
     delay,
     stagger,
     staggerFrom,
-    trigger,
     once,
     scrub,
     disappearAfter,

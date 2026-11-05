@@ -39,7 +39,7 @@ export function MarketingNavbarBrandCluster({
         </LinkTo>
       </div>
 
-      <div className="hidden shrink-0 sm:block">{servicesButton}</div>
+      <div className="hidden shrink-0 lg:block">{servicesButton}</div>
     </div>
   )
 }

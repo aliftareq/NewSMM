@@ -9,6 +9,7 @@ import {
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
+import { AnimatedContent } from "@/components/shared/animated-content"
 import { WhoItsForAudienceCard } from "@/components/shared/landing/who-its-for/who-its-for-audience-card"
 import { WhoItsForCenterStepper } from "@/components/shared/landing/who-its-for/who-its-for-center-stepper"
 import {
@@ -17,6 +18,8 @@ import {
   WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
   WHO_ITS_FOR_STEPPER_TOP_CIRCLE_Y,
 } from "@/components/shared/landing/who-its-for/who-its-for-center-stepper-graphic"
+import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
+import { useLandingLgViewport } from "@/lib/landing-animation-trigger"
 import type { WhoItsForAudience } from "@/types/landing/who-its-for"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -33,6 +36,49 @@ function setCardRef(
   node: HTMLDivElement | null,
 ) {
   refs.current[index] = node
+}
+
+type WhoItsForCardSlotProps = {
+  audience: WhoItsForAudience
+  dividerSrc: string
+  isDesktop: boolean
+  cardIndex: number
+  setCardRef: typeof setCardRef
+  cardRefs: RefObject<(HTMLDivElement | null)[]>
+}
+
+function WhoItsForCardSlot({
+  audience,
+  dividerSrc,
+  isDesktop,
+  cardIndex,
+  setCardRef: assignRef,
+  cardRefs,
+}: WhoItsForCardSlotProps) {
+  const card = (
+    <WhoItsForAudienceCard audience={audience} dividerSrc={dividerSrc} />
+  )
+
+  if (!isDesktop) {
+    return (
+      <AnimatedContent
+        className="w-full min-w-0"
+        {...landingScrollRevealProps}
+        stagger={0}
+      >
+        {card}
+      </AnimatedContent>
+    )
+  }
+
+  return (
+    <div
+      ref={(node) => assignRef(cardRefs, cardIndex, node)}
+      className="will-change-transform"
+    >
+      {card}
+    </div>
+  )
 }
 
 function getStepperLineClips(stepper: HTMLDivElement | null) {
@@ -84,6 +130,7 @@ export function WhoItsForCardsStage({
   audiencesRight,
   dividerSrc,
 }: WhoItsForCardsStageProps) {
+  const isDesktop = useLandingLgViewport()
   const rootRef = useRef<HTMLDivElement>(null)
   const stepperRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -94,6 +141,16 @@ export function WhoItsForCardsStage({
   const [logomarkSplitReveal, setLogomarkSplitReveal] = useState(false)
 
   useLayoutEffect(() => {
+    if (!isDesktop) {
+      hasPlayedRef.current = false
+      spreadTimelineRef.current?.kill()
+      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
+      gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
+      setStepperRevealed(false)
+      setLogomarkSplitReveal(false)
+      return undefined
+    }
+
     const root = rootRef.current
     const stepper = stepperRef.current
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
@@ -252,7 +309,7 @@ export function WhoItsForCardsStage({
       spreadTimelineRef.current?.kill()
       ctx.revert()
     }
-  }, [audiencesLeft, audiencesRight])
+  }, [audiencesLeft, audiencesRight, isDesktop])
 
   return (
     <div
@@ -263,16 +320,15 @@ export function WhoItsForCardsStage({
       <div className="relative flex w-full flex-col gap-5 lg:flex-row lg:items-stretch lg:justify-between">
         <div className="relative z-10 flex flex-1 flex-col gap-5 lg:max-w-[582px]">
           {audiencesLeft.map((audience, index) => (
-            <div
+            <WhoItsForCardSlot
               key={audience.id}
-              ref={(node) => setCardRef(cardRefs, index, node)}
-              className="will-change-transform"
-            >
-              <WhoItsForAudienceCard
-                audience={audience}
-                dividerSrc={dividerSrc}
-              />
-            </div>
+              audience={audience}
+              dividerSrc={dividerSrc}
+              isDesktop={isDesktop}
+              cardIndex={index}
+              setCardRef={setCardRef}
+              cardRefs={cardRefs}
+            />
           ))}
         </div>
 
@@ -285,18 +341,15 @@ export function WhoItsForCardsStage({
 
         <div className="relative z-10 flex flex-1 flex-col gap-5 lg:max-w-[582px]">
           {audiencesRight.map((audience, index) => (
-            <div
+            <WhoItsForCardSlot
               key={audience.id}
-              ref={(node) =>
-                setCardRef(cardRefs, index + audiencesLeft.length, node)
-              }
-              className="will-change-transform"
-            >
-              <WhoItsForAudienceCard
-                audience={audience}
-                dividerSrc={dividerSrc}
-              />
-            </div>
+              audience={audience}
+              dividerSrc={dividerSrc}
+              isDesktop={isDesktop}
+              cardIndex={index + audiencesLeft.length}
+              setCardRef={setCardRef}
+              cardRefs={cardRefs}
+            />
           ))}
         </div>
       </div>

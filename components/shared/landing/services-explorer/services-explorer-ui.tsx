@@ -266,7 +266,7 @@ export function PlatformTabsRow({
   tabLabels?: Partial<Record<ServicesModalPlatformId, string>>
 }) {
   return (
-    <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 xl:grid xl:grid-cols-8 xl:overflow-visible">
+    <div className="-mx-1 grid grid-cols-2 gap-3 px-1 pb-1 xl:grid-cols-8">
       {platforms.map((platform) => {
         const active = platform.id === activeId
         const label = tabLabels?.[platform.id] ?? platform.label
@@ -276,7 +276,7 @@ export function PlatformTabsRow({
             type="button"
             onClick={() => onSelect(platform.id)}
             className={cn(
-              "flex min-w-[120px] shrink-0 flex-1 flex-col items-center justify-center rounded-xl p-4 transition-shadow xl:min-w-0",
+              "flex w-full min-w-0 flex-col items-center justify-center rounded-xl p-3 transition-shadow xl:min-w-0 xl:p-4",
               active
                 ? "bg-[#269de7] text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
                 : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
