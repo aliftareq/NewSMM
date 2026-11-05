@@ -15,6 +15,7 @@ import {
 } from "@/components/shared/landing/marketing-navbar-mobile-menu"
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import { cn } from "@/lib/utils"
+import { useLandingLgViewport } from "@/lib/landing-animation-trigger"
 
 type MarketingNavbarProps = {
   content?: LandingNavbarContent
@@ -41,6 +42,7 @@ export function MarketingNavbar({
   onMountRevealComplete,
 }: MarketingNavbarProps) {
   const pathname = usePathname()
+  const isLgViewport = useLandingLgViewport()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [navRevealComplete, setNavRevealComplete] = useState(!mountReveal)
@@ -102,8 +104,8 @@ export function MarketingNavbar({
       <MarketingNavbarBrandCluster
         logoHref={content.logo.href}
         logoAlt={content.logo.alt}
-        logomarkHoldStacked={mountReveal && !navRevealComplete}
-        logomarkSplitReveal={mountReveal && navRevealComplete}
+        logomarkHoldStacked={mountReveal && isLgViewport && !navRevealComplete}
+        logomarkSplitReveal={mountReveal && isLgViewport && navRevealComplete}
         servicesButton={servicesButton}
       />
       <OurServicesModal open={servicesModalOpen} onOpenChange={setServicesModalOpen} />

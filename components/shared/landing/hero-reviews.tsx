@@ -1,8 +1,10 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
+import { useInView } from "motion/react"
 
 import type { HeroReviewSource } from "@/types/landing/hero"
+import { useLandingLgViewport } from "@/lib/landing-animation-trigger"
 
 type HeroReviewsProps = {
   reviews: HeroReviewSource[]
@@ -40,10 +42,18 @@ function ReviewMeta({ review }: { review: HeroReviewSource }) {
 
 export function HeroReviews({ reviews }: HeroReviewsProps) {
   const [google, trustpilot] = reviews
+  const isLgViewport = useLandingLgViewport()
+  const rootRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(rootRef, { once: true, amount: 0.35 })
 
   useEffect(() => {
     const start = () => {
       document.documentElement.classList.add("hero-animations-ready")
+    }
+
+    if (!isLgViewport) {
+      if (isInView) start()
+      return undefined
     }
 
     if (typeof window.requestIdleCallback === "function") {
@@ -53,10 +63,11 @@ export function HeroReviews({ reviews }: HeroReviewsProps) {
 
     const id = globalThis.setTimeout(start, 300)
     return () => globalThis.clearTimeout(id)
-  }, [])
+  }, [isInView, isLgViewport])
 
   return (
     <div
+      ref={rootRef}
       className="flex flex-wrap items-center gap-2 sm:gap-[15px]"
       data-slot="hero-review-badges"
     >
