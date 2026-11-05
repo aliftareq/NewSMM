@@ -396,7 +396,7 @@
     will-change: transform;
   }
 
-  /* Customer reviews — track is tripled; -33.333% loops seamlessly */
+  /* Customer reviews — track is tripled; -33.333% loops seamlessly (@keyframes at root) */
   .customer-reviews-marquee-track {
     animation: customer-reviews-marquee 50s linear infinite;
     will-change: transform;
