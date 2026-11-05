@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { SmoothScrollProvider } from "@/components/shared/smooth-scroll-provider";
 
 // Main font: Inter (Regular 400, Medium 500, Semi Bold 600)
 const inter = Inter({
@@ -45,7 +46,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className="min-h-full flex flex-col font-sans antialiased"
       >
-        {children}
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
   );

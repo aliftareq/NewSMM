@@ -223,6 +223,12 @@ export function AnimatedContent({
 
       const start = `top ${(1 - threshold) * 100}%`
 
+      const playRevealIfNeeded = (self: ScrollTrigger) => {
+        if (self.isActive && tl.progress() === 0) {
+          tl.play()
+        }
+      }
+
       if (scrub) {
         ScrollTrigger.create({
           trigger: el,
@@ -235,12 +241,13 @@ export function AnimatedContent({
         return
       }
 
-      ScrollTrigger.create({
+      const scrollTrigger = ScrollTrigger.create({
         trigger: el,
         scroller: scroller ?? undefined,
         start,
         once,
         onEnter: () => tl.play(),
+        onRefresh: (self) => playRevealIfNeeded(self),
         onLeaveBack: once
           ? undefined
           : () => {
@@ -250,6 +257,8 @@ export function AnimatedContent({
               tl.reverse()
             },
       })
+
+      playRevealIfNeeded(scrollTrigger)
     }, el)
 
     ScrollTrigger.refresh()

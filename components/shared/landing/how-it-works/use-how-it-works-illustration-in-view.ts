@@ -36,15 +36,20 @@ export function useHowItWorksIllustrationInView(
           return
         }
 
-        setInView(false)
         hasLeftViewRef.current = true
       },
-      { threshold: 0.35, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.2, rootMargin: "0px 0px -4% 0px" },
     )
 
     observer.observe(node)
+
+    const rect = node.getBoundingClientRect()
+    if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+      setInView(true)
+    }
+
     return () => observer.disconnect()
-  }, [])
+  }, [svgRef])
 
   return inView
 }
