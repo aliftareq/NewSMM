@@ -1,0 +1,44 @@
+import type { ReactNode } from "react"
+
+import {
+  HERO_BACKGROUND_HEIGHT_PX,
+  HeroBackground,
+} from "@/components/shared/landing/hero-background"
+import { cn } from "@/lib/utils"
+
+/** Figma service hero frame height (25734:3505) */
+export const SERVICE_HERO_BACKGROUND_HEIGHT_PX = 955
+
+const HERO_GRADIENT_CLASS =
+  "pointer-events-none absolute inset-x-0 top-0 z-[1] bg-gradient-to-b from-[rgba(239,250,255,0.3)] from-[24.69%] to-[rgba(15,175,255,0)] to-[58.96%]"
+
+type MarketingHeroShellProps = {
+  backgroundSrc: string
+  backgroundHeightPx?: number
+  className?: string
+  children: ReactNode
+}
+
+export function MarketingHeroShell({
+  backgroundSrc,
+  backgroundHeightPx = HERO_BACKGROUND_HEIGHT_PX,
+  className,
+  children,
+}: MarketingHeroShellProps) {
+  return (
+    <section
+      className={cn(
+        "landing-hero-shell relative isolate overflow-x-clip bg-white",
+        className,
+      )}
+    >
+      <HeroBackground src={backgroundSrc} heightPx={backgroundHeightPx} />
+      <div
+        className={HERO_GRADIENT_CLASS}
+        style={{ height: backgroundHeightPx }}
+        aria-hidden
+      />
+      {children}
+    </section>
+  )
+}

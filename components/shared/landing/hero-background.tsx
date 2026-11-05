@@ -5,12 +5,17 @@ export const HERO_BACKGROUND_HEIGHT_PX = 960
 
 type HeroBackgroundProps = {
   src: string
+  heightPx?: number
 }
 
-export function HeroBackground({ src }: HeroBackgroundProps) {
+export function HeroBackground({
+  src,
+  heightPx = HERO_BACKGROUND_HEIGHT_PX,
+}: HeroBackgroundProps) {
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[960px] w-full overflow-hidden bg-white"
+      className="pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden bg-white"
+      style={{ height: heightPx }}
       aria-hidden
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

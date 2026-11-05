@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useReducedMotion } from "motion/react"
 
 import { AnimatedContent } from "@/components/shared/animated-content"
-import { HeroBackgroundLayer } from "@/components/shared/landing/hero-background"
 import { HeroHeadline } from "@/components/shared/landing/hero-headline"
 import { HeroOrderCard } from "@/components/shared/landing/hero-order-card"
 import { HeroReviews } from "@/components/shared/landing/hero-reviews"
@@ -51,8 +50,6 @@ export function HeroSectionContent({
 
   return (
     <>
-      <HeroBackgroundLayer content={content.assets} />
-
       <MarketingNavbar
         className="relative z-20"
         mountReveal
