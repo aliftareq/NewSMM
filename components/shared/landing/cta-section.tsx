@@ -1,12 +1,12 @@
 import { PreFooterCtaCard } from "@/components/shared/landing/pre-footer-cta-card"
 import type { PreFooterCtaContent } from "@/types/landing/pre-footer-cta"
 
-type PreFooterCtaSectionProps = {
+type CtaSectionProps = {
   content?: PreFooterCtaContent
 }
 
 /** Aligns with hero/footer via `.info-container` (max 1320px), not Figma 300px side padding. */
-export function PreFooterCtaSection({ content }: PreFooterCtaSectionProps) {
+export function CtaSection({ content }: CtaSectionProps) {
   return (
     <section
       className="py-12 font-sans sm:py-16 md:py-20 xl:py-[80px]"
