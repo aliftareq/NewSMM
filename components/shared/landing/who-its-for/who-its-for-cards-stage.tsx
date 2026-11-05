@@ -81,8 +81,8 @@ export function WhoItsForCardsStage({
         {
           opacity: 1,
           scale: 1,
-          duration: 0.55,
-          ease: "back.out(1.4)",
+          duration: 0.75,
+          ease: "power2.out",
           clearProps: "transform,opacity",
           onComplete: () => setLogomarkSplitReveal(true),
         },
@@ -101,13 +101,13 @@ export function WhoItsForCardsStage({
         const centerX = rootRect.width / 2
         const centerY = rootRect.height / 2
 
-        const offsets = cards.map((el, index) => {
+        const offsets = cards.map((el) => {
           const rect = el.getBoundingClientRect()
           const cardCenterX = rect.left + rect.width / 2 - rootRect.left
           const cardCenterY = rect.top + rect.height / 2 - rootRect.top
           return {
             x: centerX - cardCenterX,
-            y: centerY - cardCenterY + index * 6,
+            y: centerY - cardCenterY,
           }
         })
 
@@ -128,13 +128,16 @@ export function WhoItsForCardsStage({
 
         spreadTimelineRef.current = tl
 
-        tl.to(cards, {
+        const spreadToSlot = {
           x: 0,
           y: 0,
-          duration: 0.9,
-          ease: "power3.out",
-          stagger: { each: 0.09, from: "center" },
-        })
+          duration: 1.5,
+          ease: "power2.inOut",
+        }
+
+        // Diagonal pairs from center stack — same motion for each pair (0↔3, 1↔2)
+        tl.to([cards[0], cards[3]], spreadToSlot, 0)
+        tl.to([cards[1], cards[2]], spreadToSlot, 0)
       }
 
       const trigger = ScrollTrigger.create({
