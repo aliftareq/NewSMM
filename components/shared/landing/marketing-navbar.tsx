@@ -9,6 +9,10 @@ import type { LandingNavbarContent } from "@/types/landing/navbar"
 import { LinkTo } from "@/components/shared/link-to"
 import { AnimatedContent } from "@/components/shared/animated-content"
 import { MarketingNavbarBrandCluster } from "@/components/shared/landing/marketing-navbar-brand-cluster"
+import {
+  MarketingNavbarMobileMenu,
+  MarketingNavbarMenuTrigger,
+} from "@/components/shared/landing/marketing-navbar-mobile-menu"
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import { cn } from "@/lib/utils"
 
@@ -38,6 +42,7 @@ export function MarketingNavbar({
 }: MarketingNavbarProps) {
   const pathname = usePathname()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [navRevealComplete, setNavRevealComplete] = useState(!mountReveal)
   const [isScrolled, setIsScrolled] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -102,10 +107,18 @@ export function MarketingNavbar({
         servicesButton={servicesButton}
       />
       <OurServicesModal open={servicesModalOpen} onOpenChange={setServicesModalOpen} />
+      <MarketingNavbarMobileMenu
+        open={mobileMenuOpen}
+        onOpenChange={setMobileMenuOpen}
+        content={content}
+        pathname={pathname}
+        isNavLinkActive={isNavLinkActive}
+        onOpenServices={() => setServicesModalOpen(true)}
+      />
 
         <nav
           aria-label="Main"
-          className="hidden items-center gap-8 overflow-hidden rounded-2xl bg-white py-2 pr-6 pl-2 shadow-[0px_2px_4px_0px_rgba(39,83,132,0.12)] xl:flex"
+          className="hidden items-center gap-8 overflow-hidden rounded-2xl bg-white py-2 pr-6 pl-2 shadow-[0px_2px_4px_0px_rgba(39,83,132,0.12)] lg:flex"
         >
           {content.navLinks.map((link) => {
             const active = isNavLinkActive(pathname, link.href)
@@ -148,7 +161,12 @@ export function MarketingNavbar({
             <img alt="" src={content.cart.iconSrc} width={24} height={24} className="block" />
           </LinkTo>
 
-          <div className="hidden items-center rounded-xl bg-white sm:flex">
+          <MarketingNavbarMenuTrigger
+            open={mobileMenuOpen}
+            onOpen={() => setMobileMenuOpen(true)}
+          />
+
+          <div className="hidden items-center rounded-xl bg-white lg:flex">
             {login ? (
               <LinkTo
                 href={login.href}

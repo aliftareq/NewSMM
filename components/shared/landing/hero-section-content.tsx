@@ -24,13 +24,9 @@ const HERO_ENTRANCE = {
 
 type HeroSectionContentProps = {
   content: LandingHeroContent
-  contentPaddingTopPx: number
 }
 
-export function HeroSectionContent({
-  content,
-  contentPaddingTopPx,
-}: HeroSectionContentProps) {
+export function HeroSectionContent({ content }: HeroSectionContentProps) {
   const reduceMotion = useReducedMotion()
   const [visualEffectsReady, setVisualEffectsReady] = useState(Boolean(reduceMotion))
   const completedCountRef = useRef(0)
@@ -59,25 +55,22 @@ export function HeroSectionContent({
         onMountRevealComplete={markEntranceLayerComplete}
       />
 
-      <div
-        className="info-container relative z-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,684px)_minmax(0,480px)] lg:justify-between lg:gap-[156px]"
-        style={{ paddingTop: contentPaddingTopPx }}
-      >
+      <div className="info-container relative z-10 grid grid-cols-1 items-start gap-5 pt-[118px] sm:gap-10 sm:pt-[192px] lg:grid-cols-[minmax(0,684px)_minmax(0,480px)] lg:justify-between lg:gap-[156px] lg:pt-[220px]">
         <AnimatedContent
-          className="flex w-full max-w-[684px] flex-col gap-7"
+          className="flex w-full max-w-[684px] flex-col gap-4 lg:gap-7"
           direction="horizontal"
           reverse
           onComplete={markEntranceLayerComplete}
           {...HERO_ENTRANCE}
         >
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2.5 sm:gap-5">
             <HeroReviews reviews={content.reviews} />
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2.5 sm:gap-4">
               <HeroHeadline
                 lineOne={content.headline.lineOne}
                 lineTwo={content.headline.lineTwo}
               />
-              <p className="max-w-[684px] text-base font-normal leading-normal text-n800">
+              <p className="max-w-[684px] text-sm font-normal leading-normal text-n800 sm:text-base">
                 {content.description}
               </p>
             </div>
@@ -91,7 +84,7 @@ export function HeroSectionContent({
         </AnimatedContent>
 
         <AnimatedContent
-          className="relative w-full max-w-[480px] justify-self-end overflow-visible"
+          className="relative mx-auto w-full max-w-[480px] justify-self-center overflow-visible lg:mx-0 lg:justify-self-end"
           direction="horizontal"
           onComplete={markEntranceLayerComplete}
           {...HERO_ENTRANCE}
