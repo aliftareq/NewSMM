@@ -1,6 +1,11 @@
 import Image from "next/image"
 
+import { AnimatedContent } from "@/components/shared/animated-content"
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
+import {
+  LandingSectionHeadingReveal,
+  landingScrollRevealProps,
+} from "@/components/shared/landing/landing-section-heading-reveal"
 import { PaymentMethodsMapArcs } from "@/components/shared/landing/payment-methods/payment-methods-map-arcs"
 import { PaymentMethodsOrbitIcons } from "@/components/shared/landing/payment-methods/payment-methods-orbit-icons"
 import {
@@ -34,7 +39,7 @@ export function PaymentMethodsSection({
       )}
     >
       <div className="info-container relative z-10 flex flex-col items-center gap-[60px]">
-        <div className="flex w-full max-w-[759px] flex-col items-center gap-3 text-center">
+        <LandingSectionHeadingReveal className="flex w-full max-w-[759px] flex-col items-center gap-3 text-center">
           <LandingSectionBadge label={badgeLabel} />
 
           <h2
@@ -48,9 +53,13 @@ export function PaymentMethodsSection({
           <p className="max-w-[759px] text-base font-normal leading-normal text-n600">
             {description}
           </p>
-        </div>
+        </LandingSectionHeadingReveal>
 
-        <div className="relative w-full max-w-[1280px]">
+        <AnimatedContent
+          className="relative w-full max-w-[1280px]"
+          {...landingScrollRevealProps}
+          stagger={0}
+        >
           <div className="relative aspect-[1280/460] w-full overflow-hidden">
             <Image
               src={paymentMethodsSectionAssets.mapVisual}
@@ -65,7 +74,7 @@ export function PaymentMethodsSection({
             <PaymentMethodsMapArcs />
             <PaymentMethodsOrbitIcons />
           </div>
-        </div>
+        </AnimatedContent>
       </div>
     </section>
   )

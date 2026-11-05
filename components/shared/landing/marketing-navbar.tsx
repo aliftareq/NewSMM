@@ -1,17 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { usePathname } from "next/navigation"
 
 import { landingNavbarContent } from "@/data/landing/navbar"
 import type { LandingNavbarContent } from "@/types/landing/navbar"
 import { LinkTo } from "@/components/shared/link-to"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import { MarketingNavbarBrandCluster } from "@/components/shared/landing/marketing-navbar-brand-cluster"
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import { cn } from "@/lib/utils"
 
 type MarketingNavbarProps = {
   content?: LandingNavbarContent
   className?: string
+  /** Hero landing: nav bar slides in from the top on mount. */
+  mountReveal?: boolean
+  onMountRevealComplete?: () => void
 }
 
 function isNavLinkActive(pathname: string, href: string) {
@@ -24,58 +29,59 @@ function isNavLinkActive(pathname: string, href: string) {
 export function MarketingNavbar({
   content = landingNavbarContent,
   className,
+  mountReveal = false,
+  onMountRevealComplete,
 }: MarketingNavbarProps) {
   const pathname = usePathname()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
+  const [navRevealComplete, setNavRevealComplete] = useState(!mountReveal)
+
+  const handleNavRevealComplete = useCallback(() => {
+    setNavRevealComplete(true)
+    onMountRevealComplete?.()
+  }, [onMountRevealComplete])
 
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
 
-  return (
-    <header
-      className={cn(
-        "relative z-20 w-full bg-transparent py-6",
-        className
-      )}
+  const servicesButton = (
+    <button
+      type="button"
+      onClick={() => setServicesModalOpen(true)}
+      className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3"
     >
-      <div className="info-container flex h-[52px] items-center justify-between gap-4">
-        <div className="flex shrink-0 items-center gap-3">
-          <LinkTo href={content.logo.href} className="relative block h-[39px] w-[50px] shrink-0 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt={content.logo.alt}
-              src={content.logo.logomarkSrc}
-              className="absolute inset-[5.13%_2%_7.69%_2%] block size-auto max-w-none"
-            />
-          </LinkTo>
+      <span className="relative size-5 shrink-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt=""
+          src={content.servicesMenu.menuIconSrc}
+          className="absolute inset-[12.5%_3.13%] block size-auto max-w-none"
+        />
+      </span>
+      <span className="text-base font-medium leading-[1.35] text-n600 whitespace-nowrap">
+        {content.servicesMenu.label}
+      </span>
+      <span className="relative size-3 shrink-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt=""
+          src={content.servicesMenu.chevronSrc}
+          className="absolute inset-[21.49%_0_21.5%_0] block size-auto max-w-none"
+        />
+      </span>
+    </button>
+  )
 
-          <button
-            type="button"
-            onClick={() => setServicesModalOpen(true)}
-            className="hidden items-center gap-2 rounded-xl bg-white px-4 py-3 sm:inline-flex"
-          >
-            <span className="relative size-5 shrink-0 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={content.servicesMenu.menuIconSrc}
-                className="absolute inset-[12.5%_3.13%] block size-auto max-w-none"
-              />
-            </span>
-            <span className="text-base font-medium leading-[1.35] text-n600 whitespace-nowrap">
-              {content.servicesMenu.label}
-            </span>
-            <span className="relative size-3 shrink-0 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={content.servicesMenu.chevronSrc}
-                className="absolute inset-[21.49%_0_21.5%_0] block size-auto max-w-none"
-              />
-            </span>
-          </button>
-          <OurServicesModal open={servicesModalOpen} onOpenChange={setServicesModalOpen} />
-        </div>
+  const bar = (
+    <>
+      <MarketingNavbarBrandCluster
+        logoHref={content.logo.href}
+        logoAlt={content.logo.alt}
+        logomarkHoldStacked={mountReveal && !navRevealComplete}
+        logomarkSplitReveal={mountReveal && navRevealComplete}
+        servicesButton={servicesButton}
+      />
+      <OurServicesModal open={servicesModalOpen} onOpenChange={setServicesModalOpen} />
 
         <nav
           aria-label="Main"
@@ -155,7 +161,35 @@ export function MarketingNavbar({
             ) : null}
           </div>
         </div>
-      </div>
+    </>
+  )
+
+  return (
+    <header
+      className={cn(
+        "relative z-20 w-full bg-transparent py-6",
+        className
+      )}
+    >
+      {mountReveal ? (
+        <AnimatedContent
+          className="info-container flex h-[52px] items-center justify-between gap-4"
+          trigger="mount"
+          direction="vertical"
+          reverse
+          distance={100}
+          duration={0.8}
+          ease="power3.out"
+          threshold={0.1}
+          onComplete={handleNavRevealComplete}
+        >
+          {bar}
+        </AnimatedContent>
+      ) : (
+        <div className="info-container flex h-[52px] items-center justify-between gap-4">
+          {bar}
+        </div>
+      )}
     </header>
   )
 }

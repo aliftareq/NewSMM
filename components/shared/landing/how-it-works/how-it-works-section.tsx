@@ -1,4 +1,9 @@
 import { HowItWorksStepIllustration } from "@/components/shared/landing/how-it-works/how-it-works-step-illustration"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import {
+  LandingSectionHeadingReveal,
+  landingScrollRevealProps,
+} from "@/components/shared/landing/landing-section-heading-reveal"
 import { landingHowItWorksData } from "@/data/landing/how-it-works"
 import { cn } from "@/lib/utils"
 import type { HowItWorksData, HowItWorksStep } from "@/types/landing/how-it-works"
@@ -47,7 +52,7 @@ export function HowItWorksSection({
       className={cn("relative w-full bg-white", className)}
     >
       <div className="info-container flex flex-col items-center gap-[60px] py-16 md:py-20">
-        <div className="flex max-w-[705px] flex-col items-center gap-3 text-center">
+        <LandingSectionHeadingReveal className="flex max-w-[705px] flex-col items-center gap-3 text-center">
           <div className="stats-highlight-subheading shrink-0 overflow-visible rounded-[33px] border-[0.5px] border-[#e8e8e3] bg-white/50 px-2 py-1">
             <div className="overflow-visible rounded-full border border-white bg-[#fafafa] px-3 py-1.5 shadow-[0px_2px_1.5px_0px_rgba(183,183,183,0.25)]">
               <div className="flex items-center gap-2">
@@ -72,13 +77,16 @@ export function HowItWorksSection({
           </h2>
 
           <p className="text-base leading-normal text-n600">{intro.description}</p>
-        </div>
+        </LandingSectionHeadingReveal>
 
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+        <AnimatedContent
+          className="grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+          {...landingScrollRevealProps}
+        >
           {steps.map((step) => (
             <HowItWorksStepColumn key={step.id} step={step} />
           ))}
-        </div>
+        </AnimatedContent>
       </div>
     </section>
   )
