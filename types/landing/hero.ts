@@ -6,6 +6,7 @@ export type HeroReviewRating = {
 
 export type HeroReviewSource = {
   id: "google" | "trustpilot"
+  href: string
   iconSrc: string
   starIcons: string[]
   rating: HeroReviewRating

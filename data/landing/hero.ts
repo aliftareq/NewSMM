@@ -11,6 +11,7 @@ export const landingHeroContent: LandingHeroContent = {
   reviews: [
     {
       id: "google",
+      href: "https://www.google.com/maps",
       iconSrc: "/images/landing/google.svg",
       starIcons: [
         "/images/landing/star-google.svg",
@@ -27,6 +28,7 @@ export const landingHeroContent: LandingHeroContent = {
     },
     {
       id: "trustpilot",
+      href: "https://www.trustpilot.com",
       iconSrc: "",
       starIcons: [
         "/images/landing/star-trustpilot.svg",
