@@ -9,7 +9,9 @@ import {
   PrimaryButtonArrow,
 } from "@/components/ui/button"
 import { LinkTo } from "@/components/shared/link-to"
+import { AnimatedContent } from "@/components/shared/animated-content"
 import { CtaFigmaLayers } from "@/components/shared/landing/cta-figma-layers"
+import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
 import { cn } from "@/lib/utils"
 
 export const CTA_DESIGN_WIDTH = 1280
@@ -110,16 +112,18 @@ export function CtaCard({
           "sm:absolute sm:inset-0 sm:justify-center sm:px-0 sm:py-0"
         )}
       >
-        <div
+        <AnimatedContent
           className={cn(
             "flex w-full max-w-[691px] flex-col items-center",
             "gap-[clamp(1rem,3.5cqw,1.82875rem)]",
             "@min-[1280px]/cta:gap-[29.26px]"
           )}
+          {...landingScrollRevealProps}
+          stagger={0.08}
         >
           <CtaCopyBlock content={content} headingId={headingId} />
           <CtaButtons content={content} />
-        </div>
+        </AnimatedContent>
       </div>
     </div>
   )
