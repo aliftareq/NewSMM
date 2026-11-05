@@ -15,6 +15,8 @@ const HERO_GRADIENT_CLASS =
 type MarketingHeroShellProps = {
   backgroundSrc: string
   backgroundHeightPx?: number
+  /** When set, overrides fixed `backgroundHeightPx` for responsive hero art */
+  backgroundHeightClassName?: string
   className?: string
   children: ReactNode
 }
@@ -22,6 +24,7 @@ type MarketingHeroShellProps = {
 export function MarketingHeroShell({
   backgroundSrc,
   backgroundHeightPx = HERO_BACKGROUND_HEIGHT_PX,
+  backgroundHeightClassName,
   className,
   children,
 }: MarketingHeroShellProps) {
@@ -32,10 +35,14 @@ export function MarketingHeroShell({
         className,
       )}
     >
-      <HeroBackground src={backgroundSrc} heightPx={backgroundHeightPx} />
+      <HeroBackground
+        src={backgroundSrc}
+        heightPx={backgroundHeightPx}
+        className={backgroundHeightClassName}
+      />
       <div
-        className={HERO_GRADIENT_CLASS}
-        style={{ height: backgroundHeightPx }}
+        className={cn(HERO_GRADIENT_CLASS, backgroundHeightClassName)}
+        style={backgroundHeightClassName ? undefined : { height: backgroundHeightPx }}
         aria-hidden
       />
       {children}

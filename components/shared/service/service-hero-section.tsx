@@ -3,14 +3,9 @@ import type { ServiceHeroContent } from "@/types/service/hero"
 import { MarketingNavbar } from "@/components/shared/landing/marketing-navbar"
 import {
   MarketingHeroShell,
-  SERVICE_HERO_BACKGROUND_HEIGHT_PX,
 } from "@/components/shared/landing/marketing-hero-shell"
 import { ServiceHeroIntro } from "@/components/shared/service/service-hero-intro"
 import { ServiceOrderWidget } from "@/components/shared/service/service-order-widget"
-
-/** Figma 25734:4636 nav 100px; widget ~35px below nav */
-const SERVICE_NAV_TO_WIDGET_GAP_PX = 35
-/** Figma intro column starts lower than the order widget (208px vs 134px) */
 
 type ServiceHeroSectionProps = {
   content?: ServiceHeroContent
@@ -22,21 +17,15 @@ export function ServiceHeroSection({
   return (
     <MarketingHeroShell
       backgroundSrc={content.assets.backgroundHero}
-      backgroundHeightPx={SERVICE_HERO_BACKGROUND_HEIGHT_PX}
-      className="pb-16 md:pb-24 lg:pb-[120px]"
+      backgroundHeightClassName="h-[min(720px,120vh)] sm:h-[840px] md:h-[900px] lg:h-[955px]"
+      className="pb-12 sm:pb-16 md:pb-24 lg:pb-[120px]"
     >
       <MarketingNavbar className="relative z-20" mountReveal />
 
-      <div
-        className="info-container relative z-10 grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,594px)_minmax(0,661px)] lg:justify-between lg:gap-[65px]"
-        style={{ marginTop: SERVICE_NAV_TO_WIDGET_GAP_PX }}
-      >
-        <ServiceHeroIntro
-          content={content.intro}
-          className="lg:mt-[73px]"
-        />
+      <div className="info-container relative z-10 mt-6 grid grid-cols-1 items-start gap-6 sm:mt-8 sm:gap-8 md:gap-10 lg:mt-8 lg:grid-cols-2 lg:items-start lg:gap-8 xl:mt-[35px] xl:grid-cols-[minmax(0,594px)_minmax(0,661px)] xl:justify-between xl:gap-[65px]">
+        <ServiceHeroIntro content={content.intro} className="xl:mt-[73px]" />
 
-        <div className="w-full justify-self-stretch lg:justify-self-end lg:self-start">
+        <div className="mx-auto w-full min-w-0 max-w-[661px] lg:mx-0 lg:max-w-none lg:justify-self-stretch xl:justify-self-end">
           <ServiceOrderWidget
             content={content.orderWidget}
             assets={{

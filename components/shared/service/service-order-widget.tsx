@@ -34,10 +34,12 @@ function PackageCard({
   pkg,
   selected,
   onSelect,
+  showBadge,
 }: {
   pkg: ServicePackageOption
   selected: boolean
   onSelect: () => void
+  showBadge?: boolean
 }) {
   const secondaryLabel = pkg.saveLabel ?? pkg.unitLabel
 
@@ -46,22 +48,28 @@ function PackageCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative isolate flex h-[85px] min-w-[120px] flex-1 items-center justify-center rounded-xl border px-5 py-4 text-center transition-colors",
+        "relative isolate box-border flex h-[72px] min-w-0 flex-1 basis-0 items-center justify-center overflow-visible rounded-xl border border-solid px-2 py-3 sm:h-[85px] sm:min-w-0 sm:px-3 sm:py-4 lg:px-2 xl:min-w-[120px] xl:px-5",
         selected
           ? "border-[#21aeff]"
           : "border-[#ebecef] bg-white hover:border-[#c5e8fc]",
       )}
       style={selected ? { backgroundImage: SELECTED_PACKAGE_BG } : undefined}
     >
-      {pkg.badge ? (
-        <span className="pointer-events-none absolute -top-[13px] left-1/2 z-10 flex h-[26px] -translate-x-1/2 items-center justify-center rounded-md bg-[#db3761] px-[14px] py-1 text-xs font-medium leading-[1.5] text-white">
+      {showBadge && pkg.badge ? (
+        <span
+          className={cn(
+            "pointer-events-none absolute -top-[9px] left-1/2 z-10 flex h-[22px] min-w-max max-w-none -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-md bg-[#db3761] px-2.5 py-1 text-[10px] font-medium leading-none text-white sm:-top-[11px] sm:h-[26px] sm:px-[14px] sm:py-1 sm:text-xs sm:leading-[1.5]",
+            pkg.badge === "max-value" && "sm:min-w-[98px]",
+            pkg.badge === "popular" && "sm:min-w-[85px]",
+          )}
+        >
           {BADGE_LABEL[pkg.badge]}
         </span>
       ) : null}
-      <span className="flex flex-col items-center gap-2">
+      <span className="flex flex-col items-center justify-center gap-2">
         <span
           className={cn(
-            "text-lg font-semibold leading-[1.3]",
+            "text-base font-semibold leading-[1.3] sm:text-lg",
             selected ? "text-[#21aeff]" : "text-[#343e56]",
           )}
         >
@@ -69,7 +77,7 @@ function PackageCard({
         </span>
         <span
           className={cn(
-            "text-base font-medium leading-[1.35]",
+            "text-sm font-medium leading-[1.35] sm:text-base",
             selected ? "text-[#4f586d]" : "text-[#979ca8]",
           )}
         >
@@ -106,16 +114,16 @@ export function ServiceOrderWidget({
   const ctaLabel = `Get ${selectedPackage.quantity} ${selectedPackage.unitLabel}`
 
   return (
-    <div className="box-border flex w-full max-w-[661px] items-start gap-[10px] rounded-[24px] border border-[#f5f6f7] bg-white px-8 pb-8 pt-5 shadow-[0px_2px_6px_rgba(37,37,37,0.16)]">
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-6">
-        <div className="box-border flex h-[66px] w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1">
-          <div className="flex h-[56px] gap-2">
+    <div className="box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white px-4 pb-6 pt-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px] sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8">
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-5 sm:gap-6">
+        <div className="box-border flex min-h-[60px] w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1 sm:h-[66px]">
+          <div className="flex min-h-[52px] gap-2 sm:h-[56px]">
             {content.qualityOptions.map((option, index) => {
               const active = option.id === qualityId
               return (
                 <div key={option.id} className="relative min-w-0 flex-1">
                   {option.recommendedBadge ? (
-                    <span className="absolute -top-[13px] left-1/2 z-10 flex h-[26px] w-[124px] -translate-x-1/2 items-center justify-center rounded-md bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] px-[14px] py-1 text-xs font-medium leading-[1.5] text-white">
+                    <span className="absolute -top-[13px] left-1/2 z-10 flex h-[22px] max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center justify-center rounded-md bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] px-2 py-0.5 text-[10px] font-medium leading-[1.5] text-white sm:h-[26px] sm:max-w-none sm:px-[14px] sm:py-1 sm:text-xs sm:w-[124px]">
                       {option.recommendedBadge}
                     </span>
                   ) : null}
@@ -123,9 +131,9 @@ export function ServiceOrderWidget({
                     type="button"
                     onClick={() => setQualityId(option.id)}
                     className={cn(
-                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-base font-semibold leading-[1.5] [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)]",
+                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)] sm:text-base",
                       QUALITY_BUTTON_INSET_SHADOW,
-                      index === 0 ? "px-6 py-4" : "px-7 py-4",
+                      index === 0 ? "px-3 py-3 sm:px-6 sm:py-4" : "px-3.5 py-3 sm:px-7 sm:py-4",
                       active
                         ? "border-[#269de7] bg-[#269de7] text-white"
                         : "border-[#ebecef] bg-white text-[#404a60]",
@@ -150,8 +158,8 @@ export function ServiceOrderWidget({
           </div>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-6">
-          <div className="flex h-[56px] w-full gap-3">
+        <div className="flex w-full flex-col items-center gap-5 sm:gap-6">
+          <div className="-mx-1 flex w-full gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:gap-3 sm:px-0 sm:pb-0 md:h-[56px] lg:overflow-x-auto lg:pb-1 xl:h-[56px] xl:overflow-visible [&::-webkit-scrollbar]:hidden">
             {content.platforms.map((item) => {
               const active = item.id === platformId
               return (
@@ -162,7 +170,7 @@ export function ServiceOrderWidget({
                   aria-pressed={active}
                   onClick={() => setPlatformId(item.id)}
                   className={cn(
-                    "box-border flex min-w-0 flex-1 flex-col items-center justify-center rounded-xl p-3 transition-colors",
+                    "box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl p-2 transition-colors sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
                     active
                       ? "bg-[#269de7] shadow-[0px_4px_8px_rgba(0,0,0,0.08)]"
                       : "border border-[#ebecef] bg-white",
@@ -178,8 +186,8 @@ export function ServiceOrderWidget({
             })}
           </div>
 
-          <div className="box-border flex w-full flex-col gap-5 rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] p-3">
-            <label className="flex h-[58px] w-full min-w-[120px] items-center gap-2 rounded-xl border border-[#21aeff] bg-white px-5 py-4">
+          <div className="box-border flex w-full flex-col items-start gap-5 self-stretch rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] p-3">
+            <label className="box-border flex h-[52px] w-full min-w-[120px] shrink-0 items-center gap-2 self-stretch rounded-xl border border-[#21aeff] bg-white px-3 py-3 sm:h-[58px] sm:gap-2 sm:px-5 sm:py-4">
               <PlatformIcon
                 icon={platform.icon}
                 size={24}
@@ -191,15 +199,18 @@ export function ServiceOrderWidget({
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 placeholder={platform.usernamePlaceholder}
-                className="min-w-0 flex-1 bg-transparent text-base font-medium leading-[1.35] text-[#232323] placeholder:text-[#979ca8] outline-none"
+                className="min-w-0 flex-1 bg-transparent text-sm font-medium leading-[1.35] text-[#232323] placeholder:text-[#979ca8] outline-none sm:text-base"
                 autoComplete="off"
                 spellCheck={false}
               />
             </label>
 
-            <div className="relative isolate flex w-full flex-col gap-3">
+            <div className="relative isolate flex w-full flex-col items-start gap-3 self-stretch overflow-visible pt-1 sm:min-h-[279px] sm:pt-0">
               {[0, 1, 2].map((rowIndex) => (
-                <div key={rowIndex} className="flex gap-3">
+                <div
+                  key={rowIndex}
+                  className="flex w-full items-start gap-2 overflow-visible sm:gap-3"
+                >
                   {content.packages
                     .slice(rowIndex * 3, rowIndex * 3 + 3)
                     .map((pkg) => (
@@ -208,6 +219,7 @@ export function ServiceOrderWidget({
                         pkg={pkg}
                         selected={pkg.id === packageId}
                         onSelect={() => setPackageId(pkg.id)}
+                        showBadge
                       />
                     ))}
                 </div>
@@ -215,9 +227,9 @@ export function ServiceOrderWidget({
             </div>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-4">
-            <div className="flex w-full items-start justify-center gap-4">
-              <div className="flex h-[59px] w-[120px] shrink-0 flex-col justify-center gap-1">
+          <div className="flex w-full flex-col items-center gap-3 sm:gap-4">
+            <div className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-start md:justify-center md:gap-4">
+              <div className="flex w-full flex-col justify-center gap-1 md:h-[59px] md:w-[120px] md:shrink-0">
                 <span className="text-sm font-medium leading-[1.35] text-[#343e56]">
                   Total price
                 </span>
@@ -232,13 +244,13 @@ export function ServiceOrderWidget({
               </div>
               <button
                 type="button"
-                className="flex h-[59px] min-w-[120px] flex-1 items-center justify-center rounded-xl bg-[#269de7] py-4 pl-4 pr-3 text-base font-medium leading-[1.35] text-white"
+                className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-[#269de7] px-4 py-3.5 text-sm font-medium leading-[1.35] text-white md:h-[59px] md:min-w-[120px] md:flex-1 md:py-4 md:pl-4 md:pr-3 md:text-base"
               >
                 {ctaLabel}
               </button>
             </div>
 
-            <p className="flex items-center gap-1 text-sm font-medium leading-[1.35] text-[#5b6477]">
+            <p className="flex items-center justify-center gap-1 px-1 text-center text-xs font-medium leading-[1.35] text-[#5b6477] sm:text-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt=""
