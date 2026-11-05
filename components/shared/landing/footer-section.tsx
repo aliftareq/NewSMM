@@ -57,10 +57,13 @@ export function FooterSection({
             </div>
           </AnimatedContent>
 
-          <AnimatedContent className="w-full" {...landingScrollRevealProps} delay={0.08}>
+          <AnimatedContent
+            className="flex w-full flex-col gap-10 sm:gap-12 xl:gap-[60px]"
+            {...landingScrollRevealProps}
+            delay={0.08}
+            stagger={0}
+          >
             <FooterTrustBadges badges={content.trustBadges} />
-          </AnimatedContent>
-          <AnimatedContent className="w-full" {...landingScrollRevealProps} delay={0.1}>
             <FooterBottomBar legal={content.legal} />
           </AnimatedContent>
         </div>
