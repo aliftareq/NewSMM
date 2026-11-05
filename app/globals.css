@@ -330,11 +330,6 @@
     transform: none;
   }
 
-  .footer-reveal-item {
-    opacity: 1;
-    transform: none;
-  }
-
   .footer-glare-star {
     animation: none !important;
     opacity: 0.85;
@@ -482,11 +477,6 @@
     .comparison-panel-entrance--right {
       transform: translate3d(80px, 0, 0);
     }
-  }
-
-  .footer-reveal-item {
-    opacity: 0;
-    transform: translate3d(0, 32px, 0);
   }
 
   .comparison-vs-badge__ring-stroke {
@@ -723,5 +713,58 @@
   .how-it-works-skeleton-chart-line {
     stroke-dashoffset: 0;
     opacity: 0.7;
+  }
+}
+
+/* Hero review badges — star pop loop (layout via Tailwind on component) */
+@keyframes hero-star-pop {
+  0% {
+    transform: scale(0);
+  }
+  10% {
+    transform: scale(1.1);
+  }
+  15% {
+    transform: scale(1);
+  }
+  85% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+html:not(.hero-animations-ready) .hero-stars-row > .hero-star-pop {
+  animation: none !important;
+  transform: scale(1);
+}
+
+.hero-stars-row > .hero-star-pop {
+  transform-origin: center;
+  will-change: transform;
+  animation: hero-star-pop 2.4s ease-out infinite;
+}
+
+.hero-stars-row > .hero-star-pop:nth-child(1) {
+  animation-delay: 0s;
+}
+.hero-stars-row > .hero-star-pop:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.hero-stars-row > .hero-star-pop:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.hero-stars-row > .hero-star-pop:nth-child(4) {
+  animation-delay: 0.6s;
+}
+.hero-stars-row > .hero-star-pop:nth-child(5) {
+  animation-delay: 0.8s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stars-row > .hero-star-pop {
+    animation: none !important;
+    transform: scale(1);
   }
 }

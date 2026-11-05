@@ -1,8 +1,13 @@
 import Image from "next/image"
 
+import { AnimatedContent } from "@/components/shared/animated-content"
 import { StatsHighlightIntroHeadline } from "@/components/shared/landing/stats-highlight/stats-highlight-intro-headline"
 import { StatsHighlightAvatarCard } from "@/components/shared/landing/stats-highlight/stats-highlight-avatar-card"
 import { StatsHighlightStatCopy } from "@/components/shared/landing/stats-highlight/stats-highlight-stat-copy"
+import {
+  LandingSectionHeadingReveal,
+  landingScrollRevealProps,
+} from "@/components/shared/landing/landing-section-heading-reveal"
 import { landingStatsHighlightData } from "@/data/landing/stats-highlight"
 import { cn } from "@/lib/utils"
 import type { StatsHighlightData } from "@/types/landing/stats-highlight"
@@ -25,7 +30,7 @@ export function StatsHighlightSection({
       className={cn("relative w-full bg-background", className)}
     >
       <div className="info-container flex flex-col gap-10 py-16 md:py-20 lg:gap-12 lg:py-25">
-        <div className="flex w-full flex-col items-start gap-6 lg:flex-row lg:justify-between lg:gap-10">
+        <LandingSectionHeadingReveal className="flex w-full flex-col items-start gap-6 lg:flex-row lg:justify-between lg:gap-10">
           <div className="stats-highlight-subheading shrink-0 overflow-visible rounded-[33px] border-[0.5px] border-[#e8e8e3] bg-white/50 px-2 py-1">
             <div className="overflow-visible rounded-full border border-white bg-[#fafafa] px-3 py-1.5 shadow-[0px_2px_1.5px_0px_rgba(183,183,183,0.25)]">
               <div className="flex items-center gap-2">
@@ -48,9 +53,13 @@ export function StatsHighlightSection({
             headingPrimary={intro.headingPrimary}
             headingSecondary={intro.headingSecondary}
           />
-        </div>
+        </LandingSectionHeadingReveal>
 
-        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <AnimatedContent
+          className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+          {...landingScrollRevealProps}
+          stagger={0.08}
+        >
           <StatsHighlightAvatarCard
             stat={avatarCard.stat}
             rowOneAvatars={avatarCard.rowOneAvatars}
@@ -137,7 +146,7 @@ export function StatsHighlightSection({
               </p>
             </div>
           </article>
-        </div>
+        </AnimatedContent>
       </div>
     </section>
   )

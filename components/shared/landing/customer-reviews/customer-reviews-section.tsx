@@ -1,6 +1,10 @@
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
-import { LandingSectionHeadingReveal } from "@/components/shared/landing/landing-section-heading-reveal"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import {
+  LandingSectionHeadingReveal,
+  landingScrollRevealProps,
+} from "@/components/shared/landing/landing-section-heading-reveal"
 import { CustomerReviewsCarousel } from "@/components/shared/landing/customer-reviews/customer-reviews-carousel"
 import { CustomerReviewsSectionDecoration } from "@/components/shared/landing/customer-reviews/customer-reviews-section-decoration"
 import { landingCustomerReviewsContent } from "@/data/landing/customer-reviews"
@@ -42,11 +46,16 @@ export function CustomerReviewsSection({
           </LandingSectionHeadingReveal>
         </div>
 
-        <CustomerReviewsCarousel
-          reviews={content.reviews}
-          quoteIconSrc={content.quoteIconSrc}
-          starIconSrc={content.starIconSrc}
-        />
+        <AnimatedContent
+          className="relative w-full self-stretch"
+          {...landingScrollRevealProps}
+        >
+          <CustomerReviewsCarousel
+            reviews={content.reviews}
+            quoteIconSrc={content.quoteIconSrc}
+            starIconSrc={content.starIconSrc}
+          />
+        </AnimatedContent>
       </div>
     </section>
   );

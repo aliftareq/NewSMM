@@ -4,7 +4,11 @@ import { useCallback, useRef, useState } from "react"
 
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
-import { LandingSectionHeadingReveal } from "@/components/shared/landing/landing-section-heading-reveal"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import {
+  LandingSectionHeadingReveal,
+  landingScrollRevealProps,
+} from "@/components/shared/landing/landing-section-heading-reveal"
 import {
   WhyChooseUsCarousel,
   type WhyChooseUsCarouselHandle,
@@ -65,13 +69,15 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
         </div>
       </LandingSectionHeadingReveal>
 
-      <WhyChooseUsCarousel
-        ref={carouselRef}
-        cards={content.cards}
-        serviceIconSrc={content.serviceIconSrc}
-        textArrowSrc={content.textArrowSrc}
-        onNavStateChange={handleNavStateChange}
-      />
+      <AnimatedContent className="relative w-full" {...landingScrollRevealProps}>
+        <WhyChooseUsCarousel
+          ref={carouselRef}
+          cards={content.cards}
+          serviceIconSrc={content.serviceIconSrc}
+          textArrowSrc={content.textArrowSrc}
+          onNavStateChange={handleNavStateChange}
+        />
+      </AnimatedContent>
 
       <div className="info-container flex justify-center px-4 sm:px-6 md:hidden">
         <WhyChooseUsCarouselNav

@@ -1,9 +1,9 @@
-import { CtaCard } from "@/components/shared/landing/cta-card"
-import type { CtaContent } from "@/types/landing/cta"
+import { CtaCard } from "@/components/shared/landing/cta-card";
+import type { CtaContent } from "@/types/landing/cta";
 
 type CtaSectionProps = {
-  content?: CtaContent
-}
+  content?: CtaContent;
+};
 
 /** Aligns with hero/footer via `.info-container` (max 1320px), not Figma 300px side padding. */
 export function CtaSection({ content }: CtaSectionProps) {
@@ -16,5 +16,5 @@ export function CtaSection({ content }: CtaSectionProps) {
         <CtaCard content={content} headingId="landing-cta-heading" />
       </div>
     </section>
-  )
+  );
 }
