@@ -27,7 +27,10 @@ function HeadlineSegment({
   if (segment.type === "gradient-text") {
     return (
       <span
-        className={cn("bg-clip-text text-transparent", HEADLINE_SIZE)}
+        className={cn(
+          "mx-1 shrink-0 whitespace-nowrap bg-clip-text text-transparent sm:mx-1.5 lg:mx-2",
+          HEADLINE_SIZE,
+        )}
         style={{ backgroundImage: segment.gradient }}
       >
         {segment.content}
@@ -74,7 +77,7 @@ export function HeroHeadline({ lineOne, lineTwo }: HeroHeadlineProps) {
           </span>
         ) : null}
       </span>
-      <span>
+      <span className="flex max-w-[723px] flex-nowrap items-center">
         {lineTwo.segments.map((segment, index) => (
           <HeadlineSegment key={`line-two-${index}`} segment={segment} />
         ))}
