@@ -53,7 +53,9 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     lenis.on("scroll", ScrollTrigger.update)
 
     const onScrollTriggerRefresh = () => {
-      lenis.resize()
+      requestAnimationFrame(() => {
+        lenis.resize()
+      })
     }
 
     ScrollTrigger.addEventListener("refresh", onScrollTriggerRefresh)

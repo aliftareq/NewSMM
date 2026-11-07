@@ -66,11 +66,14 @@ export function GrowthPackageQualityToggle({
                 onClick={() => handleSelect(tab.id)}
                 aria-pressed={selected}
                 className={cn(
-                  "flex min-h-[51px] w-full scroll-mx-4 items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold leading-[1.5] transition-colors sm:min-h-[54px] sm:px-6 sm:text-lg",
+                  "flex min-h-[51px] w-full scroll-mx-4 items-center justify-center rounded-xl border border-solid px-4 py-3 text-sm font-semibold leading-[1.5] transition-[background-color,border-color,box-shadow,transform,color] duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#269de7]/45 focus-visible:ring-offset-1 sm:min-h-[54px] sm:px-6 sm:text-lg",
                   "[text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)]",
                   selected
-                    ? cn("bg-button text-white", SELECTED_INSET)
-                    : "bg-white text-[#404a60] hover:bg-[#fafafa]",
+                    ? cn(
+                        "border-[#269de7] bg-button text-white shadow-[0px_4px_14px_rgba(38,157,231,0.4)]",
+                        SELECTED_INSET,
+                      )
+                    : "border-[#ebecef] bg-white text-[#404a60] hover:border-[#c5e8fc] hover:bg-[#fafafa]",
                   index === 1 && "sm:px-7",
                 )}
               >

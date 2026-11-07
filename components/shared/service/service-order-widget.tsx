@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 
 import { serviceHeroContent } from "@/data/service/hero"
+import { mapHeroPackagesForOrder } from "@/lib/service-quality-pricing"
 import type {
   ServiceHeroContent,
   ServicePackageBadge,
@@ -106,10 +107,18 @@ export function ServiceOrderWidget({
     [content.platforms, platformId],
   )
 
-  const selectedPackage = useMemo(
-    () => content.packages.find((p) => p.id === packageId) ?? content.packages[0],
-    [content.packages, packageId],
+  const packagesForOrder = useMemo(
+    () => mapHeroPackagesForOrder(content.packages, qualityId, platformId),
+    [content.packages, qualityId, platformId],
   )
+
+  const selectedPackage = useMemo(
+    () => packagesForOrder.find((p) => p.id === packageId) ?? packagesForOrder[0],
+    [packagesForOrder, packageId],
+  )
+
+  const qualityLabel =
+    content.qualityOptions.find((q) => q.id === qualityId)?.label ?? ""
 
   const ctaLabel = `Get ${selectedPackage.quantity} ${selectedPackage.unitLabel}`
 
@@ -129,14 +138,15 @@ export function ServiceOrderWidget({
                   ) : null}
                   <button
                     type="button"
+                    aria-pressed={active}
                     onClick={() => setQualityId(option.id)}
                     className={cn(
-                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)] sm:text-base",
+                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] transition-[background-color,border-color,box-shadow,transform,color] duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#269de7]/45 focus-visible:ring-offset-1 [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)] sm:text-base",
                       QUALITY_BUTTON_INSET_SHADOW,
                       index === 0 ? "px-3 py-3 sm:px-6 sm:py-4" : "px-3.5 py-3 sm:px-7 sm:py-4",
                       active
-                        ? "border-[#269de7] bg-[#269de7] text-white"
-                        : "border-[#ebecef] bg-white text-[#404a60]",
+                        ? "border-[#269de7] bg-[#269de7] text-white shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
+                        : "border-[#ebecef] bg-white text-[#404a60] hover:border-[#c5e8fc] hover:bg-[#fafafa]",
                     )}
                   >
                     {option.label}
@@ -170,10 +180,10 @@ export function ServiceOrderWidget({
                   aria-pressed={active}
                   onClick={() => setPlatformId(item.id)}
                   className={cn(
-                    "box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl p-2 transition-colors sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
+                    "box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
                     active
-                      ? "bg-[#269de7] shadow-[0px_4px_8px_rgba(0,0,0,0.08)]"
-                      : "border border-[#ebecef] bg-white",
+                      ? "border-[#269de7] bg-[#269de7] shadow-[0px_4px_12px_rgba(38,157,231,0.35)]"
+                      : "border-[#ebecef] bg-white hover:border-[#c5e8fc] hover:bg-[#fafafa]",
                   )}
                 >
                   <PlatformIcon
@@ -186,7 +196,15 @@ export function ServiceOrderWidget({
             })}
           </div>
 
-          <div className="box-border flex w-full flex-col items-start gap-5 self-stretch rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] p-3">
+          <div
+            className={cn(
+              "box-border flex w-full flex-col items-start gap-5 self-stretch rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] p-3 transition-[border-color,box-shadow] duration-300",
+              qualityId === "real-followers" &&
+                "border-[#c5e8fc] shadow-[inset_0_0_0_1px_rgba(33,174,255,0.12)]",
+              platformId !== "instagram" &&
+                "shadow-[inset_0_0_0_1px_rgba(38,157,231,0.08)]",
+            )}
+          >
             <label className="box-border flex h-[52px] w-full min-w-[120px] shrink-0 items-center gap-2 self-stretch rounded-xl border border-[#21aeff] bg-white px-3 py-3 sm:h-[58px] sm:gap-2 sm:px-5 sm:py-4">
               <PlatformIcon
                 icon={platform.icon}
@@ -211,7 +229,7 @@ export function ServiceOrderWidget({
                   key={rowIndex}
                   className="flex w-full items-start gap-2 overflow-visible sm:gap-3"
                 >
-                  {content.packages
+                  {packagesForOrder
                     .slice(rowIndex * 3, rowIndex * 3 + 3)
                     .map((pkg) => (
                       <PackageCard
@@ -229,11 +247,14 @@ export function ServiceOrderWidget({
 
           <div className="flex w-full flex-col items-center gap-3 sm:gap-4">
             <div className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-start md:justify-center md:gap-4">
-              <div className="flex w-full flex-col justify-center gap-1 md:h-[59px] md:w-[120px] md:shrink-0">
+              <div className="flex min-h-[59px] w-full flex-col justify-center gap-0.5 md:w-[min(100%,200px)] md:shrink-0">
                 <span className="text-sm font-medium leading-[1.35] text-[#343e56]">
                   Total price
                 </span>
-                <div className="flex items-center gap-2">
+                <p className="line-clamp-1 text-xs font-normal text-[#798090]">
+                  {qualityLabel} · {platform.label}
+                </p>
+                <div className="flex items-center gap-2 tabular-nums transition-opacity duration-200">
                   <span className="text-2xl font-semibold leading-[1.5] text-[#21aeff]">
                     {selectedPackage.price}
                   </span>

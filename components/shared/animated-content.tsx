@@ -261,7 +261,9 @@ export function AnimatedContent({
       playRevealIfNeeded(scrollTrigger)
     }, el)
 
-    ScrollTrigger.refresh()
+    if (effectiveTrigger === "scroll") {
+      ScrollTrigger.refresh()
+    }
 
     return () => {
       ctx.revert()

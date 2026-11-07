@@ -25,6 +25,9 @@ export function FollowerComparisonTierCardView({
       className={cn(
         "relative flex w-full min-w-0 flex-col items-center rounded-[20px] border border-[#ebecef] bg-white p-8",
         "shadow-[0px_0px_12px_rgba(63,63,63,0.12)]",
+        "transition-[transform,box-shadow,border-color] duration-300 ease-out",
+        "hover:-translate-y-1 hover:border-[#c5e8fc]",
+        "hover:shadow-[0px_12px_28px_rgba(38,157,231,0.18)]",
       )}
     >
       {card.recommendedBadge ? (
