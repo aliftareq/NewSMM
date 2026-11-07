@@ -32,6 +32,18 @@ export const aboutSocialMediaSolutionContent: SocialMediaSolutionContent = {
       description:
         "We provide services across multiple social media platforms, making it easier to manage your marketing needs and choose services that match your preferred channels.",
     },
+    {
+      id: "customer-support",
+      title: "24/7 Customer Support",
+      description:
+        "Our support team is available around the clock to assist you with questions, order-related concerns, and service information, helping you get the guidance you need whenever you need it.",
+    },
+    {
+      id: "easy-ordering",
+      title: "Easy Ordering Process",
+      description:
+        "Getting started is simple and straightforward. Choose your preferred service, select the options that suit your needs, provide the required details, and place your order in just a few easy steps.",
+    },
   ],
   arrowUpSrc: `${ASSET_BASE}/arrow-up.svg`,
   arrowDownSrc: `${ASSET_BASE}/arrow-down.svg`,

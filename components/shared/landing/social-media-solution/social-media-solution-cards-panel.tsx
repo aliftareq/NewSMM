@@ -1,9 +1,13 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
-import { AnimatedContent } from "@/components/shared/animated-content"
-import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
+import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
 import { SocialMediaSolutionCard } from "@/components/shared/landing/social-media-solution/social-media-solution-card"
 import type { SocialMediaSolutionContent } from "@/types/landing/social-media-solution"
 import { cn } from "@/lib/utils"
@@ -11,106 +15,141 @@ import { cn } from "@/lib/utils"
 type SocialMediaSolutionCardsPanelProps = Pick<
   SocialMediaSolutionContent,
   "cards" | "arrowUpSrc" | "arrowDownSrc"
->
+> & {
+  onCarouselReady?: (reInit: () => void) => void
+}
 
+const WHEEL_MASK =
+  "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)"
+
+/** Vertical feature wheel — matches TechSMM `feature-slider` (Embla loop + fixed snap). */
 export function SocialMediaSolutionCardsPanel({
   cards,
   arrowUpSrc,
   arrowDownSrc,
+  onCarouselReady,
 }: SocialMediaSolutionCardsPanelProps) {
-  const cardRefs = useRef<(HTMLElement | null)[]>([])
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [api, setApi] = useState<CarouselApi>()
 
-  const scrollToIndex = useCallback(
-    (nextIndex: number) => {
-      const clamped = Math.max(0, Math.min(nextIndex, cards.length - 1))
-      setActiveIndex(clamped)
-      cardRefs.current[clamped]?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      })
-    },
-    [cards.length],
-  )
+  useEffect(() => {
+    if (!api) return undefined
+
+    const reInit = () => api.reInit()
+
+    onCarouselReady?.(reInit)
+
+    const timeouts = [0, 80, 320, 900].map((ms) =>
+      window.setTimeout(() => reInit(), ms),
+    )
+
+    const viewport = api.rootNode()
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" && viewport
+        ? new ResizeObserver(() => reInit())
+        : null
+    resizeObserver?.observe(viewport)
+
+    return () => {
+      timeouts.forEach((id) => window.clearTimeout(id))
+      resizeObserver?.disconnect()
+    }
+  }, [api, onCarouselReady])
 
   const navButtonClassName = cn(
     "group flex size-8 items-center justify-center rounded-full border border-[#21aeff] bg-white p-2.5",
     "transition-[background-color,box-shadow,border-color] duration-200",
     "hover:border-[#21aeff] hover:bg-[#21aeff] hover:shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]",
-    "disabled:pointer-events-none disabled:opacity-40",
   )
 
   return (
     <div className="flex w-full items-center gap-7 lg:w-[573.398px] lg:max-w-none lg:shrink-0">
-      <AnimatedContent
-        className="flex w-full max-w-[513.398px] flex-col gap-4 lg:min-h-[596px] lg:justify-center"
-        {...landingScrollRevealProps}
-        delay={0.1}
-        threshold={0.12}
-      >
-        {cards.map((card, index) => (
-          <SocialMediaSolutionCard
-            key={card.id}
-            ref={(node) => {
-              cardRefs.current[index] = node
+      <div className="relative w-full max-w-[513.398px]">
+        <Carousel
+          setApi={setApi}
+          orientation="vertical"
+          className="w-full"
+          opts={{
+            axis: "y",
+            align: "center",
+            loop: true,
+            containScroll: false,
+            duration: 28,
+            dragFree: false,
+            watchDrag: true,
+            watchResize: true,
+          }}
+        >
+          <div
+            className="relative max-h-[min(520px,70vh)] overflow-hidden lg:h-[596px] [&_[data-slot=carousel-content]]:h-full"
+            style={{
+              maskImage: WHEEL_MASK,
+              WebkitMaskImage: WHEEL_MASK,
             }}
-            card={card}
-          />
-        ))}
-      </AnimatedContent>
+          >
+            <CarouselContent className="-mt-4 h-full">
+              {cards.map((card) => (
+                <CarouselItem
+                  key={card.id}
+                  className="basis-[206px] pt-4"
+                >
+                  <SocialMediaSolutionCard card={card} className="h-full" />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </div>
+        </Carousel>
 
-      <div
-        className="hidden shrink-0 flex-col gap-2 lg:flex"
-        aria-label="Solution cards navigation"
-      >
-        <button
-          type="button"
-          aria-label="Show previous solution"
-          disabled={activeIndex <= 0}
-          onClick={() => scrollToIndex(activeIndex - 1)}
-          className={navButtonClassName}
+        <div
+          className="absolute top-1/2 -right-[45px] hidden -translate-y-1/2 flex-col gap-2 lg:flex"
+          aria-label="Solution cards navigation"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={arrowDownSrc}
-            width={12}
-            height={12}
-            className="block size-3 rotate-180 group-hover:hidden"
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={arrowUpSrc}
-            width={12}
-            height={12}
-            className="hidden size-3 rotate-180 group-hover:block"
-          />
-        </button>
-        <button
-          type="button"
-          aria-label="Show next solution"
-          disabled={activeIndex >= cards.length - 1}
-          onClick={() => scrollToIndex(activeIndex + 1)}
-          className={navButtonClassName}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={arrowDownSrc}
-            width={12}
-            height={12}
-            className="block size-3 -scale-y-100 rotate-180 group-hover:hidden"
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={arrowUpSrc}
-            width={12}
-            height={12}
-            className="hidden size-3 -scale-y-100 rotate-180 group-hover:block"
-          />
-        </button>
+          <button
+            type="button"
+            aria-label="Show previous solution"
+            onClick={() => api?.scrollPrev()}
+            className={navButtonClassName}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              src={arrowDownSrc}
+              width={12}
+              height={12}
+              className="block size-3 rotate-180 group-hover:hidden"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              src={arrowUpSrc}
+              width={12}
+              height={12}
+              className="hidden size-3 rotate-180 group-hover:block"
+            />
+          </button>
+          <button
+            type="button"
+            aria-label="Show next solution"
+            onClick={() => api?.scrollNext()}
+            className={navButtonClassName}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              src={arrowDownSrc}
+              width={12}
+              height={12}
+              className="block size-3 -scale-y-100 rotate-180 group-hover:hidden"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              src={arrowUpSrc}
+              width={12}
+              height={12}
+              className="hidden size-3 -scale-y-100 rotate-180 group-hover:block"
+            />
+          </button>
+        </div>
       </div>
     </div>
   )

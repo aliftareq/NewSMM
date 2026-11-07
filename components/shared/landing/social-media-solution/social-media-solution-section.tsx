@@ -2,7 +2,7 @@ import { AnimatedContent } from "@/components/shared/animated-content"
 import { LinkTo } from "@/components/shared/link-to"
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
-import { SocialMediaSolutionCardsPanel } from "@/components/shared/landing/social-media-solution/social-media-solution-cards-panel"
+import { SocialMediaSolutionCardsBlock } from "@/components/shared/landing/social-media-solution/social-media-solution-cards-block"
 import { aboutSocialMediaSolutionContent } from "@/data/landing/social-media-solution"
 import { cn } from "@/lib/utils"
 import type { SocialMediaSolutionContent } from "@/types/landing/social-media-solution"
@@ -74,7 +74,7 @@ export function SocialMediaSolutionSection({
             </AnimatedContent>
           </div>
 
-          <SocialMediaSolutionCardsPanel
+          <SocialMediaSolutionCardsBlock
             cards={cards}
             arrowUpSrc={arrowUpSrc}
             arrowDownSrc={arrowDownSrc}
