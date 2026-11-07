@@ -1,6 +1,6 @@
 import { CtaSection } from "@/components/shared/landing/cta-section"
 
-export default function MarketingWithCtaLayout({
+export function MarketingCtaShell({
   children,
 }: Readonly<{
   children: React.ReactNode

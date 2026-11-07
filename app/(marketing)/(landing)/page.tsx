@@ -9,7 +9,6 @@ import { WhyChooseUsSection } from "@/components/shared/landing/why-choose-us/wh
 import { FaqSection } from "@/components/shared/landing/faq/faq-section"
 import { StatsHighlightSection } from "@/components/shared/landing/stats-highlight/stats-highlight-section"
 
-
 export default function LandingPage() {
   return (
     <main className="m-0 p-0">
