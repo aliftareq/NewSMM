@@ -12,6 +12,8 @@ import {
   AnimatedServicesPanel,
   useTabSlideDirection,
 } from "@/components/shared/landing/services-explorer/services-explorer-tabs-motion"
+import { AnimatedContent } from "@/components/shared/animated-content"
+import { landingScrollRevealProps } from "@/components/shared/landing/landing-section-heading-reveal"
 
 type ServicesExplorerCardProps = {
   content?: ServicesModalContent
@@ -25,6 +27,7 @@ export function ServicesExplorerCard({
     content.defaultPlatformId
   )
   const [slideDirection, setSlideDirection] = useState(0)
+  const [panelScrollRevealDone, setPanelScrollRevealDone] = useState(false)
 
   const defaultIndex = useMemo(
     () =>
@@ -52,12 +55,19 @@ export function ServicesExplorerCard({
 
   return (
     <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-7">
-      <AnimatedPlatformTabs
-        platforms={content.platforms}
-        activeId={activePlatformId}
-        onSelect={handleSelect}
+      <AnimatedContent className="w-full" {...landingScrollRevealProps} stagger={0}>
+        <AnimatedPlatformTabs
+          platforms={content.platforms}
+          activeId={activePlatformId}
+          onSelect={handleSelect}
+        />
+      </AnimatedContent>
+      <AnimatedServicesPanel
+        platform={activePlatform}
+        direction={slideDirection}
+        enableScrollReveal={!panelScrollRevealDone}
+        onScrollRevealComplete={() => setPanelScrollRevealDone(true)}
       />
-      <AnimatedServicesPanel platform={activePlatform} direction={slideDirection} />
     </div>
   )
 }

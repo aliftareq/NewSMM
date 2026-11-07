@@ -1,11 +1,31 @@
+import { forwardRef } from "react"
+
 import { HowItWorksStepIllustration } from "@/components/shared/landing/how-it-works/how-it-works-step-illustration"
+import { cn } from "@/lib/utils"
 import type { HowItWorksStep } from "@/types/landing/how-it-works"
 
-export function HowItWorksStepColumn({ step }: { step: HowItWorksStep }) {
+type HowItWorksStepColumnProps = {
+  step: HowItWorksStep
+  hideUntilAnimated?: boolean
+  className?: string
+}
+
+export const HowItWorksStepColumn = forwardRef<
+  HTMLElement,
+  HowItWorksStepColumnProps
+>(function HowItWorksStepColumn(
+  { step, hideUntilAnimated = false, className },
+  ref,
+) {
   return (
     <article
+      ref={ref}
       data-slot="how-it-works-step"
-      className="flex h-full min-w-0 flex-col"
+      className={cn(
+        "flex min-w-0 flex-1 flex-col will-change-transform",
+        hideUntilAnimated && "opacity-0",
+        className,
+      )}
     >
       <div className="flex h-[78px] shrink-0 items-center justify-center rounded-2xl bg-[#269de7] p-6 shadow-[0px_6px_8px_0px_rgba(0,0,0,0.12)]">
         <p className="w-full text-center text-2xl font-medium leading-none text-white">
@@ -25,4 +45,4 @@ export function HowItWorksStepColumn({ step }: { step: HowItWorksStep }) {
       </div>
     </article>
   )
-}
+})

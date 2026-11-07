@@ -7,6 +7,10 @@ import type { LandingHeroContent } from "@/types/landing/hero"
 
 import { HeroSocialDock } from "@/components/shared/landing/hero-social-dock"
 import { HeroVerticalTitle } from "@/components/shared/landing/hero-vertical-title"
+import {
+  HERO_PANEL_OPEN_DURATION_S,
+  HERO_PANEL_OPEN_EASE,
+} from "@/components/shared/landing/hero-entrance"
 import { cn } from "@/lib/utils"
 
 type HeroVisualProps = {
@@ -59,7 +63,7 @@ export function HeroVisual({
           transition={
             reduceMotion
               ? { duration: 0 }
-              : { duration: 0.85, ease: [0.22, 1, 0.36, 1] }
+              : { duration: HERO_PANEL_OPEN_DURATION_S, ease: HERO_PANEL_OPEN_EASE }
           }
           onAnimationComplete={() => {
             if (panelOpen && !reduceMotion) setTitleReady(true)

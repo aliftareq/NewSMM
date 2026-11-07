@@ -77,13 +77,31 @@ export type HeroSocialBarIcon = {
   sprite: HeroSpriteCrop
 }
 
+export type LandingHeroLayout = "order-card" | "about"
+
+export type HeroTrustStrip = {
+  avatarSrcs: string[]
+  label: string
+  labelGradient: string
+}
+
+export type HeroCtaLink = {
+  label: string
+  href: string
+}
+
 export type LandingHeroContent = {
+  layout?: LandingHeroLayout
   reviews: HeroReviewSource[]
   headline: {
     lineOne: HeroHeadlineLine
     lineTwo: HeroHeadlineLine
   }
   description: string
+  trustStrip?: HeroTrustStrip
+  featureBadges?: string[]
+  primaryCta?: HeroCtaLink
+  secondaryCta?: HeroCtaLink
   orderCard: {
     platformField: Pick<HeroSelectField, "id" | "label">
     serviceField: Pick<HeroSelectField, "id" | "label">

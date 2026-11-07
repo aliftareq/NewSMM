@@ -21,6 +21,7 @@ export type WhyChooseUsCarouselHandle = {
   scrollPrev: () => void
   scrollNext: () => void
   resetScroll: () => void
+  reInit: () => void
 }
 
 type WhyChooseUsCarouselProps = Pick<
@@ -61,10 +62,15 @@ export const WhyChooseUsCarousel = forwardRef<
     emblaApi?.scrollTo(0, true)
   }, [emblaApi])
 
+  const reInit = useCallback(() => {
+    emblaApi?.reInit()
+  }, [emblaApi])
+
   useImperativeHandle(ref, () => ({
     scrollPrev,
     scrollNext,
     resetScroll,
+    reInit,
   }))
 
   useEffect(() => {

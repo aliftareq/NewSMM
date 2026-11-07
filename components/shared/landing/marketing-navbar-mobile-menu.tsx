@@ -22,6 +22,7 @@ type MarketingNavbarMobileMenuProps = {
   onOpenChange: (open: boolean) => void
   content: LandingNavbarContent
   pathname: string
+  navActiveReady?: boolean
   isNavLinkActive: (pathname: string, href: string) => boolean
   onOpenServices: () => void
 }
@@ -31,6 +32,7 @@ export function MarketingNavbarMobileMenu({
   onOpenChange,
   content,
   pathname,
+  navActiveReady = true,
   isNavLinkActive,
   onOpenServices,
 }: MarketingNavbarMobileMenuProps) {
@@ -76,7 +78,8 @@ export function MarketingNavbarMobileMenu({
 
           <nav aria-label="Mobile main" className="flex flex-col gap-1">
             {content.navLinks.map((link) => {
-              const active = isNavLinkActive(pathname, link.href)
+              const active =
+                navActiveReady && isNavLinkActive(pathname, link.href)
               return (
                 <LinkTo
                   key={link.href}

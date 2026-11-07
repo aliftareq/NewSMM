@@ -14,7 +14,10 @@ export const landingScrollRevealProps = {
   blur: 0,
   threshold: 0.1,
   stagger: 0.08,
-} as const
+} satisfies Pick<
+  AnimatedContentProps,
+  "distance" | "direction" | "duration" | "ease" | "blur" | "threshold" | "stagger"
+>
 
 type LandingSectionHeadingRevealProps = Omit<
   AnimatedContentProps,
