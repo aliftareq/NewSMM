@@ -146,17 +146,17 @@ export function OrderExtrasGrowthSlider({
 
         <div className="flex w-full flex-col items-center gap-3">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium leading-[1.35] text-[#e24377]">
-              {sliderHint}
-            </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               alt=""
               src={assets.sliderHintArrow}
               width={20}
               height={20}
-              className="size-5 shrink-0"
+              className="size-5 shrink-0 -scale-x-100"
             />
+            <p className="text-sm font-medium leading-[1.35] text-[#e24377]">
+              {sliderHint}
+            </p>
           </div>
 
           <div

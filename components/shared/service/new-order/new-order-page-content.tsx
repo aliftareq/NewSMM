@@ -3,6 +3,11 @@
 import { useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 
+import {
+  isNewOrderFromSearchParams,
+  startNewDraftGroup,
+} from "@/lib/cart-draft-group"
+
 import { newOrderContent } from "@/data/service/new-order"
 import {
   buildOrderExtrasHref,
@@ -57,6 +62,12 @@ export function NewOrderPageContent() {
     () => parseSelection(searchParams),
     [searchParams],
   )
+
+  useEffect(() => {
+    if (isNewOrderFromSearchParams(searchParams)) {
+      startNewDraftGroup()
+    }
+  }, [searchParams])
   const [quantity, setQuantity] = useState(() =>
     clampOrderQuantity(selection.quantity),
   )

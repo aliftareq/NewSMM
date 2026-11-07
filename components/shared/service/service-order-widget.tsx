@@ -11,6 +11,8 @@ import type {
 } from "@/types/service/hero"
 import { LinkTo } from "@/components/shared/link-to"
 import { PlatformIcon } from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import { startNewDraftGroup } from "@/lib/cart-draft-group"
+import { readCart } from "@/lib/cart-storage"
 import { buildOrderHref } from "@/lib/build-order-href"
 import { cn } from "@/lib/utils"
 
@@ -20,6 +22,12 @@ type ServiceOrderWidgetProps = {
     ServiceHeroContent["assets"],
     "orderDividerLine" | "secureLockIcon" | "socialIconsSprite"
   >
+  className?: string
+  /** Always start a new cart draft group before navigating to /order. */
+  forceNewDraftGroup?: boolean
+  /** Append `newOrder=1` for /order to pick up the new draft group. */
+  appendNewOrderQuery?: boolean
+  onBeforeNavigate?: () => void
 }
 
 const BADGE_LABEL: Record<ServicePackageBadge, string> = {
@@ -93,6 +101,10 @@ function PackageCard({
 
 export function ServiceOrderWidget({
   content = serviceHeroContent.orderWidget,
+  className,
+  forceNewDraftGroup = false,
+  appendNewOrderQuery = false,
+  onBeforeNavigate,
   assets = {
     orderDividerLine: serviceHeroContent.assets.orderDividerLine,
     secureLockIcon: serviceHeroContent.assets.secureLockIcon,
@@ -124,30 +136,42 @@ export function ServiceOrderWidget({
 
   const ctaLabel = `Get ${selectedPackage.quantity} ${selectedPackage.unitLabel}`
 
-  const orderHref = useMemo(
-    () =>
-      buildOrderHref({
-        quantity: selectedPackage.quantity,
-        price: selectedPackage.price,
-        compareAtPrice: selectedPackage.compareAtPrice,
-        platformId,
-        qualityId,
-        unitLabel: selectedPackage.unitLabel,
-        username,
-      }),
-    [
+  const orderHref = useMemo(() => {
+    const href = buildOrderHref({
+      quantity: selectedPackage.quantity,
+      price: selectedPackage.price,
+      compareAtPrice: selectedPackage.compareAtPrice,
       platformId,
       qualityId,
-      selectedPackage.compareAtPrice,
-      selectedPackage.price,
-      selectedPackage.quantity,
-      selectedPackage.unitLabel,
+      unitLabel: selectedPackage.unitLabel,
       username,
-    ],
-  )
+    })
+    return appendNewOrderQuery ? `${href}&newOrder=1` : href
+  }, [
+    appendNewOrderQuery,
+    platformId,
+    qualityId,
+    selectedPackage.compareAtPrice,
+    selectedPackage.price,
+    selectedPackage.quantity,
+    selectedPackage.unitLabel,
+    username,
+  ])
+
+  const handleNavigateToOrder = () => {
+    if (forceNewDraftGroup || readCart().items.length > 0) {
+      startNewDraftGroup()
+    }
+    onBeforeNavigate?.()
+  }
 
   return (
-    <div className="box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white px-4 pb-6 pt-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px] sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8">
+    <div
+      className={cn(
+        "box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white px-4 pb-6 pt-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px] sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8",
+        className,
+      )}
+    >
       <div className="flex min-w-0 flex-1 flex-col items-start gap-5 sm:gap-6">
         <div className="box-border flex min-h-[60px] w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1 sm:h-[66px]">
           <div className="flex min-h-[52px] gap-2 sm:h-[56px]">
@@ -289,6 +313,7 @@ export function ServiceOrderWidget({
               </div>
               <LinkTo
                 href={orderHref}
+                onClick={handleNavigateToOrder}
                 className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-[#269de7] px-4 py-3.5 text-sm font-medium leading-[1.35] text-white md:h-[59px] md:min-w-[120px] md:flex-1 md:py-4 md:pl-4 md:pr-3 md:text-base"
               >
                 {ctaLabel}

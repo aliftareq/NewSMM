@@ -8,6 +8,7 @@ import { landingNavbarContent } from "@/data/landing/navbar"
 import type { LandingNavbarContent } from "@/types/landing/navbar"
 import { LinkTo } from "@/components/shared/link-to"
 import { AnimatedContent } from "@/components/shared/animated-content"
+import { MarketingNavbarCart } from "@/components/shared/cart/marketing-navbar-cart"
 import { MarketingNavbarBrandCluster } from "@/components/shared/landing/marketing-navbar-brand-cluster"
 import {
   MarketingNavbarMobileMenu,
@@ -168,14 +169,7 @@ export function MarketingNavbar({
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
-          <LinkTo
-            href={content.cart.href}
-            aria-label={content.cart.label}
-            className="relative flex size-12 items-center justify-center rounded-xl border border-[rgba(97,197,255,0.29)] bg-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="" src={content.cart.iconSrc} width={24} height={24} className="block" />
-          </LinkTo>
+          <MarketingNavbarCart />
 
           <MarketingNavbarMenuTrigger
             open={mobileMenuOpen}

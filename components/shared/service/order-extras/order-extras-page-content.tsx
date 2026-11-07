@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 import { newOrderContent } from "@/data/service/new-order"
 import { orderExtrasContent } from "@/data/service/order-extras"
+import { buildCartItemsFromExtras } from "@/lib/build-cart-from-extras"
+import { getDraftGroupId } from "@/lib/cart-draft-group"
+import { mergeCartGroupItems } from "@/lib/cart-storage"
 import { buildOrderHref, formatUsd } from "@/lib/build-order-href"
 import { NewOrderBackButton } from "@/components/shared/service/new-order/new-order-back-button"
 import { NewOrderProfileAvatarSlot } from "@/components/shared/service/new-order/new-order-profile-avatar-slot"
@@ -43,6 +46,7 @@ export function OrderExtrasPageContent() {
 
   const extrasPrice = activeLevelConfig?.extraPrice ?? 0
   const totalPrice = formatUsd(parseUsdAmount(basePrice) + extrasPrice)
+  const cartHref = "/cart"
   const extrasPriceLabel = formatUsd(extrasPrice)
 
   const storyViewsValue = activeLevelConfig?.storyViewsLabel ?? "1k"
@@ -69,6 +73,33 @@ export function OrderExtrasPageContent() {
       router.replace("/order")
     }
   }, [handle, router])
+
+  useEffect(() => {
+    if (!handle) {
+      return
+    }
+    const groupId = getDraftGroupId()
+    mergeCartGroupItems(
+      groupId,
+      buildCartItemsFromExtras({
+        groupId,
+        quantity: Number.isFinite(quantity) ? quantity : 100,
+        unitLabel,
+        platformLabel: summary.platformLabel,
+        followersPrice: basePrice,
+        storyViewsTitle: `${activeLevelConfig?.storyViewsLabel ?? "1k"} Story Views`,
+        extrasPrice,
+      }),
+    )
+  }, [
+    activeLevelConfig,
+    basePrice,
+    extrasPrice,
+    handle,
+    quantity,
+    summary.platformLabel,
+    unitLabel,
+  ])
 
   if (!handle) {
     return null
@@ -200,6 +231,7 @@ export function OrderExtrasPageContent() {
             unitLabel={unitLabel}
             platformLabel={summary.platformLabel}
             price={totalPrice}
+            ctaHref={cartHref}
             canContinue
             ctaLabel={summary.ctaLabel}
             fillHeight
