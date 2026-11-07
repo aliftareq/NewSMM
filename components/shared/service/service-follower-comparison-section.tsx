@@ -53,7 +53,7 @@ export function ServiceFollowerComparisonSection({
           </p>
         </LandingSectionHeadingReveal>
 
-        <div className="flex w-full max-w-[1320px] flex-col gap-5">
+        <div className="flex w-full min-w-0 max-w-[1320px] flex-col gap-5">
           <div className="grid grid-cols-1 gap-[18px] lg:grid-cols-2">
             {tierCards.map((card) => (
               <FollowerComparisonTierCardView

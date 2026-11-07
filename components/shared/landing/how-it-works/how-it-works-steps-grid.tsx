@@ -27,6 +27,7 @@ export function HowItWorksStepsGrid({
   const gridRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLElement | null)[]>([])
   const isAnimatingRef = useRef(false)
+  const hasPlayedOnceRef = useRef(false)
   const completeTimeoutRef = useRef<number | null>(null)
   const [hideUntilAnimated, setHideUntilAnimated] = useState(true)
 
@@ -50,14 +51,8 @@ export function HowItWorksStepsGrid({
       }
     }
 
-    const resetForReplay = () => {
-      clearCompleteTimeout()
-      isAnimatingRef.current = false
-      setHideUntilAnimated(true)
-      clearHowItWorksItemMotionStyles(getItems())
-    }
-
     const revealImmediately = () => {
+      hasPlayedOnceRef.current = true
       clearCompleteTimeout()
       isAnimatingRef.current = false
       setHideUntilAnimated(false)
@@ -65,7 +60,7 @@ export function HowItWorksStepsGrid({
     }
 
     const playFromViewportBottom = () => {
-      if (isAnimatingRef.current) return
+      if (isAnimatingRef.current || hasPlayedOnceRef.current) return
 
       const items = getItems()
       if (items.length === 0) return
@@ -79,6 +74,7 @@ export function HowItWorksStepsGrid({
         () => {
           completeTimeoutRef.current = null
           isAnimatingRef.current = false
+          hasPlayedOnceRef.current = true
           clearHowItWorksItemMotionStyles(items)
         },
         (timeoutId) => {
@@ -96,8 +92,6 @@ export function HowItWorksStepsGrid({
       ([entry]) => {
         if (entry?.isIntersecting) {
           playFromViewportBottom()
-        } else {
-          resetForReplay()
         }
       },
       { threshold: 0.15, rootMargin: "0px 0px -5% 0px" },

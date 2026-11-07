@@ -221,6 +221,12 @@
   min-height: 40px;
 }
 
+.service-follower-glance-scroll {
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+}
+
 .service-growth-package-scroll::-webkit-scrollbar-thumb:horizontal {
   min-width: 40px;
 }
