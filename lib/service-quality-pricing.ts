@@ -92,6 +92,61 @@ export function mapHeroPackagesForOrder(
   })
 }
 
+export function getOrderPackageQuantities(
+  packages: ServicePackageOption[],
+  qualityId: string,
+  platformId: string,
+): number[] {
+  const mapped = mapHeroPackagesForOrder(packages, qualityId, platformId)
+  return [...new Set(mapped.map((pkg) => pkg.quantity))].sort(
+    (left, right) => left - right,
+  )
+}
+
+export function stepOrderPackageQuantity(
+  quantities: number[],
+  current: number,
+  direction: "up" | "down",
+): number {
+  if (quantities.length === 0) {
+    return current
+  }
+
+  const exactIndex = quantities.indexOf(current)
+  const baseIndex =
+    exactIndex >= 0
+      ? exactIndex
+      : quantities.reduce((bestIndex, qty, index) => {
+          const bestQty = quantities[bestIndex] ?? quantities[0]
+          return Math.abs(qty - current) < Math.abs(bestQty - current)
+            ? index
+            : bestIndex
+        }, 0)
+
+  if (direction === "up") {
+    return quantities[Math.min(baseIndex + 1, quantities.length - 1)]
+  }
+  return quantities[Math.max(baseIndex - 1, 0)]
+}
+
+export function resolvePackagePricingForQuantity(
+  packages: ServicePackageOption[],
+  qualityId: string,
+  platformId: string,
+  quantity: number,
+): ServicePackageOption {
+  const mapped = mapHeroPackagesForOrder(packages, qualityId, platformId)
+  const exact = mapped.find((pkg) => pkg.quantity === quantity)
+  if (exact) {
+    return exact
+  }
+  return mapped.reduce((best, pkg) =>
+    Math.abs(pkg.quantity - quantity) < Math.abs(best.quantity - quantity)
+      ? pkg
+      : best,
+  )
+}
+
 export function mapGrowthRowsForQuality(
   rows: GrowthPackageRow[],
   quality: GrowthPackageQualityId,

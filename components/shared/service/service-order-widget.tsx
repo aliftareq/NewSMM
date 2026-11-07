@@ -9,7 +9,9 @@ import type {
   ServicePackageBadge,
   ServicePackageOption,
 } from "@/types/service/hero"
+import { LinkTo } from "@/components/shared/link-to"
 import { PlatformIcon } from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import { buildOrderHref } from "@/lib/build-order-href"
 import { cn } from "@/lib/utils"
 
 type ServiceOrderWidgetProps = {
@@ -121,6 +123,28 @@ export function ServiceOrderWidget({
     content.qualityOptions.find((q) => q.id === qualityId)?.label ?? ""
 
   const ctaLabel = `Get ${selectedPackage.quantity} ${selectedPackage.unitLabel}`
+
+  const orderHref = useMemo(
+    () =>
+      buildOrderHref({
+        quantity: selectedPackage.quantity,
+        price: selectedPackage.price,
+        compareAtPrice: selectedPackage.compareAtPrice,
+        platformId,
+        qualityId,
+        unitLabel: selectedPackage.unitLabel,
+        username,
+      }),
+    [
+      platformId,
+      qualityId,
+      selectedPackage.compareAtPrice,
+      selectedPackage.price,
+      selectedPackage.quantity,
+      selectedPackage.unitLabel,
+      username,
+    ],
+  )
 
   return (
     <div className="box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white px-4 pb-6 pt-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px] sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8">
@@ -263,12 +287,12 @@ export function ServiceOrderWidget({
                   </span>
                 </div>
               </div>
-              <button
-                type="button"
+              <LinkTo
+                href={orderHref}
                 className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-[#269de7] px-4 py-3.5 text-sm font-medium leading-[1.35] text-white md:h-[59px] md:min-w-[120px] md:flex-1 md:py-4 md:pl-4 md:pr-3 md:text-base"
               >
                 {ctaLabel}
-              </button>
+              </LinkTo>
             </div>
 
             <p className="flex items-center justify-center gap-1 px-1 text-center text-xs font-medium leading-[1.35] text-[#5b6477] sm:text-sm">
