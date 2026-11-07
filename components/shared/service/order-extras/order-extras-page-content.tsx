@@ -88,9 +88,10 @@ export function OrderExtrasPageContent() {
 
       <div
         ref={celebrationBoundaryRef}
-        className="relative isolate overflow-visible grid w-full grid-cols-1 gap-4 xl:grid-cols-[minmax(0,696px)_minmax(0,594px)] xl:grid-rows-[auto_minmax(0,1fr)] xl:items-stretch xl:justify-between xl:gap-x-[34px] xl:gap-y-4"
+        className="relative isolate overflow-visible grid w-full grid-cols-1 gap-4 xl:grid-cols-[minmax(0,696px)_minmax(0,594px)] xl:items-stretch xl:justify-between xl:gap-x-[34px] xl:gap-y-0"
       >
-        <div className="w-full min-w-0 rounded-[24px] border border-[#f5f6f7] bg-white p-6 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:p-8 xl:col-start-1 xl:row-start-1">
+        <div className="flex min-h-0 w-full min-w-0 flex-col gap-4 xl:col-start-1 xl:h-full xl:max-w-[696px]">
+        <div className="w-full shrink-0 rounded-[24px] border border-[#f5f6f7] bg-white p-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:p-6 xl:p-8">
           <div className="flex w-full flex-col gap-6">
             <p className="text-lg font-semibold leading-[1.3] text-[#222e48]">
               {profile.sectionTitle}
@@ -124,7 +125,7 @@ export function OrderExtrasPageContent() {
           </div>
         </div>
 
-        <div className="flex min-h-0 w-full min-w-0 flex-col overflow-visible rounded-[24px] border border-[#f5f6f7] bg-white p-6 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:p-8 xl:col-start-1 xl:row-start-2 xl:h-full">
+        <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-visible rounded-[24px] border border-[#f5f6f7] bg-white p-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:p-6">
           <div className="flex h-full min-h-0 w-full flex-col gap-6 overflow-visible">
             <div className="flex shrink-0 flex-col gap-2">
               <p className="text-lg font-semibold leading-[1.3] text-[#222e48]">
@@ -186,8 +187,9 @@ export function OrderExtrasPageContent() {
             />
           </div>
         </div>
+        </div>
 
-        <div className="flex min-h-0 w-full min-w-0 flex-col xl:col-start-2 xl:row-start-1 xl:row-span-2 xl:h-full">
+        <div className="flex min-h-0 w-full min-w-0 flex-col xl:col-start-2 xl:h-full xl:max-w-[594px] xl:justify-self-end">
           <NewOrderSummaryCard
             summary={{
               ...newOrderContent.summary,

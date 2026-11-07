@@ -173,7 +173,7 @@ export function NewOrderPageContent() {
         />
       </div>
 
-      <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-[minmax(0,696px)_minmax(0,594px)] xl:items-stretch xl:justify-between xl:gap-x-[34px] xl:gap-y-0">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,696px)_minmax(0,594px)] xl:items-stretch xl:justify-between xl:gap-x-[34px] xl:gap-y-0">
         <div className="flex w-full min-w-0 flex-col xl:col-start-1 xl:h-full">
           <NewOrderConfigPanel
             content={newOrderContent}

@@ -109,13 +109,13 @@ export function OrderExtrasGrowthSlider({
   return (
     <div
       className={cn(
-        "flex w-full flex-1 flex-col gap-8 overflow-visible rounded-xl border-[0.5px] border-[#ebecef] bg-white p-4 shadow-[0px_2px_4px_rgba(50,50,50,0.13)] sm:gap-12 sm:p-5",
+        "flex w-full flex-1 flex-col gap-12 overflow-visible rounded-xl border-[0.5px] border-[#ebecef] bg-white p-5 shadow-[0px_2px_4px_rgba(50,50,50,0.13)]",
         className,
       )}
     >
       <div className="flex w-full flex-col gap-4">
         <div className="flex w-full flex-wrap items-start justify-between gap-4">
-          <div className="flex min-w-[140px] flex-col gap-2">
+          <div className="flex min-w-[140px] flex-col gap-2 sm:gap-2">
             <p className="text-sm font-medium leading-[1.35] text-[#4f586d]">
               {growthLevelLabel}
             </p>
@@ -129,7 +129,7 @@ export function OrderExtrasGrowthSlider({
               {activeLevelTitle}
             </p>
           </div>
-          <div className="flex min-w-[79px] flex-col gap-2 text-right">
+          <div className="flex min-w-[79px] flex-col gap-2 text-right sm:gap-2">
             <p className="text-sm font-medium leading-[1.35] text-[#4f586d]">
               {totalExtrasLabel}
             </p>
@@ -281,7 +281,7 @@ export function OrderExtrasGrowthSlider({
         </div>
       </div>
 
-      <div className="mt-auto flex w-full flex-col items-center gap-6 rounded-2xl border border-[#ffe5ee] bg-[rgba(224,76,87,0.1)] px-4 pb-4 pt-6 sm:gap-[38px]">
+      <div className="mt-auto flex w-full flex-col items-center gap-[38px] rounded-2xl border border-[#ffe5ee] bg-[rgba(224,76,87,0.1)] px-4 pb-4 pt-6">
         <div className="flex flex-col items-center gap-2">
           <p className="text-2xl font-medium leading-[1.48] text-[#4f586d]">
             {storyViewsValue}
@@ -295,7 +295,7 @@ export function OrderExtrasGrowthSlider({
             {storyViewsLabel}
           </p>
         </div>
-        <div className="flex w-full gap-4">
+        <div className="flex w-full gap-4 self-stretch">
           <button
             type="button"
             onClick={onDecrementStoryViews}

@@ -8,7 +8,7 @@ import { NewOrderPlatformIconSlot } from "@/components/shared/service/new-order/
 import { cn } from "@/lib/utils"
 
 const PAYMENT_CHIP_CLASS =
-  "relative box-border h-[38px] w-full min-w-0 flex-1 overflow-hidden rounded-[6.706px] bg-white shadow-[0px_2.235px_6.706px_rgba(65,65,65,0.12)]"
+  "relative box-border h-[38px] w-full min-w-0 overflow-hidden rounded-[6.706px] bg-white shadow-[0px_2.235px_6.706px_rgba(65,65,65,0.12)]"
 
 const INSTAGRAM_GRADIENT =
   "bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] bg-clip-text text-transparent"
@@ -68,7 +68,7 @@ function PaymentWalletChip({
             className="size-[26.824px] shrink-0 object-contain"
           />
         )}
-        <span className="whitespace-nowrap text-[15.088px] font-medium leading-[1.25] text-[#202020]">
+        <span className="whitespace-nowrap text-[11px] font-medium leading-[1.25] text-[#202020] sm:text-[15.088px]">
           {label}
         </span>
       </div>
@@ -118,14 +118,14 @@ export function NewOrderSummaryCard({
   return (
     <div
       className={cn(
-        "w-full rounded-[24px] border border-[#f5f6f7] bg-white p-6 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:p-6 lg:p-8",
-        fillHeight && "flex h-full min-h-0 flex-col",
+        "w-full rounded-[24px] border border-[#f5f6f7] bg-white p-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:p-6",
+        fillHeight && "flex min-h-0 flex-col xl:h-full",
       )}
     >
       <div
         className={cn(
           "mx-auto flex w-full max-w-[530px] flex-col items-center gap-7",
-          fillHeight && "h-full min-h-0 flex-1",
+          fillHeight && "min-h-0 flex-1 xl:h-full",
         )}
       >
         <div className="w-full rounded-xl bg-[#1c2533] p-4">
@@ -229,7 +229,7 @@ export function NewOrderSummaryCard({
 
           <div className="h-px w-full border-t border-dashed border-[#c1c4cc]" />
 
-          <div className="flex w-full gap-3">
+          <div className="grid w-full grid-cols-6 gap-2 sm:gap-3">
             {summary.paymentLogos.map((logo, index) => (
               <PaymentLogo key={index} logo={logo} index={index} />
             ))}
