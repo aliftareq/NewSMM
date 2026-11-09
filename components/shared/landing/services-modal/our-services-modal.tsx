@@ -7,10 +7,11 @@ import type {
   ServicesModalContent,
   ServicesModalPlatformId,
 } from "@/types/landing/services-modal"
+import { PlatformSidebar } from "@/components/shared/landing/services-explorer/services-explorer-ui"
 import {
-  PlatformSidebar,
-  ServicesPanel,
-} from "@/components/shared/landing/services-explorer/services-explorer-ui"
+  AnimatedServicesPanel,
+  useTabSlideDirection,
+} from "@/components/shared/landing/services-explorer/services-explorer-tabs-motion"
 import {
   Dialog,
   DialogContent,
@@ -31,10 +32,23 @@ export function OurServicesModal({
   const [activePlatformId, setActivePlatformId] = useState<ServicesModalPlatformId>(
     content.defaultPlatformId
   )
+  const [slideDirection, setSlideDirection] = useState(0)
+
+  const defaultIndex = useMemo(
+    () =>
+      Math.max(
+        0,
+        content.platforms.findIndex((p) => p.id === content.defaultPlatformId)
+      ),
+    [content.defaultPlatformId, content.platforms]
+  )
+
+  const { getDirection } = useTabSlideDirection(defaultIndex)
 
   useEffect(() => {
     if (open) {
       setActivePlatformId(content.defaultPlatformId)
+      setSlideDirection(0)
     }
   }, [open, content.defaultPlatformId])
 
@@ -43,6 +57,14 @@ export function OurServicesModal({
       content.platforms.find((p) => p.id === activePlatformId) ?? content.platforms[0],
     [activePlatformId, content.platforms]
   )
+
+  const handleSelect = (id: ServicesModalPlatformId) => {
+    const index = content.platforms.findIndex((p) => p.id === id)
+    if (index >= 0) {
+      setSlideDirection(getDirection(index))
+    }
+    setActivePlatformId(id)
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -55,14 +77,19 @@ export function OurServicesModal({
           <PlatformSidebar
             platforms={content.platforms}
             activeId={activePlatform.id}
-            onSelect={setActivePlatformId}
+            onSelect={handleSelect}
           />
           <div
             className="hidden w-px shrink-0 self-stretch bg-[#ebecef] lg:block"
             aria-hidden
           />
           <div className="min-h-0 min-w-0 flex-1 lg:overflow-y-auto lg:pr-1">
-            <ServicesPanel platform={activePlatform} />
+            <AnimatedServicesPanel
+              platform={activePlatform}
+              direction={slideDirection}
+              panelMotion="vertical"
+              enableScrollReveal
+            />
           </div>
         </div>
       </DialogContent>

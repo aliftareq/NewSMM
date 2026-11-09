@@ -15,9 +15,11 @@ import { cn } from "@/lib/utils"
 
 const TAB_PILL_LAYOUT_ID = "services-explorer-tab-pill"
 
-const panelVariants = {
+const PANEL_OFFSET = 40
+
+const panelVariantsHorizontal = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 40 : direction < 0 ? -40 : 0,
+    x: direction > 0 ? PANEL_OFFSET : direction < 0 ? -PANEL_OFFSET : 0,
     opacity: 0,
   }),
   center: {
@@ -25,7 +27,23 @@ const panelVariants = {
     opacity: 1,
   },
   exit: (direction: number) => ({
-    x: direction > 0 ? -40 : direction < 0 ? 40 : 0,
+    x: direction > 0 ? -PANEL_OFFSET : direction < 0 ? PANEL_OFFSET : 0,
+    opacity: 0,
+  }),
+}
+
+/** New content rises in from below; outgoing content moves up slightly. */
+const panelVariantsVertical = {
+  enter: () => ({
+    y: PANEL_OFFSET,
+    opacity: 0,
+  }),
+  center: {
+    y: 0,
+    opacity: 1,
+  },
+  exit: () => ({
+    y: -24,
     opacity: 0,
   }),
 }
@@ -100,6 +118,8 @@ export function AnimatedPlatformTabs({
 type AnimatedServicesPanelProps = {
   platform: ServicesModalPlatform
   direction: number
+  /** Horizontal slide (landing explorer) vs rise from bottom (modal). */
+  panelMotion?: "horizontal" | "vertical"
   enableScrollReveal?: boolean
   onScrollRevealComplete?: () => void
 }
@@ -107,20 +127,27 @@ type AnimatedServicesPanelProps = {
 export function AnimatedServicesPanel({
   platform,
   direction,
+  panelMotion = "horizontal",
   enableScrollReveal = true,
   onScrollRevealComplete,
 }: AnimatedServicesPanelProps) {
   const reduceMotion = useReducedMotion()
+  const variants =
+    panelMotion === "vertical" ? panelVariantsVertical : panelVariantsHorizontal
 
   const panelProps = {
     platform,
     enableScrollReveal,
+    scrollRevealTrigger:
+      panelMotion === "vertical" ? ("mount" as const) : ("scroll" as const),
     onScrollRevealComplete,
   }
 
   if (reduceMotion) {
     return <ServicesPanel {...panelProps} />
   }
+
+  const motionAxis = panelMotion === "vertical" ? "y" : "x"
 
   return (
     <div className="relative min-h-0 overflow-hidden">
@@ -129,13 +156,13 @@ export function AnimatedServicesPanel({
           key={platform.id}
           role="tabpanel"
           custom={direction}
-          variants={panelVariants}
+          variants={variants}
           initial="enter"
           animate="center"
           exit="exit"
           transition={{
-            x: { type: "spring", stiffness: 320, damping: 32 },
-            opacity: { duration: 0.2 },
+            [motionAxis]: { type: "spring", stiffness: 320, damping: 32 },
+            opacity: { duration: 0.22 },
           }}
           className="min-w-0"
         >

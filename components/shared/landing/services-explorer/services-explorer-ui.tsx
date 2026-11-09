@@ -1,6 +1,7 @@
 "use client"
 
 import type { CSSProperties } from "react"
+import { motion, useReducedMotion } from "motion/react"
 
 import type {
   ServicesModalFeaturedService,
@@ -24,6 +25,8 @@ export const SERVICES_EXPLORER_BADGE_BEST_SELLER =
 
 const SERVICE_ARROW_BTN_CLASS = "service-explorer-arrow-btn"
 const SERVICE_ARROW_BOX_BTN_CLASS = "service-explorer-arrow-btn--box"
+
+const MODAL_SIDEBAR_TAB_PILL_LAYOUT_ID = "services-modal-sidebar-tab-pill"
 
 const SERVICE_ARROW_BOX_HOVER_CLASS =
   "transition-[background-color,box-shadow,border-color] duration-200 hover:shadow-[0px_2px_6px_rgba(15,23,42,0.08)]"
@@ -284,31 +287,53 @@ export function PlatformSidebar({
   activeId: ServicesModalPlatformId
   onSelect: (id: ServicesModalPlatformId) => void
 }) {
+  const reduceMotion = useReducedMotion()
+
   return (
-    <div className="flex w-full shrink-0 flex-col gap-3 lg:w-[235px]">
+    <div
+      role="tablist"
+      aria-label="Social platforms"
+      className="flex w-full shrink-0 flex-col gap-3 lg:w-[235px]"
+    >
       {platforms.map((platform) => {
         const active = platform.id === activeId
         return (
           <button
             key={platform.id}
             type="button"
+            role="tab"
+            aria-selected={active}
             onClick={() => onSelect(platform.id)}
             className={cn(
-              "flex w-full flex-col justify-center rounded-xl p-4 text-left transition-shadow",
+              "relative flex w-full flex-col justify-center rounded-xl p-4 text-left transition-shadow",
               active
-                ? "text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                ? "z-10 text-white"
                 : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
             )}
-            style={
-              active
-                ? { backgroundColor: platform.theme.tabActiveBg }
-                : undefined
-            }
           >
-            <span className="flex w-full items-center justify-between gap-2">
+            {active ? (
+              reduceMotion ? (
+                <span
+                  aria-hidden
+                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                  style={{ backgroundColor: platform.theme.tabActiveBg }}
+                />
+              ) : (
+                <motion.span
+                  layoutId={MODAL_SIDEBAR_TAB_PILL_LAYOUT_ID}
+                  aria-hidden
+                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                  style={{ backgroundColor: platform.theme.tabActiveBg }}
+                  transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                />
+              )
+            ) : null}
+            <span className="relative z-10 flex w-full items-center justify-between gap-2">
               <span className="flex items-center gap-2">
                 <PlatformIcon icon={platform.icon} />
-                <span className="text-base font-medium leading-[1.35]">{platform.label}</span>
+                <span className="text-base font-medium leading-[1.35]">
+                  {platform.label}
+                </span>
               </span>
               <span
                 className={cn(
@@ -375,10 +400,12 @@ export function PlatformTabsRow({
 export function ServicesPanel({
   platform,
   enableScrollReveal = true,
+  scrollRevealTrigger = "scroll",
   onScrollRevealComplete,
 }: {
   platform: ServicesModalPlatform
   enableScrollReveal?: boolean
+  scrollRevealTrigger?: "scroll" | "mount"
   onScrollRevealComplete?: () => void
 }) {
   const headerIcon = platform.headerIcon ?? platform.icon
@@ -396,6 +423,7 @@ export function ServicesPanel({
       <AnimatedContent
         className={className}
         {...reveal}
+        trigger={scrollRevealTrigger}
         stagger={options?.stagger ?? reveal.stagger}
         delay={options?.delay ?? 0}
         onComplete={options?.onComplete}
