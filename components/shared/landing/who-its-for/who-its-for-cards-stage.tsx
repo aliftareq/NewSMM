@@ -26,7 +26,6 @@ import type { WhoItsForAudience } from "@/types/landing/who-its-for"
 gsap.registerPlugin(ScrollTrigger)
 
 const SCROLL_SCRUB_SMOOTHING = 1.35
-const PIN_SCROLL_VH = 2.85
 const STEPPER_REVEAL_PROGRESS = 0.05
 
 const CENTER_LINE_START = 0.15
@@ -35,7 +34,12 @@ const CENTER_LINE_END = CENTER_LINE_START + CENTER_LINE_DURATION
 const LOGOMARK_SPLIT_START = CENTER_LINE_END + 0.05
 const LOGOMARK_SPLIT_DURATION = 0.62
 const LOGOMARK_SPLIT_END = LOGOMARK_SPLIT_START + LOGOMARK_SPLIT_DURATION
-const CARDS_SPREAD_START = LOGOMARK_SPLIT_END + 0.14
+const CENTER_REVEAL_BEAT = CENTER_LINE_DURATION + LOGOMARK_SPLIT_DURATION
+const CARDS_SPREAD_START = LOGOMARK_SPLIT_END + 0.08
+/** Match line-reveal pacing so card travel doesn’t outrun the stepper scrub. */
+const CARDS_SPREAD_DURATION = CENTER_REVEAL_BEAT * 1.65
+const CARDS_PAIR_STAGGER = CENTER_LINE_DURATION * 0.35
+const PIN_SCROLL_VH = 3.35
 
 type WhoItsForCardsStageProps = {
   audiencesLeft: WhoItsForAudience[]
@@ -344,12 +348,12 @@ export function WhoItsForCardsStage({
         x: 0,
         y: 0,
         opacity: 1,
-        duration: 2.05,
+        duration: CARDS_SPREAD_DURATION,
         ease: "power2.inOut",
       }
 
       tl.to([cards[0], cards[3]], spreadToSlot, CARDS_SPREAD_START)
-      tl.to([cards[1], cards[2]], spreadToSlot, CARDS_SPREAD_START + 0.2)
+      tl.to([cards[1], cards[2]], spreadToSlot, CARDS_SPREAD_START + CARDS_PAIR_STAGGER)
 
       scrollTimelineRef.current = tl
       return tl
