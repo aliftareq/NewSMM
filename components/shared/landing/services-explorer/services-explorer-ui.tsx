@@ -401,11 +401,13 @@ export function ServicesPanel({
   platform,
   enableScrollReveal = true,
   scrollRevealTrigger = "scroll",
+  allServicesLinkClassName,
   onScrollRevealComplete,
 }: {
   platform: ServicesModalPlatform
   enableScrollReveal?: boolean
   scrollRevealTrigger?: "scroll" | "mount"
+  allServicesLinkClassName?: string
   onScrollRevealComplete?: () => void
 }) {
   const headerIcon = platform.headerIcon ?? platform.icon
@@ -449,6 +451,7 @@ export function ServicesPanel({
         className={cn(
           "relative inline-flex h-[49px] shrink-0 items-center justify-center gap-3 rounded-2xl px-6 py-1.5 shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)] transition-[box-shadow] duration-200 hover:shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04),0px_2px_8px_rgba(15,23,42,0.08)]",
           SERVICE_ARROW_BTN_CLASS,
+          allServicesLinkClassName,
         )}
         style={{ backgroundColor: platform.theme.allButtonBg }}
       >

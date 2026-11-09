@@ -121,6 +121,7 @@ type AnimatedServicesPanelProps = {
   /** Horizontal slide (landing explorer) vs rise from bottom (modal). */
   panelMotion?: "horizontal" | "vertical"
   enableScrollReveal?: boolean
+  allServicesLinkClassName?: string
   onScrollRevealComplete?: () => void
 }
 
@@ -129,6 +130,7 @@ export function AnimatedServicesPanel({
   direction,
   panelMotion = "horizontal",
   enableScrollReveal = true,
+  allServicesLinkClassName,
   onScrollRevealComplete,
 }: AnimatedServicesPanelProps) {
   const reduceMotion = useReducedMotion()
@@ -140,6 +142,7 @@ export function AnimatedServicesPanel({
     enableScrollReveal,
     scrollRevealTrigger:
       panelMotion === "vertical" ? ("mount" as const) : ("scroll" as const),
+    allServicesLinkClassName,
     onScrollRevealComplete,
   }
 

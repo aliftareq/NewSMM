@@ -70,6 +70,7 @@ export function OurServicesModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton
+        closeButtonClassName="top-2 right-2 rounded-xl bg-button/20 text-button hover:!bg-button hover:!text-white focus-visible:!ring-button/30 sm:top-2.5 sm:right-2.5"
         className="max-h-[min(720px,calc(100vh-2rem))] w-[min(1320px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-7 ring-0 sm:max-w-none"
       >
         <DialogTitle className="sr-only">Our services</DialogTitle>
@@ -89,6 +90,7 @@ export function OurServicesModal({
               direction={slideDirection}
               panelMotion="vertical"
               enableScrollReveal
+              allServicesLinkClassName="sm:mr-3"
             />
           </div>
         </div>

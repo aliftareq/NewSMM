@@ -76,17 +76,32 @@ export function MarketingNavbar({
     <button
       type="button"
       onClick={() => setServicesModalOpen(true)}
-      className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3"
+      className={cn(
+        "inline-flex items-center gap-2 rounded-xl px-4 transition-[background-color,color,box-shadow] duration-300 ease-out",
+        isScrolled
+          ? "h-12 justify-center bg-button py-1.5 text-sm font-semibold leading-normal text-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
+          : "bg-white py-3",
+      )}
     >
       <span className="relative size-5 shrink-0 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt=""
           src={content.servicesMenu.menuIconSrc}
-          className="absolute inset-[12.5%_3.13%] block size-auto max-w-none"
+          className={cn(
+            "absolute inset-[12.5%_3.13%] block size-auto max-w-none transition-[filter] duration-300",
+            isScrolled && "brightness-0 invert",
+          )}
         />
       </span>
-      <span className="text-base font-medium leading-[1.35] text-n600 whitespace-nowrap">
+      <span
+        className={cn(
+          "whitespace-nowrap",
+          isScrolled
+            ? "text-sm font-semibold leading-normal text-white"
+            : "text-base font-medium leading-[1.35] text-n600",
+        )}
+      >
         {content.servicesMenu.label}
       </span>
       <span className="relative size-3 shrink-0 overflow-hidden">
@@ -94,7 +109,10 @@ export function MarketingNavbar({
         <img
           alt=""
           src={content.servicesMenu.chevronSrc}
-          className="absolute inset-[21.49%_0_21.5%_0] block size-auto max-w-none"
+          className={cn(
+            "absolute inset-[21.49%_0_21.5%_0] block size-auto max-w-none transition-[filter] duration-300",
+            isScrolled && "brightness-0 invert",
+          )}
         />
       </span>
     </button>
