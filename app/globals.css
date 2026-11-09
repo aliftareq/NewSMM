@@ -768,3 +768,52 @@ html:not(.hero-animations-ready) .hero-stars-row > .hero-star-pop {
     transform: scale(1);
   }
 }
+
+/* Explore All Services — arrow slides from bottom-left into place on hover */
+@keyframes service-explorer-arrow-slide {
+  from {
+    transform: translate(-11px, 11px);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes service-explorer-arrow-slide-sm {
+  from {
+    transform: translate(-8px, 8px);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+.service-explorer-arrow-btn--box:hover,
+.service-explorer-arrow-btn--box:focus-visible {
+  background-color: var(--service-arrow-brand) !important;
+  border-color: var(--service-arrow-brand) !important;
+}
+
+.service-explorer-arrow-btn--box:hover .service-explorer-arrow-icon path,
+.service-explorer-arrow-btn--box:focus-visible .service-explorer-arrow-icon path {
+  stroke: #ffffff;
+}
+
+.service-explorer-arrow-btn:hover .service-explorer-arrow-icon,
+.service-explorer-arrow-btn:focus-visible .service-explorer-arrow-icon {
+  animation: service-explorer-arrow-slide 0.35s ease-out forwards;
+}
+
+.service-explorer-arrow-btn:hover .service-explorer-arrow-icon--sm,
+.service-explorer-arrow-btn:focus-visible .service-explorer-arrow-icon--sm {
+  animation: service-explorer-arrow-slide-sm 0.35s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-explorer-arrow-btn:hover .service-explorer-arrow-icon,
+  .service-explorer-arrow-btn:focus-visible .service-explorer-arrow-icon,
+  .service-explorer-arrow-btn:hover .service-explorer-arrow-icon--sm,
+  .service-explorer-arrow-btn:focus-visible .service-explorer-arrow-icon--sm {
+    animation: none !important;
+  }
+}

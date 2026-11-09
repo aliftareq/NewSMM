@@ -1,5 +1,7 @@
 "use client"
 
+import type { CSSProperties } from "react"
+
 import type {
   ServicesModalFeaturedService,
   ServicesModalGridService,
@@ -19,6 +21,16 @@ export const SERVICES_EXPLORER_BADGE_MOST_POPULAR =
   "/images/landing/services-modal/most-popular.svg"
 export const SERVICES_EXPLORER_BADGE_BEST_SELLER =
   "/images/landing/services-modal/best-seller.svg"
+
+const SERVICE_ARROW_BTN_CLASS = "service-explorer-arrow-btn"
+const SERVICE_ARROW_BOX_BTN_CLASS = "service-explorer-arrow-btn--box"
+
+const SERVICE_ARROW_BOX_HOVER_CLASS =
+  "transition-[background-color,box-shadow,border-color] duration-200 hover:shadow-[0px_2px_6px_rgba(15,23,42,0.08)]"
+
+type ServiceArrowLinkStyle = CSSProperties & {
+  "--service-arrow-brand": string
+}
 
 function ServicesArrowIcon({
   color,
@@ -93,14 +105,29 @@ export function ServiceArrowLink({
     <LinkTo
       href={href}
       className={cn(
-        "flex shrink-0 items-center justify-center border border-solid bg-white transition-colors hover:bg-neutral-50",
+        "flex shrink-0 items-center justify-center border border-solid bg-white",
+        SERVICE_ARROW_BTN_CLASS,
+        SERVICE_ARROW_BOX_BTN_CLASS,
+        SERVICE_ARROW_BOX_HOVER_CLASS,
         dim,
         className
       )}
-      style={{ borderColor }}
+      style={
+        {
+          borderColor,
+          "--service-arrow-brand": arrowColor,
+        } as ServiceArrowLinkStyle
+      }
       aria-label="Open service"
     >
-      <ServicesArrowIcon color={arrowColor} size={iconSize} />
+      <ServicesArrowIcon
+        color={arrowColor}
+        size={iconSize}
+        className={cn(
+          "service-explorer-arrow-icon transition-[stroke] duration-200 [&_path]:transition-[stroke] [&_path]:duration-200",
+          size === "sm" && "service-explorer-arrow-icon--sm",
+        )}
+      />
     </LinkTo>
   )
 }
@@ -391,7 +418,10 @@ export function ServicesPanel({
       </div>
       <LinkTo
         href={platform.allServicesHref}
-        className="relative inline-flex h-[49px] shrink-0 items-center justify-center gap-3 rounded-2xl px-6 py-1.5 shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
+        className={cn(
+          "relative inline-flex h-[49px] shrink-0 items-center justify-center gap-3 rounded-2xl px-6 py-1.5 shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)] transition-[box-shadow] duration-200 hover:shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04),0px_2px_8px_rgba(15,23,42,0.08)]",
+          SERVICE_ARROW_BTN_CLASS,
+        )}
         style={{ backgroundColor: platform.theme.allButtonBg }}
       >
         <span
@@ -400,7 +430,10 @@ export function ServicesPanel({
         >
           {platform.allServicesLabel}
         </span>
-        <ServicesArrowIcon color={platform.theme.allButtonText} />
+        <ServicesArrowIcon
+          color={platform.theme.allButtonText}
+          className="service-explorer-arrow-icon"
+        />
       </LinkTo>
     </div>
   )
