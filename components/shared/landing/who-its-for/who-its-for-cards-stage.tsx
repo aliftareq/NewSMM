@@ -39,6 +39,9 @@ const CARDS_SPREAD_START = LOGOMARK_SPLIT_END + 0.08
 /** Match line-reveal pacing so card travel doesn’t outrun the stepper scrub. */
 const CARDS_SPREAD_DURATION = CENTER_REVEAL_BEAT * 1.65
 const CARDS_PAIR_STAGGER = CENTER_LINE_DURATION * 0.35
+const CARDS_SPREAD_END = CARDS_SPREAD_START + CARDS_PAIR_STAGGER + CARDS_SPREAD_DURATION
+/** Extra scrub after cards land before unpinning (empty timeline segment). */
+const PIN_HOLD_AFTER_CARDS = CENTER_LINE_DURATION
 const PIN_SCROLL_VH = 3.35
 
 type WhoItsForCardsStageProps = {
@@ -354,6 +357,8 @@ export function WhoItsForCardsStage({
 
       tl.to([cards[0], cards[3]], spreadToSlot, CARDS_SPREAD_START)
       tl.to([cards[1], cards[2]], spreadToSlot, CARDS_SPREAD_START + CARDS_PAIR_STAGGER)
+
+      tl.to({}, { duration: PIN_HOLD_AFTER_CARDS }, CARDS_SPREAD_END)
 
       scrollTimelineRef.current = tl
       return tl
