@@ -13,6 +13,8 @@ export type BrandLogomarkSplitProps = {
   className?: string
   holdStacked?: boolean
   splitReveal?: boolean
+  /** Scroll-scrub timeline owns transforms (Who it’s for center). */
+  motion?: "auto" | "scroll"
   stackTopY?: number
   stackBottomY?: number
 }
@@ -25,6 +27,7 @@ export function BrandLogomarkSplit({
   className,
   holdStacked = false,
   splitReveal = false,
+  motion = "auto",
   stackTopY = 7,
   stackBottomY = -7,
 }: BrandLogomarkSplitProps) {
@@ -41,6 +44,7 @@ export function BrandLogomarkSplit({
   }, [splitReveal])
 
   useLayoutEffect(() => {
+    if (motion === "scroll") return undefined
     if (reduceMotion) return undefined
 
     const top = topRef.current
@@ -95,6 +99,7 @@ export function BrandLogomarkSplit({
     reduceMotion,
     stackTopY,
     stackBottomY,
+    motion,
   ])
 
   return (

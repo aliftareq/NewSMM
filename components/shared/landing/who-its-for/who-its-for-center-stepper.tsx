@@ -15,6 +15,7 @@ type WhoItsForCenterStepperProps = {
   revealed?: boolean
   /** Run logomark layer split after center column is visible. */
   logomarkSplitReveal?: boolean
+  logomarkScrollDriven?: boolean
 }
 
 /** Figma 25704:30539–30548 — vertical stepper + center logomark */
@@ -22,7 +23,12 @@ export const WhoItsForCenterStepper = forwardRef<
   HTMLDivElement,
   WhoItsForCenterStepperProps
 >(function WhoItsForCenterStepper(
-  { className, revealed = false, logomarkSplitReveal = false },
+  {
+    className,
+    revealed = false,
+    logomarkSplitReveal = false,
+    logomarkScrollDriven = false,
+  },
   ref,
 ) {
   return (
@@ -45,6 +51,7 @@ export const WhoItsForCenterStepper = forwardRef<
             <BrandLogomarkSplit
               {...WHO_ITS_FOR_CENTER_LOGOMARK}
               className="size-full max-w-none"
+              motion={logomarkScrollDriven ? "scroll" : "auto"}
               holdStacked={revealed && !logomarkSplitReveal}
               splitReveal={logomarkSplitReveal}
             />

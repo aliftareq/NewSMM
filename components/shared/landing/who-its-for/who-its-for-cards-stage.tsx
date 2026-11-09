@@ -12,6 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { AnimatedContent } from "@/components/shared/animated-content"
 import { WhoItsForAudienceCard } from "@/components/shared/landing/who-its-for/who-its-for-audience-card"
 import { WhoItsForCenterStepper } from "@/components/shared/landing/who-its-for/who-its-for-center-stepper"
+import { WHO_ITS_FOR_CENTER_LOGOMARK } from "@/components/shared/landing/brand-logomark-split"
 import {
   WHO_ITS_FOR_STEPPER_BOTTOM_CIRCLE_Y,
   WHO_ITS_FOR_STEPPER_CENTER_Y,
@@ -26,8 +27,15 @@ gsap.registerPlugin(ScrollTrigger)
 
 const SCROLL_SCRUB_SMOOTHING = 1.35
 const PIN_SCROLL_VH = 2.85
-const LOGOMARK_SPLIT_PROGRESS = 0.44
 const STEPPER_REVEAL_PROGRESS = 0.05
+
+const CENTER_LINE_START = 0.15
+const CENTER_LINE_DURATION = 1.2
+const CENTER_LINE_END = CENTER_LINE_START + CENTER_LINE_DURATION
+const LOGOMARK_SPLIT_START = CENTER_LINE_END + 0.05
+const LOGOMARK_SPLIT_DURATION = 0.62
+const LOGOMARK_SPLIT_END = LOGOMARK_SPLIT_START + LOGOMARK_SPLIT_DURATION
+const CARDS_SPREAD_START = LOGOMARK_SPLIT_END + 0.14
 
 type WhoItsForCardsStageProps = {
   audiencesLeft: WhoItsForAudience[]
@@ -131,6 +139,20 @@ function setStepperLinesRevealed(topClip: SVGRectElement | null, bottomClip: SVG
   }
 }
 
+function getCenterLogomarkPaths(stepper: HTMLDivElement | null) {
+  const anchor = stepper?.querySelector(
+    '[data-slot="who-its-for-logomark-anchor"]',
+  )
+  const paths = anchor?.querySelectorAll("svg path")
+  if (!paths || paths.length < 2) {
+    return { top: null as SVGPathElement | null, bottom: null as SVGPathElement | null }
+  }
+  return {
+    top: paths[0] as SVGPathElement,
+    bottom: paths[1] as SVGPathElement,
+  }
+}
+
 function computeCardSpreadOffsets(
   root: HTMLDivElement,
   stepper: HTMLDivElement | null,
@@ -214,7 +236,11 @@ export function WhoItsForCardsStage({
 
     const syncRevealState = (progress: number) => {
       setStepperRevealed(progress >= STEPPER_REVEAL_PROGRESS)
-      setLogomarkSplitReveal(progress >= LOGOMARK_SPLIT_PROGRESS)
+      const timeline = scrollTimelineRef.current
+      const timelineProgress = timeline
+        ? progress * (timeline.duration() || 1)
+        : 0
+      setLogomarkSplitReveal(timelineProgress >= LOGOMARK_SPLIT_END - 0.02)
     }
 
     const buildTimeline = () => {
@@ -264,10 +290,10 @@ export function WhoItsForCardsStage({
           topClip,
           {
             attr: { height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT },
-            duration: 1.2,
+            duration: CENTER_LINE_DURATION,
             ease: "power2.inOut",
           },
-          0.15,
+          CENTER_LINE_START,
         )
         tl.to(
           bottomClip,
@@ -276,10 +302,41 @@ export function WhoItsForCardsStage({
               y: WHO_ITS_FOR_STEPPER_CENTER_Y,
               height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
             },
-            duration: 1.2,
+            duration: CENTER_LINE_DURATION,
             ease: "power2.inOut",
           },
-          0.15,
+          CENTER_LINE_START,
+        )
+      }
+
+      const { top: logomarkTop, bottom: logomarkBottom } =
+        getCenterLogomarkPaths(stepper ?? null)
+      if (logomarkTop && logomarkBottom) {
+        const { stackTopY, stackBottomY } = WHO_ITS_FOR_CENTER_LOGOMARK
+        gsap.set([logomarkTop, logomarkBottom], {
+          transformOrigin: "50% 50%",
+          transformBox: "fill-box",
+          force3D: true,
+        })
+        gsap.set(logomarkTop, { y: stackTopY })
+        gsap.set(logomarkBottom, { y: stackBottomY })
+        tl.to(
+          logomarkTop,
+          {
+            y: 0,
+            duration: LOGOMARK_SPLIT_DURATION,
+            ease: "power3.out",
+          },
+          LOGOMARK_SPLIT_START,
+        )
+        tl.to(
+          logomarkBottom,
+          {
+            y: 0,
+            duration: LOGOMARK_SPLIT_DURATION,
+            ease: "power3.out",
+          },
+          LOGOMARK_SPLIT_START + 0.04,
         )
       }
 
@@ -291,8 +348,8 @@ export function WhoItsForCardsStage({
         ease: "power2.inOut",
       }
 
-      tl.to([cards[0], cards[3]], spreadToSlot, 0.58)
-      tl.to([cards[1], cards[2]], spreadToSlot, 0.88)
+      tl.to([cards[0], cards[3]], spreadToSlot, CARDS_SPREAD_START)
+      tl.to([cards[1], cards[2]], spreadToSlot, CARDS_SPREAD_START + 0.2)
 
       scrollTimelineRef.current = tl
       return tl
@@ -316,6 +373,12 @@ export function WhoItsForCardsStage({
           gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
           if (stepper) {
             gsap.set(stepper, { clearProps: "transform,opacity" })
+            const { top, bottom } = getCenterLogomarkPaths(stepper)
+            if (top && bottom) {
+              gsap.set([top, bottom], {
+                clearProps: "transform,transformOrigin,transformBox",
+              })
+            }
           }
           setStepperRevealed(true)
           setLogomarkSplitReveal(true)
@@ -363,6 +426,7 @@ export function WhoItsForCardsStage({
           ref={stepperRef}
           revealed={stepperRevealed}
           logomarkSplitReveal={logomarkSplitReveal}
+          logomarkScrollDriven
           className="z-0"
         />
 
