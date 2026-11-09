@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import type { LandingFaqItem } from "@/types/landing/faq"
 
 const CHEVRON_COLLAPSED = "/images/landing/faq/chevron-collapsed.svg"
+const CHEVRON_EXPANDED = "/images/landing/faq/chevron-expanded.svg"
 
 type FaqItemProps = {
   item: LandingFaqItem
@@ -43,7 +44,7 @@ export function FaqItem({ item, isOpen, onToggle }: FaqItemProps) {
         </span>
         <span className="relative inline-flex size-6 shrink-0 items-center justify-center">
           <Image
-            src={CHEVRON_COLLAPSED}
+            src={isOpen ? CHEVRON_EXPANDED : CHEVRON_COLLAPSED}
             alt=""
             width={24}
             height={24}
