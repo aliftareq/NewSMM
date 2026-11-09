@@ -406,13 +406,10 @@
     max-width: 100%;
     overflow-x: clip;
     --wcuc-section-pad: 1rem;
-    --wcuc-inset-nudge: 0.75rem;
     --wcuc-slide-gap: 20px;
     --wcuc-card-width: min(calc(100vw - 4rem), 413px);
-    --wcuc-inset: calc(
-      (100vw - min(100vw, 1320px)) / 2 + var(--wcuc-section-pad) -
-        var(--wcuc-inset-nudge)
-    );
+    /* Match info-container column start; inner px-4/sm:px-6 is on the copy, not added here. */
+    --wcuc-inset: var(--wcuc-section-pad);
     --wcuc-end-spacer: 0px;
   }
 
@@ -420,6 +417,12 @@
     .why-choose-us-embla {
       --wcuc-section-pad: 1.5rem;
       --wcuc-card-width: 413px;
+    }
+  }
+
+  @media (min-width: 1320px) {
+    .why-choose-us-embla {
+      --wcuc-inset: calc((100vw - 1320px) / 2);
     }
   }
 
