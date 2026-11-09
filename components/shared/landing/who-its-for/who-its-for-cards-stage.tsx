@@ -29,16 +29,16 @@ const SCROLL_SCRUB_SMOOTHING = 1.35
 const STEPPER_REVEAL_PROGRESS = 0.05
 
 const CENTER_LINE_START = 0.15
-const CENTER_LINE_DURATION = 1.45
+const CENTER_LINE_DURATION = 1.75
 const CENTER_LINE_END = CENTER_LINE_START + CENTER_LINE_DURATION
 const LOGOMARK_SPLIT_START = CENTER_LINE_END + 0.05
 const LOGOMARK_SPLIT_DURATION = 0.62
 const LOGOMARK_SPLIT_END = LOGOMARK_SPLIT_START + LOGOMARK_SPLIT_DURATION
 const CENTER_REVEAL_BEAT = CENTER_LINE_DURATION + LOGOMARK_SPLIT_DURATION
 const CARDS_SPREAD_START = LOGOMARK_SPLIT_END + 0.08
-/** Match line-reveal pacing so card travel doesn’t outrun the stepper scrub. */
-const CARDS_SPREAD_DURATION = CENTER_REVEAL_BEAT * 1.65
-const CARDS_PAIR_STAGGER = CENTER_LINE_DURATION * 0.35
+/** Scroll-scrubbed travel from center — keep slower than the stepper line draw. */
+const CARDS_SPREAD_DURATION = CENTER_REVEAL_BEAT * 2.2
+const CARDS_PAIR_STAGGER = CENTER_LINE_DURATION * 0.45
 const CARDS_SPREAD_END = CARDS_SPREAD_START + CARDS_PAIR_STAGGER + CARDS_SPREAD_DURATION
 /** Extra scrub after cards land before unpinning (empty timeline segment). */
 const PIN_HOLD_AFTER_CARDS = CENTER_REVEAL_BEAT * 1.15
@@ -298,7 +298,7 @@ export function WhoItsForCardsStage({
           {
             attr: { height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT },
             duration: CENTER_LINE_DURATION,
-            ease: "power2.inOut",
+            ease: "power1.inOut",
           },
           CENTER_LINE_START,
         )
@@ -310,7 +310,7 @@ export function WhoItsForCardsStage({
               height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
             },
             duration: CENTER_LINE_DURATION,
-            ease: "power2.inOut",
+            ease: "power1.inOut",
           },
           CENTER_LINE_START,
         )
@@ -352,7 +352,7 @@ export function WhoItsForCardsStage({
         y: 0,
         opacity: 1,
         duration: CARDS_SPREAD_DURATION,
-        ease: "power2.inOut",
+        ease: "power1.inOut",
       }
 
       tl.to([cards[0], cards[3]], spreadToSlot, CARDS_SPREAD_START)
