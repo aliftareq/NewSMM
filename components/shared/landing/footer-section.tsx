@@ -31,12 +31,12 @@ export function FooterSection({
           />
         </AnimatedContent>
 
-        <div className="flex w-full flex-col items-center gap-10 pb-8 sm:gap-12 sm:pb-10 xl:gap-[60px] xl:pb-12">
-          <AnimatedContent
-            className="flex w-full flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-[133px]"
-            {...landingScrollRevealProps}
-            delay={0.05}
-          >
+        <AnimatedContent
+          className="flex w-full flex-col items-center gap-10 pb-8 sm:gap-12 sm:pb-10 xl:gap-[60px] xl:pb-12"
+          {...landingScrollRevealProps}
+          stagger={0}
+        >
+          <div className="flex w-full flex-col gap-10 xl:flex-row xl:items-start xl:justify-between xl:gap-[133px]">
             <FooterBrandColumn brand={content.brand} />
 
             <div className="grid w-full min-w-0 grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-8 md:gap-x-12 xl:contents">
@@ -55,18 +55,13 @@ export function FooterSection({
                 className="sm:col-span-2 xl:col-span-1"
               />
             </div>
-          </AnimatedContent>
+          </div>
 
-          <AnimatedContent
-            className="flex w-full flex-col gap-10 sm:gap-12 xl:gap-[60px]"
-            {...landingScrollRevealProps}
-            delay={0.08}
-            stagger={0}
-          >
+          <div className="flex w-full flex-col gap-10 sm:gap-12 xl:gap-[60px]">
             <FooterTrustBadges badges={content.trustBadges} />
             <FooterBottomBar legal={content.legal} />
-          </AnimatedContent>
-        </div>
+          </div>
+        </AnimatedContent>
       </div>
     </footer>
   )
