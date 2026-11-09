@@ -73,13 +73,15 @@ export function AnimatedPlatformTabs({
               reduceMotion ? (
                 <span
                   aria-hidden
-                  className="absolute inset-0 rounded-xl bg-[#269de7] shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                  style={{ backgroundColor: platform.theme.tabActiveBg }}
                 />
               ) : (
                 <motion.span
                   layoutId={TAB_PILL_LAYOUT_ID}
                   aria-hidden
-                  className="absolute inset-0 rounded-xl bg-[#269de7] shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                  style={{ backgroundColor: platform.theme.tabActiveBg }}
                   transition={{ type: "spring", stiffness: 420, damping: 36 }}
                 />
               )

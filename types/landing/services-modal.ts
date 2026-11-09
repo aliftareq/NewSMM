@@ -51,6 +51,14 @@ export type ServicesModalPlatformTheme = {
   featuredGradientFrom: string
   featuredGradientTo: string
   gridArrowBorder: string
+  /** Active platform tab background */
+  tabActiveBg: string
+  featuredSecondaryBorder: string
+  featuredSecondaryGradientFrom: string
+  featuredSecondaryGradientTo: string
+  badgePopularBg: string
+  badgeSellerBg: string
+  badgeSellerText: string
 }
 
 export type ServicesModalPlatform = {

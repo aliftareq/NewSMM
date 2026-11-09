@@ -15,11 +15,40 @@ import {
 } from "@/components/shared/landing/landing-section-heading-reveal"
 import { cn } from "@/lib/utils"
 
-export const SERVICES_EXPLORER_ARROW = "/images/landing/services-modal/arrow-instagram.svg"
 export const SERVICES_EXPLORER_BADGE_MOST_POPULAR =
   "/images/landing/services-modal/most-popular.svg"
 export const SERVICES_EXPLORER_BADGE_BEST_SELLER =
   "/images/landing/services-modal/best-seller.svg"
+
+function ServicesArrowIcon({
+  color,
+  size = 16,
+  className,
+}: {
+  color: string
+  size?: number
+  className?: string
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("block shrink-0", className)}
+      aria-hidden
+    >
+      <path
+        d="M13 3L3 13M13 12V3H4"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
 
 export function PlatformIcon({
   icon,
@@ -47,15 +76,18 @@ export function PlatformIcon({
 export function ServiceArrowLink({
   href,
   borderColor,
+  arrowColor,
   size = "md",
   className,
 }: {
   href: string
   borderColor: string
+  arrowColor: string
   size?: "md" | "sm"
   className?: string
 }) {
   const dim = size === "sm" ? "size-7 rounded-[5.5px]" : "size-[41px] rounded-lg"
+  const iconSize = size === "sm" ? 11 : 16
 
   return (
     <LinkTo
@@ -68,14 +100,7 @@ export function ServiceArrowLink({
       style={{ borderColor }}
       aria-label="Open service"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        alt=""
-        src={SERVICES_EXPLORER_ARROW}
-        width={size === "sm" ? 11 : 16}
-        height={size === "sm" ? 11 : 16}
-        className="block"
-      />
+      <ServicesArrowIcon color={arrowColor} size={iconSize} />
     </LinkTo>
   )
 }
@@ -99,11 +124,15 @@ function FeaturedServiceCard({
   platform: ServicesModalPlatform
 }) {
   const isPopular = service.badge === "most-popular"
-  const border = isPopular ? platform.theme.featuredBorder : "#e2c8ff"
+  const border = isPopular
+    ? platform.theme.featuredBorder
+    : platform.theme.featuredSecondaryBorder
   const gradientFrom = isPopular
     ? platform.theme.featuredGradientFrom
-    : "#fefdff"
-  const gradientTo = isPopular ? platform.theme.featuredGradientTo : "#fbf7ff"
+    : platform.theme.featuredSecondaryGradientFrom
+  const gradientTo = isPopular
+    ? platform.theme.featuredGradientTo
+    : platform.theme.featuredSecondaryGradientTo
 
   return (
     <div
@@ -116,10 +145,12 @@ function FeaturedServiceCard({
       <div className="flex w-full flex-col gap-5">
         <div className="flex items-center justify-between gap-3">
           <div
-            className={cn(
-              "flex items-center gap-2 rounded-full px-4 py-2.5",
-              isPopular ? "bg-[#ffe5e7]" : "bg-[rgba(147,51,234,0.12)]"
-            )}
+            className="flex items-center gap-2 rounded-full px-4 py-2.5"
+            style={{
+              backgroundColor: isPopular
+                ? platform.theme.badgePopularBg
+                : platform.theme.badgeSellerBg,
+            }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -135,12 +166,20 @@ function FeaturedServiceCard({
             />
             <span
               className="text-sm leading-[1.3]"
-              style={{ color: isPopular ? platform.theme.accentPrice : "#902ceb" }}
+              style={{
+                color: isPopular
+                  ? platform.theme.accentPrice
+                  : platform.theme.badgeSellerText,
+              }}
             >
               {isPopular ? "MOST POPULAR" : "BEST SELLER"}
             </span>
           </div>
-          <ServiceArrowLink href={service.href} borderColor={border} />
+          <ServiceArrowLink
+            href={service.href}
+            borderColor={border}
+            arrowColor={platform.theme.accentText}
+          />
         </div>
 
         <div className="flex items-center justify-between gap-4">
@@ -200,6 +239,7 @@ function GridServiceCard({
           <ServiceArrowLink
             href={service.href}
             borderColor={platform.theme.gridArrowBorder}
+            arrowColor={platform.theme.accentText}
             size="sm"
           />
         </div>
@@ -229,9 +269,14 @@ export function PlatformSidebar({
             className={cn(
               "flex w-full flex-col justify-center rounded-xl p-4 text-left transition-shadow",
               active
-                ? "bg-[#269de7] text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                ? "text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
                 : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
             )}
+            style={
+              active
+                ? { backgroundColor: platform.theme.tabActiveBg }
+                : undefined
+            }
           >
             <span className="flex w-full items-center justify-between gap-2">
               <span className="flex items-center gap-2">
@@ -280,9 +325,14 @@ export function PlatformTabsRow({
             className={cn(
               "flex w-full min-w-0 flex-col items-center justify-center rounded-xl p-3 transition-shadow xl:min-w-0 xl:p-4",
               active
-                ? "bg-[#269de7] text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                ? "text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
                 : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
             )}
+            style={
+              active
+                ? { backgroundColor: platform.theme.tabActiveBg }
+                : undefined
+            }
           >
             <span className="flex items-center gap-2 whitespace-nowrap">
               <PlatformIcon icon={platform.icon} />
@@ -350,14 +400,7 @@ export function ServicesPanel({
         >
           {platform.allServicesLabel}
         </span>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          alt=""
-          src={SERVICES_EXPLORER_ARROW}
-          width={16}
-          height={16}
-          className="block"
-        />
+        <ServicesArrowIcon color={platform.theme.allButtonText} />
       </LinkTo>
     </div>
   )

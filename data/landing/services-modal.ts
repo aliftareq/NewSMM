@@ -1,13 +1,14 @@
 import type {
   ServicesModalContent,
   ServicesModalPlatform,
+  ServicesModalPlatformTheme,
 } from "@/types/landing/services-modal"
 
 const BASE = "/images/landing/services-modal"
 const PLATFORMS = `${BASE}/platforms`
 const SERVICES = `${BASE}/services`
 
-const instagramTheme = {
+const instagramTheme: ServicesModalPlatformTheme = {
   accentText: "#e1306c",
   accentPrice: "#e11d48",
   allButtonBg: "#fff1f2",
@@ -16,17 +17,139 @@ const instagramTheme = {
   featuredGradientFrom: "#fffdfd",
   featuredGradientTo: "#fff7f9",
   gridArrowBorder: "#ffcfda",
+  tabActiveBg: "#e1306c",
+  featuredSecondaryBorder: "#ffcfda",
+  featuredSecondaryGradientFrom: "#fffdfd",
+  featuredSecondaryGradientTo: "#fff7f9",
+  badgePopularBg: "#ffe5e7",
+  badgeSellerBg: "#ffe5e7",
+  badgeSellerText: "#e1306c",
 }
 
-const genericTheme = {
-  accentText: "#1698e3",
-  accentPrice: "#1698e3",
-  allButtonBg: "#f0f9ff",
-  allButtonText: "#1698e3",
+const tiktokTheme: ServicesModalPlatformTheme = {
+  accentText: "#000000",
+  accentPrice: "#000000",
+  allButtonBg: "#f2f2f2",
+  allButtonText: "#000000",
+  featuredBorder: "#e5e5e5",
+  featuredGradientFrom: "#ffffff",
+  featuredGradientTo: "#f2f2f2",
+  gridArrowBorder: "#e5e5e5",
+  tabActiveBg: "#000000",
+  featuredSecondaryBorder: "#e5e5e5",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#f7f7f7",
+  badgePopularBg: "rgba(0,0,0,0.08)",
+  badgeSellerBg: "rgba(0,0,0,0.06)",
+  badgeSellerText: "#000000",
+}
+
+const youtubeTheme: ServicesModalPlatformTheme = {
+  accentText: "#ff0000",
+  accentPrice: "#ff0000",
+  allButtonBg: "#fff1f1",
+  allButtonText: "#ff0000",
+  featuredBorder: "#ffcccc",
+  featuredGradientFrom: "#ffffff",
+  featuredGradientTo: "#fff0f0",
+  gridArrowBorder: "#ffcccc",
+  tabActiveBg: "#ff0000",
+  featuredSecondaryBorder: "#ffcccc",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#fff0f0",
+  badgePopularBg: "#ffebeb",
+  badgeSellerBg: "#ffebeb",
+  badgeSellerText: "#ff0000",
+}
+
+const facebookTheme: ServicesModalPlatformTheme = {
+  accentText: "#1877f2",
+  accentPrice: "#1877f2",
+  allButtonBg: "#eef5fe",
+  allButtonText: "#1877f2",
+  featuredBorder: "#bfdbfe",
+  featuredGradientFrom: "#ffffff",
+  featuredGradientTo: "#f0f6ff",
+  gridArrowBorder: "#bfdbfe",
+  tabActiveBg: "#1877f2",
+  featuredSecondaryBorder: "#bfdbfe",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#eef5fe",
+  badgePopularBg: "#e7f0ff",
+  badgeSellerBg: "rgba(24,119,242,0.1)",
+  badgeSellerText: "#1877f2",
+}
+
+const twitterTheme: ServicesModalPlatformTheme = {
+  accentText: "#1d9bf0",
+  accentPrice: "#1d9bf0",
+  allButtonBg: "#eef8fd",
+  allButtonText: "#1d9bf0",
   featuredBorder: "#bae6fd",
   featuredGradientFrom: "#ffffff",
   featuredGradientTo: "#f0f9ff",
   gridArrowBorder: "#bae6fd",
+  tabActiveBg: "#1d9bf0",
+  featuredSecondaryBorder: "#bae6fd",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#f0f9ff",
+  badgePopularBg: "#e8f6fc",
+  badgeSellerBg: "rgba(29,155,240,0.1)",
+  badgeSellerText: "#1d9bf0",
+}
+
+const threadsTheme: ServicesModalPlatformTheme = {
+  accentText: "#000000",
+  accentPrice: "#000000",
+  allButtonBg: "#f2f2f2",
+  allButtonText: "#000000",
+  featuredBorder: "#e5e5e5",
+  featuredGradientFrom: "#ffffff",
+  featuredGradientTo: "#f7f7f7",
+  gridArrowBorder: "#e5e5e5",
+  tabActiveBg: "#000000",
+  featuredSecondaryBorder: "#e5e5e5",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#f7f7f7",
+  badgePopularBg: "rgba(0,0,0,0.08)",
+  badgeSellerBg: "rgba(0,0,0,0.06)",
+  badgeSellerText: "#000000",
+}
+
+const spotifyTheme: ServicesModalPlatformTheme = {
+  accentText: "#1db954",
+  accentPrice: "#1db954",
+  allButtonBg: "#edfdf3",
+  allButtonText: "#1db954",
+  featuredBorder: "#bbf7d0",
+  featuredGradientFrom: "#ffffff",
+  featuredGradientTo: "#f0fdf4",
+  gridArrowBorder: "#bbf7d0",
+  tabActiveBg: "#1db954",
+  featuredSecondaryBorder: "#bbf7d0",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#f0fdf4",
+  badgePopularBg: "#dcfceb",
+  badgeSellerBg: "rgba(29,185,84,0.12)",
+  badgeSellerText: "#1db954",
+}
+
+const soundcloudTheme: ServicesModalPlatformTheme = {
+  accentText: "#ff5500",
+  accentPrice: "#ff5500",
+  allButtonBg: "#fff4ed",
+  allButtonText: "#ff5500",
+  featuredBorder: "#fed7aa",
+  featuredGradientFrom: "#ffffff",
+  featuredGradientTo: "#fff7ed",
+  gridArrowBorder: "#fed7aa",
+  tabActiveBg: "#ff5500",
+  featuredSecondaryBorder: "#fed7aa",
+  featuredSecondaryGradientFrom: "#ffffff",
+  featuredSecondaryGradientTo: "#fff7ed",
+  badgePopularBg: "#ffe8d9",
+  badgeSellerBg: "rgba(255,85,0,0.1)",
+  badgeSellerText: "#ff5500",
 }
 
 const instagramFeatured = [
@@ -186,10 +309,10 @@ function platformEntry(
     "featured" | "grid" | "headerIcon" | "theme"
   > & {
     buySlug: string
-    theme?: typeof instagramTheme | typeof genericTheme
+    theme?: ServicesModalPlatformTheme
   }
 ): ServicesModalPlatform {
-  const { buySlug, theme = genericTheme, ...rest } = config
+  const { buySlug, theme = instagramTheme, ...rest } = config
   const packages =
     buySlug === "instagram"
       ? { featured: instagramFeatured, grid: instagramGrid }
@@ -224,6 +347,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "tiktok",
       packageCount: 7,
       icon: spriteTiktok,
+      theme: tiktokTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All TikTok",
       allServicesHref: "/tiktok-smm-panel",
@@ -234,6 +358,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "youtube",
       packageCount: 7,
       icon: spriteYoutube,
+      theme: youtubeTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All YouTube",
       allServicesHref: "/youtube-smm-panel",
@@ -244,6 +369,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "facebook",
       packageCount: 7,
       icon: spriteFacebook,
+      theme: facebookTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Facebook",
       allServicesHref: "/facebook-smm-panel",
@@ -254,6 +380,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "twitter",
       packageCount: 7,
       icon: imageTwitter,
+      theme: twitterTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Twitter",
       allServicesHref: "/twitter-smm-panel",
@@ -264,6 +391,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "threads",
       packageCount: 7,
       icon: imageThreads,
+      theme: threadsTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Threads",
       allServicesHref: "/threads-smm-panel",
@@ -274,6 +402,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "spotify",
       packageCount: 7,
       icon: imageSpotify,
+      theme: spotifyTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Spotify",
       allServicesHref: "/spotify-smm-panel",
@@ -284,6 +413,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       buySlug: "soundcloud",
       packageCount: 7,
       icon: imageSoundcloud,
+      theme: soundcloudTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Soundcloud",
       allServicesHref: "/soundcloud-smm-panel",
