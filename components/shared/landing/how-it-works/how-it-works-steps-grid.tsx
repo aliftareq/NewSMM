@@ -20,6 +20,7 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
   const gridRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLElement | null)[]>([])
   const isAnimatingRef = useRef(false)
+  const hasRevealedRef = useRef(false)
   const completeTimeoutRef = useRef<number | null>(null)
   const [hideUntilAnimated, setHideUntilAnimated] = useState(true)
 
@@ -46,6 +47,7 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
     const resetForReplay = () => {
       clearCompleteTimeout()
       isAnimatingRef.current = false
+      hasRevealedRef.current = false
       setHideUntilAnimated(true)
       clearHowItWorksItemMotionStyles(getItems())
     }
@@ -53,12 +55,13 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
     const revealImmediately = () => {
       clearCompleteTimeout()
       isAnimatingRef.current = false
+      hasRevealedRef.current = true
       setHideUntilAnimated(false)
       clearHowItWorksItemMotionStyles(getItems())
     }
 
     const playFromViewportBottom = () => {
-      if (isAnimatingRef.current) return
+      if (isAnimatingRef.current || hasRevealedRef.current) return
 
       const items = getItems()
       if (items.length === 0) return
@@ -72,6 +75,7 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
         () => {
           completeTimeoutRef.current = null
           isAnimatingRef.current = false
+          hasRevealedRef.current = true
           clearHowItWorksItemMotionStyles(items)
         },
         (timeoutId) => {
@@ -87,9 +91,15 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) {
+        if (!entry) return
+
+        if (entry.isIntersecting) {
           playFromViewportBottom()
-        } else {
+          return
+        }
+
+        /* Leaving upward (e.g. under navbar) must not hide steps — only reset when scrolled back below view. */
+        if (entry.boundingClientRect.top > window.innerHeight) {
           resetForReplay()
         }
       },
