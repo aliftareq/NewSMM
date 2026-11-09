@@ -12,11 +12,6 @@ import { WhyChooseUsFeatureCard } from "@/components/shared/landing/why-choose-u
 import { cn } from "@/lib/utils"
 import type { WhyChooseUsContent } from "@/types/landing/why-choose-us"
 
-export type WhyChooseUsCarouselNavState = {
-  canScrollPrev: boolean
-  canScrollNext: boolean
-}
-
 export type WhyChooseUsCarouselHandle = {
   scrollPrev: () => void
   scrollNext: () => void
@@ -29,21 +24,21 @@ type WhyChooseUsCarouselProps = Pick<
   "cards" | "serviceIconSrc" | "textArrowSrc"
 > & {
   className?: string
-  onNavStateChange?: (state: WhyChooseUsCarouselNavState) => void
 }
 
 export const WhyChooseUsCarousel = forwardRef<
   WhyChooseUsCarouselHandle,
   WhyChooseUsCarouselProps
 >(function WhyChooseUsCarousel(
-  { cards, serviceIconSrc, textArrowSrc, className, onNavStateChange },
+  { cards, serviceIconSrc, textArrowSrc, className },
   ref
 ) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
+    loop: true,
     containScroll: false,
     dragFree: false,
-    duration: 28,
+    duration: 32,
     skipSnaps: false,
     slidesToScroll: 1,
     watchDrag: true,
@@ -76,23 +71,8 @@ export const WhyChooseUsCarousel = forwardRef<
   useEffect(() => {
     if (!emblaApi) return
     emblaApi.scrollTo(0, true)
-
-    const syncNavState = () => {
-      onNavStateChange?.({
-        canScrollPrev: emblaApi.canScrollPrev(),
-        canScrollNext: emblaApi.canScrollNext(),
-      })
-    }
-
-    syncNavState()
-    emblaApi.on("select", syncNavState)
-    emblaApi.on("reInit", syncNavState)
-
-    return () => {
-      emblaApi.off("select", syncNavState)
-      emblaApi.off("reInit", syncNavState)
-    }
-  }, [emblaApi, onNavStateChange])
+    emblaApi.reInit()
+  }, [emblaApi, cards])
 
   return (
     <div

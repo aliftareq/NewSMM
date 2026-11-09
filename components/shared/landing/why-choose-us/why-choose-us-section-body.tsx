@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useRef } from "react"
 
 import { LandingSectionBadge } from "@/components/shared/landing/landing-section-badge"
 import { LandingSectionDescription } from "@/components/shared/landing/landing-section-description"
@@ -12,7 +12,6 @@ import {
 import {
   WhyChooseUsCarousel,
   type WhyChooseUsCarouselHandle,
-  type WhyChooseUsCarouselNavState,
 } from "@/components/shared/landing/why-choose-us/why-choose-us-carousel"
 import { WhyChooseUsCarouselNav } from "@/components/shared/landing/why-choose-us/why-choose-us-carousel-nav"
 import type { WhyChooseUsContent } from "@/types/landing/why-choose-us"
@@ -23,14 +22,6 @@ type WhyChooseUsSectionBodyProps = {
 
 export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps) {
   const carouselRef = useRef<WhyChooseUsCarouselHandle>(null)
-  const [navState, setNavState] = useState<WhyChooseUsCarouselNavState>({
-    canScrollPrev: false,
-    canScrollNext: true,
-  })
-
-  const handleNavStateChange = useCallback((state: WhyChooseUsCarouselNavState) => {
-    setNavState(state)
-  }, [])
 
   const handleCarouselRevealComplete = useCallback(() => {
     carouselRef.current?.reInit()
@@ -67,8 +58,6 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
             className="hidden md:flex"
             chevronNextSrc={content.chevronNextSrc}
             chevronPrevSrc={content.chevronPrevSrc}
-            canScrollPrev={navState.canScrollPrev}
-            canScrollNext={navState.canScrollNext}
             onPrev={() => carouselRef.current?.scrollPrev()}
             onNext={() => carouselRef.current?.scrollNext()}
           />
@@ -77,7 +66,7 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
       </div>
 
       <AnimatedContent
-        className="relative w-full self-stretch"
+        className="relative w-full self-stretch overflow-x-clip"
         {...landingScrollRevealProps}
         stagger={0}
         onComplete={handleCarouselRevealComplete}
@@ -87,7 +76,6 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
           cards={content.cards}
           serviceIconSrc={content.serviceIconSrc}
           textArrowSrc={content.textArrowSrc}
-          onNavStateChange={handleNavStateChange}
         />
       </AnimatedContent>
 
@@ -95,8 +83,6 @@ export function WhyChooseUsSectionBody({ content }: WhyChooseUsSectionBodyProps)
         <WhyChooseUsCarouselNav
           chevronNextSrc={content.chevronNextSrc}
           chevronPrevSrc={content.chevronPrevSrc}
-          canScrollPrev={navState.canScrollPrev}
-          canScrollNext={navState.canScrollNext}
           onPrev={() => carouselRef.current?.scrollPrev()}
           onNext={() => carouselRef.current?.scrollNext()}
         />
