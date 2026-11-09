@@ -93,7 +93,11 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
           resetForReplay()
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" },
+      {
+        threshold: 0,
+        /* Fire when the grid crosses the vertical center of the viewport. */
+        rootMargin: "-50% 0px -50% 0px",
+      },
     )
 
     observer.observe(grid)
