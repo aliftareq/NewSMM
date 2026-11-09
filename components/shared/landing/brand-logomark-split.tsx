@@ -35,6 +35,12 @@ export function BrandLogomarkSplit({
   const splitPlayedRef = useRef(false)
 
   useLayoutEffect(() => {
+    if (!splitReveal) {
+      splitPlayedRef.current = false
+    }
+  }, [splitReveal])
+
+  useLayoutEffect(() => {
     if (reduceMotion) return undefined
 
     const top = topRef.current

@@ -24,10 +24,16 @@ import type { WhoItsForAudience } from "@/types/landing/who-its-for"
 
 gsap.registerPlugin(ScrollTrigger)
 
+const SCROLL_SCRUB_SMOOTHING = 1.35
+const PIN_SCROLL_VH = 2.85
+const LOGOMARK_SPLIT_PROGRESS = 0.44
+const STEPPER_REVEAL_PROGRESS = 0.05
+
 type WhoItsForCardsStageProps = {
   audiencesLeft: WhoItsForAudience[]
   audiencesRight: WhoItsForAudience[]
   dividerSrc: string
+  pinTargetRef?: RefObject<HTMLDivElement | null>
 }
 
 function setCardRef(
@@ -125,26 +131,57 @@ function setStepperLinesRevealed(topClip: SVGRectElement | null, bottomClip: SVG
   }
 }
 
+function computeCardSpreadOffsets(
+  root: HTMLDivElement,
+  stepper: HTMLDivElement | null,
+  cards: HTMLDivElement[],
+) {
+  const rootRect = root.getBoundingClientRect()
+  const anchor = stepper?.querySelector(
+    '[data-slot="who-its-for-logomark-anchor"]',
+  ) as HTMLElement | null
+
+  let originX = rootRect.width / 2
+  let originY = rootRect.height / 2
+  if (anchor) {
+    const anchorRect = anchor.getBoundingClientRect()
+    if (anchorRect.width > 0 && anchorRect.height > 0) {
+      originX = anchorRect.left + anchorRect.width / 2 - rootRect.left
+      originY = anchorRect.top + anchorRect.height / 2 - rootRect.top
+    }
+  }
+
+  return cards.map((el) => {
+    const rect = el.getBoundingClientRect()
+    const cardCenterX = rect.left + rect.width / 2 - rootRect.left
+    const cardCenterY = rect.top + rect.height / 2 - rootRect.top
+    return {
+      x: originX - cardCenterX,
+      y: originY - cardCenterY,
+    }
+  })
+}
+
 export function WhoItsForCardsStage({
   audiencesLeft,
   audiencesRight,
   dividerSrc,
+  pinTargetRef,
 }: WhoItsForCardsStageProps) {
   const isDesktop = useLandingLgViewport()
   const rootRef = useRef<HTMLDivElement>(null)
   const stageRowRef = useRef<HTMLDivElement>(null)
   const stepperRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const spreadTimelineRef = useRef<gsap.core.Timeline | null>(null)
-  const hasPlayedRef = useRef(false)
+  const scrollTimelineRef = useRef<gsap.core.Timeline | null>(null)
 
   const [stepperRevealed, setStepperRevealed] = useState(false)
   const [logomarkSplitReveal, setLogomarkSplitReveal] = useState(false)
 
   useLayoutEffect(() => {
     if (!isDesktop) {
-      hasPlayedRef.current = false
-      spreadTimelineRef.current?.kill()
+      scrollTimelineRef.current?.kill()
+      scrollTimelineRef.current = null
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
       gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
       setStepperRevealed(false)
@@ -155,10 +192,10 @@ export function WhoItsForCardsStage({
     const root = rootRef.current
     const stageRow = stageRowRef.current
     const stepper = stepperRef.current
+    const pinTarget = pinTargetRef?.current
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
-    if (!root || !stageRow || cards.length === 0) return undefined
+    if (!root || !stageRow || !pinTarget || cards.length === 0) return undefined
 
-    hasPlayedRef.current = false
     setStepperRevealed(false)
     setLogomarkSplitReveal(false)
 
@@ -170,148 +207,133 @@ export function WhoItsForCardsStage({
       setLogomarkSplitReveal(true)
       const { topClip, bottomClip } = getStepperLineClips(stepper)
       setStepperLinesRevealed(topClip, bottomClip)
+      gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
+      if (stepper) gsap.set(stepper, { clearProps: "transform,opacity" })
       return undefined
     }
 
-    gsap.set(cards, { clearProps: "transform,zIndex", opacity: 0 })
-    if (stepper) {
-      gsap.set(stepper, { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" })
-      const { topClip, bottomClip } = getStepperLineClips(stepper)
+    const syncRevealState = (progress: number) => {
+      setStepperRevealed(progress >= STEPPER_REVEAL_PROGRESS)
+      setLogomarkSplitReveal(progress >= LOGOMARK_SPLIT_PROGRESS)
+    }
+
+    const buildTimeline = () => {
+      scrollTimelineRef.current?.kill()
+      scrollTimelineRef.current = null
+
+      const offsets = computeCardSpreadOffsets(root, stepper, cards)
+      const { topClip, bottomClip } = getStepperLineClips(stepper ?? null)
+
       setStepperLinesHidden(topClip, bottomClip)
+
+      gsap.set(cards, {
+        x: (i) => offsets[i]?.x ?? 0,
+        y: (i) => offsets[i]?.y ?? 0,
+        opacity: 0,
+        zIndex: (i) => 20 + i,
+        force3D: true,
+      })
+
+      if (stepper) {
+        gsap.set(stepper, {
+          opacity: 0,
+          scale: 0.72,
+          transformOrigin: "50% 50%",
+        })
+      }
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power2.inOut" },
+      })
+
+      if (stepper) {
+        tl.to(
+          stepper,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.1,
+            ease: "power2.out",
+          },
+          0,
+        )
+      }
+
+      if (topClip && bottomClip) {
+        tl.to(
+          topClip,
+          {
+            attr: { height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT },
+            duration: 1.2,
+            ease: "power2.inOut",
+          },
+          0.15,
+        )
+        tl.to(
+          bottomClip,
+          {
+            attr: {
+              y: WHO_ITS_FOR_STEPPER_CENTER_Y,
+              height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
+            },
+            duration: 1.2,
+            ease: "power2.inOut",
+          },
+          0.15,
+        )
+      }
+
+      const spreadToSlot = {
+        x: 0,
+        y: 0,
+        opacity: 1,
+        duration: 2.05,
+        ease: "power2.inOut",
+      }
+
+      tl.to([cards[0], cards[3]], spreadToSlot, 0.58)
+      tl.to([cards[1], cards[2]], spreadToSlot, 0.88)
+
+      scrollTimelineRef.current = tl
+      return tl
     }
 
     const ctx = gsap.context(() => {
-      const runSequence = () => {
-        if (hasPlayedRef.current) return
-        hasPlayedRef.current = true
+      const timeline = buildTimeline()
 
-        spreadTimelineRef.current?.kill()
-        gsap.killTweensOf(cards)
-        if (stepper) gsap.killTweensOf(stepper)
-
-        const rootRect = root.getBoundingClientRect()
-        const anchor = stepper?.querySelector(
-          '[data-slot="who-its-for-logomark-anchor"]',
-        ) as HTMLElement | null
-
-        let originX = rootRect.width / 2
-        let originY = rootRect.height / 2
-        if (anchor) {
-          const anchorRect = anchor.getBoundingClientRect()
-          if (anchorRect.width > 0 && anchorRect.height > 0) {
-            originX = anchorRect.left + anchorRect.width / 2 - rootRect.left
-            originY = anchorRect.top + anchorRect.height / 2 - rootRect.top
-          }
-        }
-
-        const offsets = cards.map((el) => {
-          const rect = el.getBoundingClientRect()
-          const cardCenterX = rect.left + rect.width / 2 - rootRect.left
-          const cardCenterY = rect.top + rect.height / 2 - rootRect.top
-          return {
-            x: originX - cardCenterX,
-            y: originY - cardCenterY,
-          }
-        })
-
-        gsap.set(cards, {
-          x: (i) => offsets[i]?.x ?? 0,
-          y: (i) => offsets[i]?.y ?? 0,
-          opacity: 0,
-          zIndex: (i) => 20 + i,
-          force3D: true,
-        })
-
-        setStepperRevealed(true)
-
-        const tl = gsap.timeline({
-          onComplete: () => {
-            gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
-            if (stepper) {
-              gsap.set(stepper, { clearProps: "transform,opacity" })
-            }
-            spreadTimelineRef.current = null
-          },
-        })
-
-        spreadTimelineRef.current = tl
-
-        const { topClip, bottomClip } = getStepperLineClips(stepper ?? null)
-        setStepperLinesHidden(topClip, bottomClip)
-
-        if (stepper) {
-          tl.fromTo(
-            stepper,
-            { opacity: 0, scale: 0.72, transformOrigin: "50% 50%" },
-            {
-              opacity: 1,
-              scale: 1,
-              duration: 0.75,
-              ease: "power2.out",
-            },
-          )
-        }
-
-        const lineDuration = 0.85
-        if (topClip && bottomClip) {
-          tl.to(
-            topClip,
-            {
-              attr: { height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT },
-              duration: lineDuration,
-              ease: "power2.inOut",
-            },
-            "-=0.1",
-          )
-          tl.to(
-            bottomClip,
-            {
-              attr: {
-                y: WHO_ITS_FOR_STEPPER_CENTER_Y,
-                height: WHO_ITS_FOR_STEPPER_LINE_SEGMENT_HEIGHT,
-              },
-              duration: lineDuration,
-              ease: "power2.inOut",
-            },
-            "<",
-          )
-        }
-
-        tl.call(() => setLogomarkSplitReveal(true))
-
-        const spreadToSlot = {
-          x: 0,
-          y: 0,
-          opacity: 1,
-          duration: 1.5,
-          ease: "power2.inOut",
-        }
-
-        tl.to([cards[0], cards[3]], spreadToSlot, "+=0.25")
-        tl.to([cards[1], cards[2]], spreadToSlot, "<")
-      }
-
-      const trigger = ScrollTrigger.create({
+      ScrollTrigger.create({
         trigger: stageRow,
         start: "center center",
-        once: true,
-        onEnter: () => {
-          requestAnimationFrame(runSequence)
+        end: () => `+=${Math.round(window.innerHeight * PIN_SCROLL_VH)}`,
+        pin: pinTarget,
+        pinSpacing: true,
+        scrub: SCROLL_SCRUB_SMOOTHING,
+        animation: timeline,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+        onUpdate: (self) => syncRevealState(self.progress),
+        onLeave: () => {
+          gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
+          if (stepper) {
+            gsap.set(stepper, { clearProps: "transform,opacity" })
+          }
+          setStepperRevealed(true)
+          setLogomarkSplitReveal(true)
+        },
+        onLeaveBack: () => {
+          syncRevealState(0)
         },
       })
 
       ScrollTrigger.refresh()
-
-      if (trigger.isActive) {
-        requestAnimationFrame(runSequence)
-      }
     }, root)
 
     return () => {
-      spreadTimelineRef.current?.kill()
+      scrollTimelineRef.current?.kill()
+      scrollTimelineRef.current = null
       ctx.revert()
     }
-  }, [audiencesLeft, audiencesRight, isDesktop])
+  }, [audiencesLeft, audiencesRight, isDesktop, pinTargetRef])
 
   return (
     <div
