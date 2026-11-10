@@ -32,5 +32,6 @@ export const privacyPolicyPageContent: PrivacyPolicyPageContent = {
     heroBackgroundSrc: blogPageContent.assets.heroBackgroundSrc,
     breadcrumbChevronSrc: `${LEGAL_IMG}/breadcrumb-chevron.svg`,
     searchIcon24Src: `${LEGAL_IMG}/search-icon-24.svg`,
+    searchButtonHighlightSrc: `${LEGAL_IMG}/search-button-highlight.png`,
   },
 }

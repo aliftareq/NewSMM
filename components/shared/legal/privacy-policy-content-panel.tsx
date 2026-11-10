@@ -42,6 +42,7 @@ export function PrivacyPolicyContentPanel({
         activeTab={activeTab}
         searchPlaceholder={searchPlaceholder}
         searchIcon24Src={assets.searchIcon24Src}
+        searchButtonHighlightSrc={assets.searchButtonHighlightSrc}
         query={query}
         onQueryChange={setQuery}
       />

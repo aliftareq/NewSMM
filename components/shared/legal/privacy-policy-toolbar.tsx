@@ -11,6 +11,7 @@ type PrivacyPolicyToolbarProps = {
   activeTab: LegalDocumentActiveTab
   searchPlaceholder: string
   searchIcon24Src: string
+  searchButtonHighlightSrc: string
   query: string
   onQueryChange: (value: string) => void
 }
@@ -26,6 +27,7 @@ export function PrivacyPolicyToolbar({
   activeTab,
   searchPlaceholder,
   searchIcon24Src,
+  searchButtonHighlightSrc,
   query,
   onQueryChange,
 }: PrivacyPolicyToolbarProps) {
@@ -57,7 +59,10 @@ export function PrivacyPolicyToolbar({
           className="min-w-0 flex-1 bg-transparent text-base font-medium leading-[1.25] text-n700 placeholder:text-[#798090] focus:outline-none"
           aria-label={searchPlaceholder}
         />
-        <LegalSearchButton iconSrc={searchIcon24Src} />
+        <LegalSearchButton
+          iconSrc={searchIcon24Src}
+          highlightSrc={searchButtonHighlightSrc}
+        />
       </div>
     </div>
   )

@@ -27,5 +27,6 @@ export type PrivacyPolicyPageContent = {
     heroBackgroundSrc: string
     breadcrumbChevronSrc: string
     searchIcon24Src: string
+    searchButtonHighlightSrc: string
   }
 }
