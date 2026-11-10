@@ -9,7 +9,9 @@ export const checkoutPageContent: CheckoutPageContent = {
   assets: {
     backArrow: `${IMG}/back-arrow.svg`,
     applePayMark: `${IMG}/apple-pay-mark.svg`,
-    googlePayMark: `${IMG}/google-pay-mark.png`,
+    googlePayMark: `${SERVICE_INTRO}/pay-google.png`,
+    googlePayMarkCropClassName:
+      "absolute h-[178.29%] left-[-69.82%] max-w-none top-[-39.02%] w-[241.47%]",
     cardBrandVisa: `${IMG}/card-brand-visa.png`,
     cardBrandMastercard: `${IMG}/card-brand-mc.png`,
     cardBrandAmex: `${IMG}/card-brand-amex.png`,

@@ -2,6 +2,7 @@ export type CheckoutPageAssets = {
   backArrow: string
   applePayMark: string
   googlePayMark: string
+  googlePayMarkCropClassName: string
   cardBrandVisa: string
   cardBrandMastercard: string
   cardBrandAmex: string

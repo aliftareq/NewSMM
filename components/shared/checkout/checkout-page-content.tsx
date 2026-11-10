@@ -19,10 +19,10 @@ const emailFieldShell =
 
 function WalletPayButton({
   iconSrc,
-  iconClassName,
+  iconCropClassName,
 }: {
   iconSrc: string
-  iconClassName?: string
+  iconCropClassName?: string
 }) {
   return (
     <button
@@ -37,7 +37,9 @@ function WalletPayButton({
             src={iconSrc}
             width={32}
             height={32}
-            className={cn("block size-8 object-contain", iconClassName)}
+            className={
+              iconCropClassName ?? "block size-8 max-w-none object-contain"
+            }
           />
         </span>
         <span className="text-lg font-medium leading-[1.25] text-[#202020]">
@@ -180,7 +182,7 @@ export function CheckoutPageContent() {
                     <WalletPayButton iconSrc={assets.applePayMark} />
                     <WalletPayButton
                       iconSrc={assets.googlePayMark}
-                      iconClassName="scale-110"
+                      iconCropClassName={assets.googlePayMarkCropClassName}
                     />
                   </div>
                 </div>
