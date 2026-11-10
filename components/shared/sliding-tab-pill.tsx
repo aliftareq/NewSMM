@@ -18,6 +18,7 @@ export const LAYOUT_IDS = {
   serviceHeroQuality: "service-hero-quality-pill",
   serviceHeroPlatform: "service-hero-platform-pill",
   growthPackageQuality: "growth-package-quality-pill",
+  authModal: "auth-modal-tab-pill",
 } as const
 
 type SlidingTabPillProps = {

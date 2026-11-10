@@ -25,6 +25,7 @@ type MarketingNavbarMobileMenuProps = {
   navActiveReady?: boolean
   isNavLinkActive: (pathname: string, href: string) => boolean
   onOpenServices: () => void
+  onOpenLogin: () => void
 }
 
 export function MarketingNavbarMobileMenu({
@@ -35,6 +36,7 @@ export function MarketingNavbarMobileMenu({
   navActiveReady = true,
   isNavLinkActive,
   onOpenServices,
+  onOpenLogin,
 }: MarketingNavbarMobileMenuProps) {
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
@@ -121,16 +123,19 @@ export function MarketingNavbarMobileMenu({
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
             {login ? (
-              <LinkTo
-                href={login.href}
-                onClick={close}
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenLogin()
+                }}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "default" }),
                   "w-full justify-center font-sans sm:flex-1",
                 )}
               >
                 {login.label}
-              </LinkTo>
+              </button>
             ) : null}
             {signUp ? (
               <LinkTo

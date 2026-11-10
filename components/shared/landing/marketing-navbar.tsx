@@ -14,7 +14,9 @@ import {
   MarketingNavbarMobileMenu,
   MarketingNavbarMenuTrigger,
 } from "@/components/shared/landing/marketing-navbar-mobile-menu"
+import { LoginModal } from "@/components/shared/auth/login-modal"
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
+import type { AuthModalTab } from "@/types/auth/login-modal"
 import { cn } from "@/lib/utils"
 import { useLandingLgViewport } from "@/lib/landing-animation-trigger"
 import { HERO_ENTRANCE } from "@/components/shared/landing/hero-entrance"
@@ -46,6 +48,8 @@ export function MarketingNavbar({
   const pathname = usePathname()
   const isLgViewport = useLandingLgViewport()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
+  const [loginModalOpen, setLoginModalOpen] = useState(false)
+  const [loginModalTab, setLoginModalTab] = useState<AuthModalTab>("login")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [navRevealComplete, setNavRevealComplete] = useState(!mountReveal)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -83,6 +87,11 @@ export function MarketingNavbar({
 
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
+
+  const openLoginModal = useCallback((tab: AuthModalTab = "login") => {
+    setLoginModalTab(tab)
+    setLoginModalOpen(true)
+  }, [])
 
   const servicesButton = (
     <button
@@ -140,6 +149,12 @@ export function MarketingNavbar({
         servicesButton={servicesButton}
       />
       <OurServicesModal open={servicesModalOpen} onOpenChange={setServicesModalOpen} />
+      <LoginModal
+        open={loginModalOpen}
+        onOpenChange={setLoginModalOpen}
+        activeTab={loginModalTab}
+        onActiveTabChange={setLoginModalTab}
+      />
       <MarketingNavbarMobileMenu
         open={mobileMenuOpen}
         onOpenChange={setMobileMenuOpen}
@@ -148,6 +163,7 @@ export function MarketingNavbar({
         navActiveReady={mounted}
         isNavLinkActive={isNavLinkActive}
         onOpenServices={() => setServicesModalOpen(true)}
+        onOpenLogin={() => openLoginModal("login")}
       />
 
         <nav
@@ -196,12 +212,13 @@ export function MarketingNavbar({
 
           <div className="hidden items-center rounded-xl bg-white lg:flex">
             {login ? (
-              <LinkTo
-                href={login.href}
+              <button
+                type="button"
+                onClick={() => openLoginModal("login")}
                 className="px-7 py-3 text-base font-medium leading-[1.35] text-[#202020] text-shadow-[0px_0.4px_0.3px_rgba(0,0,0,0.08)] whitespace-nowrap"
               >
                 {login.label}
-              </LinkTo>
+              </button>
             ) : null}
 
             {signUp ? (
