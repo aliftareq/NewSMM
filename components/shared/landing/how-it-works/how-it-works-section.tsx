@@ -9,12 +9,14 @@ import type { HowItWorksData } from "@/types/landing/how-it-works"
 type HowItWorksSectionProps = {
   content?: HowItWorksData
   className?: string
+  stepsGridClassName?: string
 }
 
 /** Figma 25704:29483 — How it works */
 export function HowItWorksSection({
   content = landingHowItWorksData,
   className,
+  stepsGridClassName,
 }: HowItWorksSectionProps) {
   const { intro, steps } = content
 
@@ -51,7 +53,10 @@ export function HowItWorksSection({
           <p className="text-base leading-normal text-n600">{intro.description}</p>
         </LandingSectionHeadingReveal>
 
-        <HowItWorksStepsGrid steps={steps} />
+        <HowItWorksStepsGrid
+          steps={steps}
+          desktopGridClassName={stepsGridClassName}
+        />
       </div>
     </section>
   )

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useReducedMotion } from "motion/react"
 
 import { AnimatedContent } from "@/components/shared/animated-content"
-import { HeroBackgroundLayer } from "@/components/shared/landing/hero-background"
 import { HeroHeadline } from "@/components/shared/landing/hero-headline"
 import { HeroAboutCtas } from "@/components/shared/landing/hero-about-ctas"
 import { HeroFeatureBadges } from "@/components/shared/landing/hero-feature-badges"
@@ -45,8 +44,6 @@ export function HeroSectionContent({ content }: HeroSectionContentProps) {
 
   return (
     <>
-      <HeroBackgroundLayer content={content.assets} />
-
       <MarketingNavbar
         overlay
         mountReveal

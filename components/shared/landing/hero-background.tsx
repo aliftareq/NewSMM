@@ -1,16 +1,28 @@
 import type { LandingHeroContent } from "@/types/landing/hero"
 
+import { cn } from "@/lib/utils"
+
 /** Hero background art (2:1) — matches landing hero shell height */
 export const HERO_BACKGROUND_HEIGHT_PX = 960
 
 type HeroBackgroundProps = {
   src: string
+  heightPx?: number
+  className?: string
 }
 
-export function HeroBackground({ src }: HeroBackgroundProps) {
+export function HeroBackground({
+  src,
+  heightPx = HERO_BACKGROUND_HEIGHT_PX,
+  className,
+}: HeroBackgroundProps) {
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[960px] w-full overflow-hidden bg-white"
+      className={cn(
+        "pointer-events-none absolute inset-x-0 top-0 z-0 w-full overflow-hidden bg-white",
+        className,
+      )}
+      style={className ? undefined : { height: heightPx }}
       aria-hidden
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}

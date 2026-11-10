@@ -23,7 +23,7 @@ export function FaqItem({ item, isOpen, onToggle }: FaqItemProps) {
         "w-full rounded-2xl px-6 py-6 shadow-[0px_2px_4px_rgba(0,0,0,0.08)] transition-[background-color,box-shadow] duration-300 ease-out sm:px-[30px] sm:py-[25px]",
         isOpen
           ? "bg-[#21aeff] shadow-[0px_4px_12px_rgba(33,174,255,0.35)]"
-          : "bg-white"
+          : "bg-white",
       )}
     >
       <button
@@ -37,7 +37,7 @@ export function FaqItem({ item, isOpen, onToggle }: FaqItemProps) {
         <span
           className={cn(
             "min-w-0 flex-1 text-lg leading-normal font-medium",
-            isOpen ? "text-white" : "text-[#232323]"
+            isOpen ? "text-white" : "text-[#232323]",
           )}
         >
           {item.question}
@@ -50,7 +50,7 @@ export function FaqItem({ item, isOpen, onToggle }: FaqItemProps) {
             height={24}
             className={cn(
               "size-6 transition-transform duration-300 ease-out",
-              isOpen && "rotate-180"
+              isOpen && "rotate-180",
             )}
             unoptimized
           />
@@ -62,13 +62,13 @@ export function FaqItem({ item, isOpen, onToggle }: FaqItemProps) {
         aria-labelledby={`faq-trigger-${item.id}`}
         className={cn(
           "grid transition-[grid-template-rows,margin-top] duration-300 ease-in-out motion-reduce:transition-none",
-          isOpen ? "mt-[15px] grid-rows-[1fr]" : "mt-0 grid-rows-[0fr]"
+          isOpen ? "mt-[15px] grid-rows-[1fr]" : "mt-0 grid-rows-[0fr]",
         )}
       >
         <div
           className={cn(
             "min-h-0 overflow-hidden transition-opacity duration-300 ease-in-out motion-reduce:transition-none",
-            isOpen ? "opacity-100" : "opacity-0"
+            isOpen ? "opacity-100" : "opacity-0",
           )}
         >
           <p className="text-base leading-[1.35] text-[#fafafb]">{item.answer}</p>

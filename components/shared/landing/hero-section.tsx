@@ -3,6 +3,7 @@ import type { LandingHeroContent } from "@/types/landing/hero"
 
 import { HeroSectionContent } from "@/components/shared/landing/hero-section-content"
 
+
 type HeroSectionProps = {
   content?: LandingHeroContent
 }

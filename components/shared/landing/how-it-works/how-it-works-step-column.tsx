@@ -37,7 +37,7 @@ export const HowItWorksStepColumn = forwardRef<
         <HowItWorksStepIllustration step={step} />
       </div>
 
-      <div className="flex min-h-[132px] shrink-0 flex-col justify-center rounded-2xl bg-[#f5f6f7] p-6">
+      <div className="flex min-h-[132px] flex-1 flex-col justify-center rounded-2xl bg-[#f5f6f7] p-6">
         <h3 className="text-xl font-medium leading-[1.3] text-[#13203b]">{step.title}</h3>
         <p className="mt-2 text-sm font-medium leading-[1.35] text-n600">
           {step.description}

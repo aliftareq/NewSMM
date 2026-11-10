@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useSyncExternalStore } from "react"
 
 /** Tailwind `lg` — desktop keeps original mount / entrance animations. */
 export const LANDING_LG_MEDIA = "(min-width: 1024px)"
@@ -19,17 +19,24 @@ export function resolveLandingRevealTrigger(
   return desktopTrigger
 }
 
+function subscribeLandingLg(onStoreChange: () => void) {
+  const mq = window.matchMedia(LANDING_LG_MEDIA)
+  mq.addEventListener("change", onStoreChange)
+  return () => mq.removeEventListener("change", onStoreChange)
+}
+
+function getLandingLgSnapshot() {
+  return window.matchMedia(LANDING_LG_MEDIA).matches
+}
+
+function getLandingLgServerSnapshot() {
+  return false
+}
+
 export function useLandingLgViewport(): boolean {
-  // Default false so SSR and the first client render agree (avoids hydration errors).
-  const [isLg, setIsLg] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia(LANDING_LG_MEDIA)
-    const update = () => setIsLg(mq.matches)
-    update()
-    mq.addEventListener("change", update)
-    return () => mq.removeEventListener("change", update)
-  }, [])
-
-  return isLg
+  return useSyncExternalStore(
+    subscribeLandingLg,
+    getLandingLgSnapshot,
+    getLandingLgServerSnapshot,
+  )
 }

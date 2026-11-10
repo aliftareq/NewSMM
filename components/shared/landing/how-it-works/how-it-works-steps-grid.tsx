@@ -7,16 +7,23 @@ import {
   clearHowItWorksItemMotionStyles,
   playHowItWorksEnterAnimation,
 } from "@/components/shared/landing/how-it-works/how-it-works-enter-animation"
+import { cn } from "@/lib/utils"
 import type { HowItWorksStep } from "@/types/landing/how-it-works"
 
 type HowItWorksStepsGridProps = {
   steps: HowItWorksStep[]
+  /** Tailwind grid column classes from `md` breakpoint (default: `md:grid-cols-3`). */
+  desktopGridClassName?: string
 }
 
 /**
- * Step columns rise from below the viewport, staggered left → right (UK Boost pattern).
+ * Step columns rise from below the viewport, staggered left → right.
+ * Service routes can override `desktopGridClassName` (e.g. 4 columns on xl).
  */
-export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
+export function HowItWorksStepsGrid({
+  steps,
+  desktopGridClassName = "md:grid-cols-3",
+}: HowItWorksStepsGridProps) {
   const gridRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLElement | null)[]>([])
   const isAnimatingRef = useRef(false)
@@ -121,7 +128,10 @@ export function HowItWorksStepsGrid({ steps }: HowItWorksStepsGridProps) {
   return (
     <div
       ref={gridRef}
-      className="grid w-full grid-cols-1 gap-4 md:grid-cols-3"
+      className={cn(
+        "grid w-full grid-cols-1 items-stretch gap-4",
+        desktopGridClassName,
+      )}
     >
       {steps.map((step, index) => (
         <HowItWorksStepColumn

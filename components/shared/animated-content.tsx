@@ -4,6 +4,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
+  useState,
   type CSSProperties,
   type ReactNode,
 } from "react"
@@ -100,6 +101,8 @@ export function AnimatedContent({
   const isLgViewport = useLandingLgViewport()
   const effectiveTrigger = resolveLandingRevealTrigger(trigger, isLgViewport)
   const ref = useRef<HTMLDivElement>(null)
+  /** Keep visibility in React state so re-renders do not undo GSAP's reveal. */
+  const [containerVisible, setContainerVisible] = useState(false)
   const callbacksRef = useRef({
     onStart,
     onComplete,
@@ -110,6 +113,8 @@ export function AnimatedContent({
   useIsomorphicLayoutEffect(() => {
     const el = ref.current
     if (!el) return undefined
+
+    setContainerVisible(false)
 
     const scroller: HTMLElement | Element | null =
       typeof container === "string"
@@ -130,6 +135,7 @@ export function AnimatedContent({
       const mask = wipe !== "none" ? WIPES[wipe] : undefined
 
       gsap.set(el, { visibility: "visible" })
+      setContainerVisible(true)
 
       if (reduce) {
         gsap.set(targets, { clearProps: "all" })
@@ -217,6 +223,12 @@ export function AnimatedContent({
 
       const start = `top ${(1 - threshold) * 100}%`
 
+      const playRevealIfNeeded = (self: ScrollTrigger) => {
+        if (self.isActive && tl.progress() === 0) {
+          tl.play()
+        }
+      }
+
       if (scrub) {
         ScrollTrigger.create({
           trigger: el,
@@ -229,12 +241,13 @@ export function AnimatedContent({
         return
       }
 
-      ScrollTrigger.create({
+      const scrollTrigger = ScrollTrigger.create({
         trigger: el,
         scroller: scroller ?? undefined,
         start,
         once,
         onEnter: () => tl.play(),
+        onRefresh: (self) => playRevealIfNeeded(self),
         onLeaveBack: once
           ? undefined
           : () => {
@@ -244,11 +257,18 @@ export function AnimatedContent({
               tl.reverse()
             },
       })
+
+      playRevealIfNeeded(scrollTrigger)
     }, el)
 
-    ScrollTrigger.refresh()
+    if (effectiveTrigger === "scroll") {
+      ScrollTrigger.refresh()
+    }
 
-    return () => ctx.revert()
+    return () => {
+      ctx.revert()
+      setContainerVisible(false)
+    }
   }, [
     isLgViewport,
     effectiveTrigger,
@@ -280,7 +300,7 @@ export function AnimatedContent({
     <div
       ref={ref}
       className={className}
-      style={{ visibility: "hidden", ...style }}
+      style={{ visibility: containerVisible ? "visible" : "hidden", ...style }}
     >
       {children}
     </div>

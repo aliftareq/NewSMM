@@ -8,6 +8,7 @@ import { landingNavbarContent } from "@/data/landing/navbar"
 import type { LandingNavbarContent } from "@/types/landing/navbar"
 import { LinkTo } from "@/components/shared/link-to"
 import { AnimatedContent } from "@/components/shared/animated-content"
+import { MarketingNavbarCart } from "@/components/shared/cart/marketing-navbar-cart"
 import { MarketingNavbarBrandCluster } from "@/components/shared/landing/marketing-navbar-brand-cluster"
 import {
   MarketingNavbarMobileMenu,
@@ -55,8 +56,19 @@ export function MarketingNavbar({
   }, [])
 
   useEffect(() => {
+    const SCROLL_GLASS_ON = 12
+    const SCROLL_GLASS_OFF = 2
+    let glassActive = window.scrollY > SCROLL_GLASS_ON
+
     const updateScrollState = () => {
-      setIsScrolled(window.scrollY > 8)
+      const y = window.scrollY
+      if (!glassActive && y > SCROLL_GLASS_ON) {
+        glassActive = true
+        setIsScrolled(true)
+      } else if (glassActive && y < SCROLL_GLASS_OFF) {
+        glassActive = false
+        setIsScrolled(false)
+      }
     }
 
     updateScrollState()
@@ -175,14 +187,7 @@ export function MarketingNavbar({
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
-          <LinkTo
-            href={content.cart.href}
-            aria-label={content.cart.label}
-            className="relative flex size-12 items-center justify-center rounded-xl border border-[rgba(97,197,255,0.29)] bg-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="" src={content.cart.iconSrc} width={24} height={24} className="block" />
-          </LinkTo>
+          <MarketingNavbarCart />
 
           <MarketingNavbarMenuTrigger
             open={mobileMenuOpen}
@@ -229,24 +234,25 @@ export function MarketingNavbar({
     <div className="flex h-[52px] w-full items-center justify-between gap-4">{bar}</div>
   )
 
-  const barShell = isScrolled ? (
+  const barShell = (
     <div className="info-container w-full">
       <div
         className={cn(
-          "rounded-[12px] border border-white/70 bg-white/85 p-3 shadow-[0px_8px_32px_rgba(39,83,132,0.14)] backdrop-blur-xl transition-[border-radius,background-color,box-shadow,backdrop-filter,border-color,padding] duration-300 ease-out supports-[backdrop-filter]:bg-white/72 sm:p-4",
+          "rounded-[12px] border p-3 transition-[background-color,box-shadow,backdrop-filter,border-color] duration-300 ease-out sm:p-4",
+          isScrolled
+            ? "border-white/70 bg-white/85 shadow-[0px_8px_32px_rgba(39,83,132,0.14)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/72"
+            : "border-transparent bg-transparent shadow-none",
         )}
       >
         {barRow}
       </div>
     </div>
-  ) : (
-    <div className="info-container w-full">{barRow}</div>
   )
 
   const isFloating = overlay && isScrolled
 
   const headerPosition = isFloating
-    ? "fixed inset-x-0 top-0 py-3"
+    ? "fixed inset-x-0 top-0 py-6"
     : overlay
       ? "absolute inset-x-0 top-0 py-6"
       : "sticky top-0 py-6"

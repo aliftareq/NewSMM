@@ -69,12 +69,14 @@ export function PlatformIcon({
   icon,
   size = 32,
   className,
+  spriteSrc = servicesModalSpriteSrc,
 }: {
   icon: ServicesModalPlatformIcon
   size?: number
   className?: string
+  spriteSrc?: string
 }) {
-  const src = icon.kind === "sprite" ? servicesModalSpriteSrc : icon.src
+  const src = icon.kind === "sprite" ? spriteSrc : icon.src
   const crop = icon.cropClassName ?? "absolute inset-0 size-full max-w-none object-cover"
 
   return (
