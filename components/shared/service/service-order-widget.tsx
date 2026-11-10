@@ -10,6 +10,7 @@ import type {
   ServicePackageOption,
 } from "@/types/service/hero"
 import { LinkTo } from "@/components/shared/link-to"
+import { LAYOUT_IDS, SlidingTabPill } from "@/components/shared/sliding-tab-pill"
 import { PlatformIcon } from "@/components/shared/landing/services-explorer/services-explorer-ui"
 import { startNewDraftGroup } from "@/lib/cart-draft-group"
 import { readCart } from "@/lib/cart-storage"
@@ -173,31 +174,44 @@ export function ServiceOrderWidget({
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col items-start gap-5 sm:gap-6">
-        <div className="box-border flex min-h-[60px] w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1 sm:h-[66px]">
+        <div
+          role="tablist"
+          aria-label="Package quality"
+          className="box-border flex min-h-[60px] w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1 sm:h-[66px]"
+        >
           <div className="flex min-h-[52px] gap-2 sm:h-[56px]">
             {content.qualityOptions.map((option, index) => {
               const active = option.id === qualityId
               return (
                 <div key={option.id} className="relative min-w-0 flex-1">
                   {option.recommendedBadge ? (
-                    <span className="absolute -top-[13px] left-1/2 z-10 flex h-[22px] max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center justify-center rounded-md bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] px-2 py-0.5 text-[10px] font-medium leading-[1.5] text-white sm:h-[26px] sm:max-w-none sm:px-[14px] sm:py-1 sm:text-xs sm:w-[124px]">
+                    <span className="absolute -top-[13px] left-1/2 z-20 flex h-[22px] max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center justify-center rounded-md bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] px-2 py-0.5 text-[10px] font-medium leading-[1.5] text-white sm:h-[26px] sm:max-w-none sm:px-[14px] sm:py-1 sm:text-xs sm:w-[124px]">
                       {option.recommendedBadge}
                     </span>
                   ) : null}
                   <button
                     type="button"
-                    aria-pressed={active}
+                    role="tab"
+                    aria-selected={active}
                     onClick={() => setQualityId(option.id)}
                     className={cn(
-                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] transition-[background-color,border-color,box-shadow,transform,color] duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#269de7]/45 focus-visible:ring-offset-1 [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)] sm:text-base",
-                      QUALITY_BUTTON_INSET_SHADOW,
+                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] transition-[border-color,color,transform] duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#269de7]/45 focus-visible:ring-offset-1 sm:text-base",
                       index === 0 ? "px-3 py-3 sm:px-6 sm:py-4" : "px-3.5 py-3 sm:px-7 sm:py-4",
                       active
-                        ? "border-[#269de7] bg-[#269de7] text-white shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
-                        : "border-[#ebecef] bg-white text-[#404a60] hover:border-[#c5e8fc] hover:bg-[#fafafa]",
+                        ? cn(
+                            "z-10 border-transparent text-white",
+                            QUALITY_BUTTON_INSET_SHADOW,
+                          )
+                        : "border-[#ebecef] bg-white text-[#404a60] hover:border-[#c5e8fc] hover:bg-[#fafafa] [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)]",
                     )}
                   >
-                    {option.label}
+                    {active ? (
+                      <SlidingTabPill
+                        layoutId={LAYOUT_IDS.serviceHeroQuality}
+                        className="rounded-xl border border-[#269de7] bg-[#269de7] shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
+                      />
+                    ) : null}
+                    <span className="relative z-10">{option.label}</span>
                   </button>
                 </div>
               )
@@ -217,28 +231,41 @@ export function ServiceOrderWidget({
         </div>
 
         <div className="flex w-full flex-col items-center gap-5 sm:gap-6">
-          <div className="-mx-1 flex w-full gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:gap-3 sm:px-0 sm:pb-0 md:h-[56px] lg:overflow-x-auto lg:pb-1 xl:h-[56px] xl:overflow-visible [&::-webkit-scrollbar]:hidden">
+          <div
+            role="tablist"
+            aria-label="Social platforms"
+            className="-mx-1 flex w-full gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:gap-3 sm:px-0 sm:pb-0 md:h-[56px] lg:overflow-x-auto lg:pb-1 xl:h-[56px] xl:overflow-visible [&::-webkit-scrollbar]:hidden"
+          >
             {content.platforms.map((item) => {
               const active = item.id === platformId
               return (
                 <button
                   key={item.id}
                   type="button"
+                  role="tab"
                   aria-label={item.label}
-                  aria-pressed={active}
+                  aria-selected={active}
                   onClick={() => setPlatformId(item.id)}
                   className={cn(
-                    "box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
+                    "relative box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[border-color,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
                     active
-                      ? "border-[#269de7] bg-[#269de7] shadow-[0px_4px_12px_rgba(38,157,231,0.35)]"
+                      ? "z-10 border-transparent"
                       : "border-[#ebecef] bg-white hover:border-[#c5e8fc] hover:bg-[#fafafa]",
                   )}
                 >
-                  <PlatformIcon
-                    icon={item.icon}
-                    size={32}
-                    spriteSrc={assets.socialIconsSprite}
-                  />
+                  {active ? (
+                    <SlidingTabPill
+                      layoutId={LAYOUT_IDS.serviceHeroPlatform}
+                      className="rounded-xl bg-[#269de7] shadow-[0px_4px_12px_rgba(38,157,231,0.35)]"
+                    />
+                  ) : null}
+                  <span className="relative z-10">
+                    <PlatformIcon
+                      icon={item.icon}
+                      size={32}
+                      spriteSrc={assets.socialIconsSprite}
+                    />
+                  </span>
                 </button>
               )
             })}

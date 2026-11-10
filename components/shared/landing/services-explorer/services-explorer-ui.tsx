@@ -1,7 +1,6 @@
 "use client"
 
 import type { CSSProperties } from "react"
-import { motion, useReducedMotion } from "motion/react"
 
 import type {
   ServicesModalFeaturedService,
@@ -12,6 +11,10 @@ import type {
 } from "@/types/landing/services-modal"
 import { servicesModalSpriteSrc } from "@/data/landing/services-modal"
 import { LinkTo } from "@/components/shared/link-to"
+import {
+  LAYOUT_IDS,
+  SlidingTabPill,
+} from "@/components/shared/sliding-tab-pill"
 import { AnimatedContent } from "@/components/shared/animated-content"
 import {
   landingScrollRevealProps,
@@ -25,8 +28,6 @@ export const SERVICES_EXPLORER_BADGE_BEST_SELLER =
 
 const SERVICE_ARROW_BTN_CLASS = "service-explorer-arrow-btn"
 const SERVICE_ARROW_BOX_BTN_CLASS = "service-explorer-arrow-btn--box"
-
-const MODAL_SIDEBAR_TAB_PILL_LAYOUT_ID = "services-modal-sidebar-tab-pill"
 
 const SERVICE_ARROW_BOX_HOVER_CLASS =
   "transition-[background-color,box-shadow,border-color] duration-200 hover:shadow-[0px_2px_6px_rgba(15,23,42,0.08)]"
@@ -289,8 +290,6 @@ export function PlatformSidebar({
   activeId: ServicesModalPlatformId
   onSelect: (id: ServicesModalPlatformId) => void
 }) {
-  const reduceMotion = useReducedMotion()
-
   return (
     <div
       role="tablist"
@@ -314,21 +313,11 @@ export function PlatformSidebar({
             )}
           >
             {active ? (
-              reduceMotion ? (
-                <span
-                  aria-hidden
-                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
-                  style={{ backgroundColor: platform.theme.tabActiveBg }}
-                />
-              ) : (
-                <motion.span
-                  layoutId={MODAL_SIDEBAR_TAB_PILL_LAYOUT_ID}
-                  aria-hidden
-                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
-                  style={{ backgroundColor: platform.theme.tabActiveBg }}
-                  transition={{ type: "spring", stiffness: 420, damping: 36 }}
-                />
-              )
+              <SlidingTabPill
+                layoutId={LAYOUT_IDS.servicesModalSidebar}
+                className="rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                style={{ backgroundColor: platform.theme.tabActiveBg }}
+              />
             ) : null}
             <span className="relative z-10 flex w-full items-center justify-between gap-2">
               <span className="flex items-center gap-2">

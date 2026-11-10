@@ -11,9 +11,11 @@ import {
   PlatformIcon,
   ServicesPanel,
 } from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import {
+  LAYOUT_IDS,
+  SlidingTabPill,
+} from "@/components/shared/sliding-tab-pill"
 import { cn } from "@/lib/utils"
-
-const TAB_PILL_LAYOUT_ID = "services-explorer-tab-pill"
 
 const PANEL_OFFSET = 40
 
@@ -61,8 +63,6 @@ export function AnimatedPlatformTabs({
   onSelect,
   tabLabels,
 }: AnimatedPlatformTabsProps) {
-  const reduceMotion = useReducedMotion()
-
   return (
     <div
       role="tablist"
@@ -88,21 +88,11 @@ export function AnimatedPlatformTabs({
             )}
           >
             {active ? (
-              reduceMotion ? (
-                <span
-                  aria-hidden
-                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
-                  style={{ backgroundColor: platform.theme.tabActiveBg }}
-                />
-              ) : (
-                <motion.span
-                  layoutId={TAB_PILL_LAYOUT_ID}
-                  aria-hidden
-                  className="absolute inset-0 rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
-                  style={{ backgroundColor: platform.theme.tabActiveBg }}
-                  transition={{ type: "spring", stiffness: 420, damping: 36 }}
-                />
-              )
+              <SlidingTabPill
+                layoutId={LAYOUT_IDS.servicesExplorer}
+                className="rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                style={{ backgroundColor: platform.theme.tabActiveBg }}
+              />
             ) : null}
             <span className="relative z-10 flex items-center gap-2 whitespace-nowrap text-sm xl:text-base">
               <PlatformIcon icon={platform.icon} />
