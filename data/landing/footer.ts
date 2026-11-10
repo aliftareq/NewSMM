@@ -141,8 +141,8 @@ export const landingFooterContent: LandingFooterContent = {
     copyrightBrand: "SOCIAL PANEL",
     copyrightSuffix: " all rights reserved",
     links: [
-      { label: "Privacy policy", href: "/privacy" },
-      { label: "Terms of service", href: "/terms" },
+      { label: "Privacy policy", href: "/privacy-policy" },
+      { label: "Terms of service", href: "/terms-of-services" },
     ],
   },
 }
