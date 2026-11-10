@@ -89,10 +89,10 @@ export function MarketingNavbar({
       type="button"
       onClick={() => setServicesModalOpen(true)}
       className={cn(
-        "inline-flex items-center gap-2 rounded-xl px-4 transition-[background-color,color,box-shadow] duration-300 ease-out",
+        "inline-flex items-center gap-2 transition-[background-color,color,box-shadow] duration-300 ease-out",
         isScrolled
-          ? "h-12 justify-center bg-button py-1.5 text-sm font-semibold leading-normal text-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
-          : "bg-white py-3",
+          ? "h-12 justify-center rounded-xl bg-button px-4 py-1.5 text-sm font-semibold leading-normal text-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
+          : "h-[52px] rounded-2xl bg-white px-5 py-2 shadow-[0px_2px_4px_0px_rgba(39,83,132,0.12)] sm:px-6",
       )}
     >
       <span className="relative size-5 shrink-0 overflow-hidden">

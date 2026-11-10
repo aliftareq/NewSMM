@@ -14,8 +14,9 @@ type GrowthPackageScrollPaneProps = {
 const SCROLL_PANE_MAX_HEIGHT = "max-h-[min(664px,70vh)]"
 
 /**
- * Nested scroll for the pricing table. Lenis `allowNestedScroll` handles wheel
- * handoff at edges; touch stays native via `data-lenis-prevent-touch`.
+ * Nested scroll for the pricing table — native wheel/touch so scroll chains to
+ * the page when the inner list hits top/bottom (Lenis `allowNestedScroll` alone
+ * can trap the wheel at the edge).
  */
 export function GrowthPackageScrollPane({
   children,
@@ -24,6 +25,7 @@ export function GrowthPackageScrollPane({
 }: GrowthPackageScrollPaneProps) {
   return (
     <div
+      data-lenis-prevent-wheel
       data-lenis-prevent-touch
       className={cn(
         "service-growth-package-scroll min-h-0",

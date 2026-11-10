@@ -68,6 +68,7 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     gsap.ticker.lagSmoothing(0)
 
     ScrollTrigger.refresh()
+    window.dispatchEvent(new Event("lenis-scroll-ready"))
 
     return () => {
       ScrollTrigger.removeEventListener("refresh", onScrollTriggerRefresh)

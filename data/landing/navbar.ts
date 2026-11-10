@@ -23,10 +23,10 @@ export const landingNavbarContent: LandingNavbarContent = {
   },
   navLinks: [
     { label: "Home", href: "/" },
+    { label: "Services", href: "/services" },
     { label: "About Us", href: "/about" },
     { label: "Contact Us", href: "/contact" },
     { label: "Blog", href: "/blog" },
-    { label: "Faq", href: "/faq" },
   ],
   cart: {
     href: "/cart",

@@ -44,6 +44,14 @@ const CARDS_SPREAD_END = CARDS_SPREAD_START + CARDS_PAIR_STAGGER + CARDS_SPREAD_
 const PIN_HOLD_AFTER_CARDS = CENTER_REVEAL_BEAT * 1.15
 const PIN_SCROLL_VH = 3.35
 
+const LENIS_SCROLL_ROOT =
+  typeof document !== "undefined" ? document.documentElement : null
+
+function isLenisScrollProxyReady() {
+  if (typeof window === "undefined") return false
+  return Boolean((window as Window & { lenis?: { version?: string } }).lenis?.version)
+}
+
 type WhoItsForCardsStageProps = {
   audiencesLeft: WhoItsForAudience[]
   audiencesRight: WhoItsForAudience[]
@@ -207,6 +215,8 @@ export function WhoItsForCardsStage({
   const [stepperRevealed, setStepperRevealed] = useState(false)
   const [logomarkSplitReveal, setLogomarkSplitReveal] = useState(false)
 
+  const expectedCardCount = audiencesLeft.length + audiencesRight.length
+
   useLayoutEffect(() => {
     if (!isDesktop) {
       scrollTimelineRef.current?.kill()
@@ -218,28 +228,11 @@ export function WhoItsForCardsStage({
       return undefined
     }
 
-    const root = rootRef.current
-    const stageRow = stageRowRef.current
-    const stepper = stepperRef.current
-    const pinTarget = pinTargetRef?.current
-    const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
-    if (!root || !stageRow || !pinTarget || cards.length === 0) return undefined
-
-    setStepperRevealed(false)
-    setLogomarkSplitReveal(false)
-
-    const reduce =
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
-
-    if (reduce) {
-      setStepperRevealed(true)
-      setLogomarkSplitReveal(true)
-      const { topClip, bottomClip } = getStepperLineClips(stepper)
-      setStepperLinesRevealed(topClip, bottomClip)
-      gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
-      if (stepper) gsap.set(stepper, { clearProps: "transform,opacity" })
-      return undefined
-    }
+    let cancelled = false
+    let mountRaf = 0
+    let gsapCtx: gsap.Context | null = null
+    let mountAttempts = 0
+    let scrollPinMounted = false
 
     const syncRevealState = (progress: number) => {
       setStepperRevealed(progress >= STEPPER_REVEAL_PROGRESS)
@@ -250,7 +243,11 @@ export function WhoItsForCardsStage({
       setLogomarkSplitReveal(timelineProgress >= LOGOMARK_SPLIT_END - 0.02)
     }
 
-    const buildTimeline = () => {
+    const buildTimeline = (
+      root: HTMLDivElement,
+      stepper: HTMLDivElement | null,
+      cards: HTMLDivElement[],
+    ) => {
       scrollTimelineRef.current?.kill()
       scrollTimelineRef.current = null
 
@@ -365,48 +362,109 @@ export function WhoItsForCardsStage({
       return tl
     }
 
-    const ctx = gsap.context(() => {
-      const timeline = buildTimeline()
+    const mountScrollPin = () => {
+      if (cancelled || scrollPinMounted) return
 
-      ScrollTrigger.create({
-        trigger: stageRow,
-        start: "center center",
-        end: () => `+=${Math.round(window.innerHeight * PIN_SCROLL_VH)}`,
-        pin: pinTarget,
-        pinSpacing: true,
-        scrub: SCROLL_SCRUB_SMOOTHING,
-        animation: timeline,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-        onUpdate: (self) => syncRevealState(self.progress),
-        onLeave: () => {
-          gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
-          if (stepper) {
-            gsap.set(stepper, { clearProps: "transform,opacity" })
-            const { top, bottom } = getCenterLogomarkPaths(stepper)
-            if (top && bottom) {
-              gsap.set([top, bottom], {
-                clearProps: "transform,transformOrigin,transformBox",
-              })
+      const root = rootRef.current
+      const stageRow = stageRowRef.current
+      const stepper = stepperRef.current
+      const pinTarget = pinTargetRef?.current
+      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
+
+      const domReady =
+        Boolean(root) &&
+        Boolean(stageRow) &&
+        Boolean(pinTarget) &&
+        cards.length >= expectedCardCount
+
+      if (!domReady || !isLenisScrollProxyReady()) {
+        mountAttempts += 1
+        if (mountAttempts < 180) {
+          mountRaf = requestAnimationFrame(mountScrollPin)
+        }
+        return
+      }
+
+      setStepperRevealed(false)
+      setLogomarkSplitReveal(false)
+
+      const reduce =
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
+
+      if (reduce) {
+        setStepperRevealed(true)
+        setLogomarkSplitReveal(true)
+        const { topClip, bottomClip } = getStepperLineClips(stepper)
+        setStepperLinesRevealed(topClip, bottomClip)
+        gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
+        if (stepper) gsap.set(stepper, { clearProps: "transform,opacity" })
+        return
+      }
+
+      gsapCtx?.revert()
+      gsapCtx = gsap.context(() => {
+        const timeline = buildTimeline(root, stepper, cards)
+
+        ScrollTrigger.create({
+          trigger: stageRow,
+          scroller: LENIS_SCROLL_ROOT ?? undefined,
+          start: "center center",
+          end: () => `+=${Math.round(window.innerHeight * PIN_SCROLL_VH)}`,
+          pin: pinTarget,
+          pinSpacing: true,
+          scrub: SCROLL_SCRUB_SMOOTHING,
+          animation: timeline,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+          onUpdate: (self) => syncRevealState(self.progress),
+          onLeave: () => {
+            gsap.set(cards, { clearProps: "transform,zIndex,opacity" })
+            if (stepper) {
+              gsap.set(stepper, { clearProps: "transform,opacity" })
+              const { top, bottom } = getCenterLogomarkPaths(stepper)
+              if (top && bottom) {
+                gsap.set([top, bottom], {
+                  clearProps: "transform,transformOrigin,transformBox",
+                })
+              }
             }
-          }
-          setStepperRevealed(true)
-          setLogomarkSplitReveal(true)
-        },
-        onLeaveBack: () => {
-          syncRevealState(0)
-        },
-      })
+            setStepperRevealed(true)
+            setLogomarkSplitReveal(true)
+          },
+          onLeaveBack: () => {
+            syncRevealState(0)
+          },
+        })
 
-      ScrollTrigger.refresh()
-    }, root)
+        ScrollTrigger.refresh()
+      }, root)
+
+      scrollPinMounted = true
+    }
+
+    const onLenisScrollReady = () => {
+      if (!cancelled) mountScrollPin()
+    }
+
+    mountScrollPin()
+    window.addEventListener("lenis-scroll-ready", onLenisScrollReady)
 
     return () => {
+      cancelled = true
+      cancelAnimationFrame(mountRaf)
+      window.removeEventListener("lenis-scroll-ready", onLenisScrollReady)
       scrollTimelineRef.current?.kill()
       scrollTimelineRef.current = null
-      ctx.revert()
+      gsapCtx?.revert()
+      gsapCtx = null
     }
-  }, [audiencesLeft, audiencesRight, isDesktop, pinTargetRef])
+  }, [
+    audiencesLeft,
+    audiencesRight,
+    expectedCardCount,
+    isDesktop,
+    pinTargetRef,
+  ])
 
   return (
     <div
