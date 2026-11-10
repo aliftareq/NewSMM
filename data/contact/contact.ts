@@ -4,10 +4,6 @@ import type { ContactPageContent } from "@/types/contact/contact"
 const CONTACT_IMG = "/images/pages/contact"
 
 export const contactPageContent: ContactPageContent = {
-  breadcrumb: {
-    homeLabel: "Home",
-    currentLabel: "Contact Us",
-  },
   hero: {
     badgeLabel: "Contact Us",
     title: "Need Help?",
@@ -64,7 +60,6 @@ export const contactPageContent: ContactPageContent = {
     },
   ],
   assets: {
-    breadcrumbChevronSrc: blogPageContent.assets.breadcrumbChevronSrc,
     heroBackgroundSrc: blogPageContent.assets.heroBackgroundSrc,
     supportPhotoSrc: `${CONTACT_IMG}/support-photo.png`,
     submitArrowSrc: `${CONTACT_IMG}/submit-arrow.svg`,

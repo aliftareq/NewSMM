@@ -15,10 +15,6 @@ export type ContactSupportChannel = {
 }
 
 export type ContactPageContent = {
-  breadcrumb: {
-    homeLabel: string
-    currentLabel: string
-  }
   hero: {
     badgeLabel: string
     title: string
@@ -31,7 +27,6 @@ export type ContactPageContent = {
   }
   supportChannels: ContactSupportChannel[]
   assets: {
-    breadcrumbChevronSrc: string
     heroBackgroundSrc: string
     supportPhotoSrc: string
     submitArrowSrc: string
