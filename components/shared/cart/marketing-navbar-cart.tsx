@@ -191,7 +191,7 @@ export function MarketingNavbarCart() {
         }}
         onMouseEnter={openPanel}
         onMouseLeave={scheduleClose}
-        className="relative flex size-12 items-center justify-center rounded-xl border border-[rgba(97,197,255,0.29)] bg-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
+        className="relative flex size-12 cursor-pointer items-center justify-center rounded-xl border border-[rgba(97,197,255,0.29)] bg-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="" src={cart.iconSrc} width={24} height={24} className="block" />
