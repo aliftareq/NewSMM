@@ -9,7 +9,9 @@ import { useCartRemoveConfirm } from "@/hooks/use-cart-remove-confirm"
 import { formatUsd } from "@/lib/build-order-href"
 import { getUpsellId, isPrimaryServiceLine } from "@/lib/cart-storage"
 import { CartAddServiceLink } from "@/components/shared/cart/cart-add-service-link"
+import { LinkTo } from "@/components/shared/link-to"
 import { CartLineExpandedDetails } from "@/components/shared/cart/cart-line-expanded-details"
+import { CartLineUpsellDividerSwap } from "@/components/shared/cart/cart-line-upsell-divider-swap"
 import { CartRemoveItemDialog } from "@/components/shared/cart/cart-remove-item-dialog"
 import { NewOrderPlatformIconSlot } from "@/components/shared/service/new-order/new-order-platform-icon-slot"
 import type { CartLineItem } from "@/types/cart/cart"
@@ -19,6 +21,18 @@ const INSTAGRAM_GRADIENT =
   "bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] bg-clip-text text-transparent"
 
 const { assets: cartAssets } = cartPageContent
+
+const CART_SLIDE_GRID = (open: boolean) =>
+  cn(
+    "grid transition-[grid-template-rows,margin-top] duration-300 ease-in-out motion-reduce:transition-none",
+    open ? "mt-0 grid-rows-[1fr]" : "mt-0 grid-rows-[0fr]",
+  )
+
+const CART_SLIDE_INNER = (open: boolean) =>
+  cn(
+    "min-h-0 overflow-hidden transition-opacity duration-300 ease-in-out motion-reduce:transition-none",
+    open ? "opacity-100" : "opacity-0",
+  )
 
 function CartDashedDivider() {
   return <div className="h-px w-full border-t border-dashed border-[#c1c4cc]" />
@@ -101,50 +115,40 @@ function CartServiceCard({
   const [expanded, setExpanded] = useState(false)
   const lineDetails = item.details ?? cartPageContent.defaultExpandedDetails
 
+  const panelId = `cart-line-panel-${item.id}`
+  const triggerId = `cart-line-trigger-${item.id}`
+
   return (
-    <div className="w-full rounded-[24px] border border-[#f5f6f7] bg-white p-6 shadow-[0px_2px_3px_rgba(37,37,37,0.16)]">
-      <div className="flex flex-col gap-5">
-        <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-[#ebecef] bg-white px-3 py-3.5">
-          <div className="flex min-w-0 items-center gap-3">
-            <NewOrderPlatformIconSlot
-              icon={newOrderContent.service.platformIcon}
-              spriteSrc={newOrderContent.assets.socialIconsSprite}
-            />
-            <p className="text-base font-medium leading-[1.35] text-[#343e56]">
-              {item.title}
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <p className="text-lg font-semibold leading-[1.3] text-[#343e56]">
-              {item.price}
-            </p>
-            <button
-              type="button"
-              onClick={onRemoveRequest}
-              className="flex size-5 items-center justify-center opacity-80 hover:opacity-100"
-              aria-label={`Remove ${item.title}`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={cartAssets.trashIcon}
-                width={20}
-                height={20}
-                className="block size-5"
+    <div
+      data-slot="cart-line-item"
+      data-state={expanded ? "open" : "closed"}
+      className="w-full rounded-[24px] border border-[#f5f6f7] bg-white p-6 shadow-[0px_2px_3px_rgba(37,37,37,0.16)]"
+    >
+      <div className="flex flex-col">
+        <div className="flex flex-col gap-5">
+        <div className="flex w-full items-center gap-3 rounded-xl border border-[#ebecef] bg-white px-3 py-3.5">
+          <button
+            type="button"
+            id={triggerId}
+            aria-expanded={expanded}
+            aria-controls={panelId}
+            onClick={() => setExpanded((open) => !open)}
+            className="flex min-w-0 flex-1 items-center justify-between gap-3 text-left"
+          >
+            <span className="flex min-w-0 items-center gap-3">
+              <NewOrderPlatformIconSlot
+                icon={newOrderContent.service.platformIcon}
+                spriteSrc={newOrderContent.assets.socialIconsSprite}
               />
-            </button>
-            <button
-              type="button"
-              aria-expanded={expanded}
-              onClick={() => setExpanded((open) => !open)}
-              className="relative flex h-[34px] w-[33px] shrink-0 items-center justify-center rounded-[7px] bg-[#21aeff] shadow-[0px_1.6px_3.2px_rgba(114,114,114,0.12)]"
-              aria-label={
-                expanded
-                  ? `Collapse details for ${item.title}`
-                  : `Expand details for ${item.title}`
-              }
-            >
-              <span className="flex size-3 items-center justify-center overflow-hidden">
+              <span className="text-base font-medium leading-[1.35] text-[#343e56]">
+                {item.title}
+              </span>
+            </span>
+            <span className="flex shrink-0 items-center gap-3">
+              <span className="text-lg font-semibold leading-[1.3] text-[#343e56]">
+                {item.price}
+              </span>
+              <span className="relative flex h-[34px] w-[33px] shrink-0 items-center justify-center rounded-[7px] bg-[#21aeff] shadow-[0px_1.6px_3.2px_rgba(114,114,114,0.12)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   alt=""
@@ -152,36 +156,60 @@ function CartServiceCard({
                   width={12}
                   height={7}
                   className={cn(
-                    "block w-3 max-w-none transition-transform duration-200",
+                    "block w-3 max-w-none transition-transform duration-300 ease-out",
                     expanded && "rotate-180",
                   )}
                 />
               </span>
-            </button>
-          </div>
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={onRemoveRequest}
+            className="flex size-5 shrink-0 items-center justify-center opacity-80 hover:opacity-100"
+            aria-label={`Remove ${item.title}`}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              src={cartAssets.trashIcon}
+              width={20}
+              height={20}
+              className="block size-5"
+            />
+          </button>
         </div>
 
-        {expanded ? (
-          <>
+        <CartLineUpsellDividerSwap
+          lineId={item.id}
+          expanded={expanded}
+          upsell={
             <CartUpsellRow
               upsellAdded={upsellAdded}
               onAddUpsell={onAddUpsell}
             />
-            <CartDashedDivider />
+          }
+          divider={<CartDashedDivider />}
+        />
+        </div>
+
+        <div
+          id={panelId}
+          role="region"
+          aria-labelledby={triggerId}
+          aria-hidden={!expanded}
+          className={cn(
+            CART_SLIDE_GRID(expanded),
+            expanded ? "mt-5" : "h-0 overflow-hidden",
+          )}
+        >
+          <div className={CART_SLIDE_INNER(expanded)}>
             <CartLineExpandedDetails
               details={lineDetails}
               placeholderAvatarSrc={cartAssets.profilePlaceholder}
             />
-          </>
-        ) : (
-          <>
-            <CartDashedDivider />
-            <CartUpsellRow
-              upsellAdded={upsellAdded}
-              onAddUpsell={onAddUpsell}
-            />
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -330,12 +358,12 @@ export function CartPageContent() {
             </div>
 
             <div className="flex w-full flex-col gap-5">
-              <button
-                type="button"
+              <LinkTo
+                href="/checkout"
                 className="flex h-14 w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] text-lg font-medium leading-[1.5] text-white"
               >
                 {cartPageContent.checkoutCtaLabel}
-              </button>
+              </LinkTo>
 
               <div className="flex items-center justify-center gap-1">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

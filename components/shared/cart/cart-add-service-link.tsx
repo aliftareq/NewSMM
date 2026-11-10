@@ -56,7 +56,7 @@ export function CartAddServiceLink({ className }: CartAddServiceLinkProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           showCloseButton
-          className="max-h-[min(92vh,860px)] w-[calc(100%-2rem)] max-w-[700px] gap-0 overflow-y-auto border-[#ebecef] bg-[#f9fafb] p-3 sm:max-w-[700px] sm:p-4"
+          className="max-h-[min(92vh,860px)] w-[calc(100%-2rem)] max-w-[700px] gap-0 overflow-y-auto border-[#ebecef] bg-[#f9fafb] p-3 [scrollbar-width:none] sm:max-w-[700px] sm:p-4 [&::-webkit-scrollbar]:hidden"
         >
           <DialogTitle className="sr-only">
             {cartPageContent.addServiceModalTitle}
