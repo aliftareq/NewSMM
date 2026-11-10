@@ -22,7 +22,7 @@ export const newOrderContent: NewOrderContent = {
     orderDividerLine: serviceHeroContent.assets.orderDividerLine,
   },
   backLabel: "Back",
-  backHref: "/service",
+  backHref: "/services",
   service: {
     title: "Followers",
     platformLabel: "Instagram",

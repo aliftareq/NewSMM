@@ -25,8 +25,8 @@ export const landingNavbarContent: LandingNavbarContent = {
     { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
     { label: "About Us", href: "/about" },
-    { label: "Contact Us", href: "/contact" },
     { label: "Blog", href: "/blog" },
+    { label: "Contact Us", href: "/contact" },
   ],
   cart: {
     href: "/cart",

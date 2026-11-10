@@ -25,11 +25,31 @@ export function CartAddServiceLink({ className }: CartAddServiceLinkProps) {
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          "flex h-[54px] w-full min-w-[120px] items-center justify-center gap-2 rounded-xl border border-dashed border-[#21aeff] bg-[rgba(33,174,255,0.04)] px-4 text-base font-medium leading-[1.35] text-[#21aeff]",
+          "flex h-[54px] w-full min-w-[120px] items-center justify-center gap-2 rounded-xl border border-dashed border-[#21aeff] bg-[rgba(33,174,255,0.04)] px-4 py-4 text-base font-medium leading-[1.35] text-[#21aeff]",
           className,
         )}
       >
-        <span className="text-2xl leading-none">+</span>
+        <span
+          className="relative flex size-6 shrink-0 items-center justify-center"
+          aria-hidden
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            src={cartPageContent.assets.addServicePlusVertical}
+            width={3}
+            height={17}
+            className="absolute block"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            src={cartPageContent.assets.addServicePlusHorizontal}
+            width={17}
+            height={3}
+            className="absolute block"
+          />
+        </span>
         {cartPageContent.addServiceLabel}
       </button>
 

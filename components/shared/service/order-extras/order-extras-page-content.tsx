@@ -89,6 +89,11 @@ export function OrderExtrasPageContent() {
         followersPrice: basePrice,
         storyViewsTitle: `${activeLevelConfig?.storyViewsLabel ?? "1k"} Story Views`,
         extrasPrice,
+        handle,
+        avatarSrc: newOrderContent.profile.defaultPreview.avatarSrc,
+        followersCount: newOrderContent.profile.defaultPreview.followersCount,
+        followingCount: newOrderContent.profile.defaultPreview.followingCount,
+        qualityId,
       }),
     )
   }, [
@@ -99,6 +104,7 @@ export function OrderExtrasPageContent() {
     quantity,
     summary.platformLabel,
     unitLabel,
+    qualityId,
   ])
 
   if (!handle) {
