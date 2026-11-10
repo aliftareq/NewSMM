@@ -12,14 +12,17 @@ import { cn } from "@/lib/utils";
 import type { LandingCustomerReviewsContent } from "@/types/landing/customer-reviews";
 
 type CustomerReviewsSectionProps = {
-  content?: LandingCustomerReviewsContent;
-  className?: string;
-};
+  content?: LandingCustomerReviewsContent
+  className?: string
+  /** Top-left rotating torus. Default true (landing / service). */
+  showDecoration?: boolean
+}
 
 /** Figma 25704:30886 — Real Customer, Real Result / customer reviews */
 export function CustomerReviewsSection({
   content = landingCustomerReviewsContent,
   className,
+  showDecoration = true,
 }: CustomerReviewsSectionProps) {
   return (
     <section
@@ -27,7 +30,7 @@ export function CustomerReviewsSection({
       className={cn("relative isolate bg-white font-sans", className)}
       aria-labelledby="landing-customer-reviews-heading"
     >
-      <CustomerReviewsSectionDecoration />
+      {showDecoration ? <CustomerReviewsSectionDecoration /> : null}
 
       <div className="relative z-[2] flex flex-col items-center gap-12 py-16 md:py-20 xl:gap-[60px] xl:py-[100px]">
         <div className="info-container flex w-full flex-col items-center px-4 sm:px-6">
