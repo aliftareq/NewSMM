@@ -22,6 +22,7 @@ type UserAccountNavPanelProps = {
   onLogout: () => void
   onNavigate?: () => void
   onAddFunds?: () => void
+  onNewOrder?: () => void
   className?: string
 }
 
@@ -42,6 +43,7 @@ export function UserAccountNavPanel({
   onLogout,
   onNavigate,
   onAddFunds,
+  onNewOrder,
   className,
 }: UserAccountNavPanelProps) {
   const teamLabel = formatUserAccountTeamLabel(displayName)
@@ -116,6 +118,31 @@ export function UserAccountNavPanel({
         <div className="flex w-full flex-col gap-0.5">
           {content.items.map((item) =>
             item.variant === "primary" ? (
+              item.id === "new-order" && onNewOrder ? (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    onNewOrder()
+                  }}
+                  className="flex w-full items-center gap-2.5 overflow-hidden rounded-lg bg-[#269de7] px-3 py-1.5 sm:py-2"
+                >
+                  <span className={cn(iconShellClass, "bg-[#f7f8f9]")}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      alt=""
+                      src={item.iconSrc}
+                      width={16}
+                      height={16}
+                      className={rowIconClass}
+                    />
+                  </span>
+                  <span className="text-sm font-medium leading-[1.35] text-white">
+                    {item.label}
+                  </span>
+                </button>
+              ) : (
               <LinkTo
                 key={item.id}
                 href={item.href}
@@ -139,6 +166,7 @@ export function UserAccountNavPanel({
                   {item.label}
                 </span>
               </LinkTo>
+              )
             ) : (
               <LinkTo
                 key={item.id}

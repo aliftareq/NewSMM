@@ -27,6 +27,7 @@ import { HERO_ENTRANCE } from "@/components/shared/landing/hero-entrance"
 /** Fallback glass bar bottom (px from viewport top) before measure. */
 const NAVBAR_BAR_BOTTOM_FALLBACK_PX = 110
 const SERVICES_MODAL_NAV_GAP_PX = 20
+const QUICK_ORDER_MODAL_NAV_GAP_PX = 28
 
 type MarketingNavbarProps = {
   content?: LandingNavbarContent
@@ -110,7 +111,7 @@ export function MarketingNavbar({
   }, [])
 
   useLayoutEffect(() => {
-    if (!servicesModalOpen) {
+    if (!servicesModalOpen && !isScrolled) {
       setNavbarBarBottomPx(0)
       return
     }
@@ -118,7 +119,7 @@ export function MarketingNavbar({
   }, [servicesModalOpen, measureNavbarBarBottom, isScrolled])
 
   useEffect(() => {
-    if (!servicesModalOpen) return
+    if (!servicesModalOpen && !isScrolled) return
 
     measureNavbarBarBottom()
     const raf = requestAnimationFrame(measureNavbarBarBottom)
@@ -141,6 +142,11 @@ export function MarketingNavbar({
       ? (navbarBarBottomPx || NAVBAR_BAR_BOTTOM_FALLBACK_PX) +
         SERVICES_MODAL_NAV_GAP_PX
       : 0
+
+  const quickOrderAnchorTopPx = isScrolled
+    ? (navbarBarBottomPx || NAVBAR_BAR_BOTTOM_FALLBACK_PX) +
+      QUICK_ORDER_MODAL_NAV_GAP_PX
+    : 0
 
   const servicesButton = (
     <button
@@ -225,6 +231,7 @@ export function MarketingNavbar({
         authEmail={user?.email}
         userMenu={content.userMenu}
         onLogout={() => logout()}
+        quickOrderAnchorTopPx={quickOrderAnchorTopPx}
       />
 
         <nav
@@ -278,6 +285,7 @@ export function MarketingNavbar({
               avatarIconSrc={content.userMenu.avatarIconSrc}
               chevronIconSrc={content.userMenu.chevronIconSrc}
               onLogout={() => logout()}
+              quickOrderAnchorTopPx={quickOrderAnchorTopPx}
             />
           ) : (
             <div className="hidden items-center rounded-xl bg-white lg:flex">

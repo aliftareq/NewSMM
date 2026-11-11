@@ -60,6 +60,12 @@ type ServiceOrderWidgetProps = {
   platformTabsNavigateToServicePages?: boolean
   /** Service hero: slightly tighter layout to reduce overall height. */
   compact?: boolean
+  /** Quick-order / cart modals: hide quality tier tabs (Figma 25687:7054). */
+  hideQualityTabs?: boolean
+  /** When false, outer widget shell has no padding (e.g. quick-order modal). */
+  shellPadding?: boolean
+  /** Show lock + secure checkout line under the CTA. */
+  showSecureCheckoutNote?: boolean
 }
 
 const BADGE_LABEL: Record<ServicePackageBadge, string> = {
@@ -151,6 +157,9 @@ export function ServiceOrderWidget({
   onBeforeNavigate,
   platformTabsNavigateToServicePages = false,
   compact = false,
+  hideQualityTabs = false,
+  shellPadding = true,
+  showSecureCheckoutNote = true,
   assets = {
     orderDividerLine: serviceHeroContent.assets.orderDividerLine,
     secureLockIcon: serviceHeroContent.assets.secureLockIcon,
@@ -267,9 +276,11 @@ export function ServiceOrderWidget({
     <div
       className={cn(
         "box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px]",
-        compact
-          ? "px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4 md:px-6 lg:px-5 xl:px-6"
-          : "px-4 pb-6 pt-4 sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8",
+        shellPadding &&
+          (compact
+            ? "px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4 md:px-6 lg:px-5 xl:px-6"
+            : "px-4 pb-6 pt-4 sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8"),
+        shellPadding === false && "p-0",
         className,
       )}
     >
@@ -279,69 +290,73 @@ export function ServiceOrderWidget({
           compact ? "gap-4 sm:gap-4" : "gap-5 sm:gap-6",
         )}
       >
-        <div
-          role="tablist"
-          aria-label="Package quality"
-          className={cn(
-            "box-border flex w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1",
-            compact ? "min-h-[56px] sm:h-[60px]" : "min-h-[60px] sm:h-[66px]",
-          )}
-        >
-          <div
-            className={cn(
-              "flex gap-2",
-              compact ? "min-h-[48px] sm:h-[52px]" : "min-h-[52px] sm:h-[56px]",
-            )}
-          >
-            {content.qualityOptions.map((option, index) => {
-              const active = option.id === qualityId
-              return (
-                <div key={option.id} className="relative min-w-0 flex-1">
-                  {option.recommendedBadge ? (
-                    <span className="absolute -top-[13px] left-1/2 z-20 flex h-[22px] max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center justify-center rounded-md bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] px-2 py-0.5 text-[10px] font-medium leading-[1.5] text-white sm:h-[26px] sm:max-w-none sm:px-[14px] sm:py-1 sm:text-xs sm:w-[124px]">
-                      {option.recommendedBadge}
-                    </span>
-                  ) : null}
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setQualityId(option.id)}
-                    className={cn(
-                      "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] transition-[border-color,color,transform] duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#269de7]/45 focus-visible:ring-offset-1 sm:text-base",
-                      index === 0 ? "px-3 py-3 sm:px-6 sm:py-4" : "px-3.5 py-3 sm:px-7 sm:py-4",
-                      active
-                        ? cn(
-                            "z-10 border-transparent text-white",
-                            QUALITY_BUTTON_INSET_SHADOW,
-                          )
-                        : "border-[#ebecef] bg-white text-[#404a60] hover:border-[#c5e8fc] hover:bg-[#fafafa] [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)]",
-                    )}
-                  >
-                    {active ? (
-                      <SlidingTabPill
-                        layoutId={LAYOUT_IDS.serviceHeroQuality}
-                        className="rounded-xl border border-[#269de7] bg-[#269de7] shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
-                      />
-                    ) : null}
-                    <span className="relative z-10">{option.label}</span>
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-        </div>
+        {hideQualityTabs ? null : (
+          <>
+            <div
+              role="tablist"
+              aria-label="Package quality"
+              className={cn(
+                "box-border flex w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1",
+                compact ? "min-h-[56px] sm:h-[60px]" : "min-h-[60px] sm:h-[66px]",
+              )}
+            >
+              <div
+                className={cn(
+                  "flex gap-2",
+                  compact ? "min-h-[48px] sm:h-[52px]" : "min-h-[52px] sm:h-[56px]",
+                )}
+              >
+                {content.qualityOptions.map((option, index) => {
+                  const active = option.id === qualityId
+                  return (
+                    <div key={option.id} className="relative min-w-0 flex-1">
+                      {option.recommendedBadge ? (
+                        <span className="absolute -top-[13px] left-1/2 z-20 flex h-[22px] max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center justify-center rounded-md bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] px-2 py-0.5 text-[10px] font-medium leading-[1.5] text-white sm:h-[26px] sm:max-w-none sm:px-[14px] sm:py-1 sm:text-xs sm:w-[124px]">
+                          {option.recommendedBadge}
+                        </span>
+                      ) : null}
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => setQualityId(option.id)}
+                        className={cn(
+                          "relative box-border flex h-full w-full items-center justify-center rounded-xl border border-solid text-sm font-semibold leading-[1.5] transition-[border-color,color,transform] duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#269de7]/45 focus-visible:ring-offset-1 sm:text-base",
+                          index === 0 ? "px-3 py-3 sm:px-6 sm:py-4" : "px-3.5 py-3 sm:px-7 sm:py-4",
+                          active
+                            ? cn(
+                                "z-10 border-transparent text-white",
+                                QUALITY_BUTTON_INSET_SHADOW,
+                              )
+                            : "border-[#ebecef] bg-white text-[#404a60] hover:border-[#c5e8fc] hover:bg-[#fafafa] [text-shadow:0px_0.4px_0.3px_rgba(0,0,0,0.08)]",
+                        )}
+                      >
+                        {active ? (
+                          <SlidingTabPill
+                            layoutId={LAYOUT_IDS.serviceHeroQuality}
+                            className="rounded-xl border border-[#269de7] bg-[#269de7] shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
+                          />
+                        ) : null}
+                        <span className="relative z-10">{option.label}</span>
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
 
-        <div className="relative h-0 w-full shrink-0">
-          <div className="absolute inset-[-1px_0_0_0]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt=""
-              src={assets.orderDividerLine}
-              className="block size-full max-w-none"
-            />
-          </div>
-        </div>
+            <div className="relative h-0 w-full shrink-0">
+              <div className="absolute inset-[-1px_0_0_0]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  alt=""
+                  src={assets.orderDividerLine}
+                  className="block size-full max-w-none"
+                />
+              </div>
+            </div>
+          </>
+        )}
 
         <div
           className={cn(
@@ -596,17 +611,19 @@ export function ServiceOrderWidget({
               </LinkTo>
             </div>
 
-            <p className="flex items-center justify-center gap-1 px-1 text-center text-xs font-medium leading-[1.35] text-[#5b6477] sm:text-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={assets.secureLockIcon}
-                width={18}
-                height={18}
-                className="size-[18px] shrink-0"
-              />
-              {content.secureCheckoutLabel}
-            </p>
+            {showSecureCheckoutNote ? (
+              <p className="flex items-center justify-center gap-1 px-1 text-center text-xs font-medium leading-[1.35] text-[#5b6477] sm:text-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  alt=""
+                  src={assets.secureLockIcon}
+                  width={18}
+                  height={18}
+                  className="size-[18px] shrink-0"
+                />
+                {content.secureCheckoutLabel}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

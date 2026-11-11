@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import { AddFundsModal } from "@/app/(auth)/_components/add-funds-modal"
 import { PayNowModal } from "@/app/(auth)/_components/pay-now-modal"
+import { QuickOrderModal } from "@/app/(auth)/_components/quick-order-modal"
 import { UserAccountNavPanel } from "@/app/(auth)/_components/user-account-nav-panel"
 import { cn } from "@/lib/utils"
 
@@ -15,6 +16,8 @@ type MarketingNavbarUserMenuProps = {
   onLogout: () => void
   /** Desktop pill in the header bar; drawer fills mobile menu width. */
   placement?: "navbar" | "drawer"
+  /** When set, quick-order dialog sits below the fixed navbar (px from viewport top). */
+  quickOrderAnchorTopPx?: number
   className?: string
 }
 
@@ -28,6 +31,7 @@ export function MarketingNavbarUserMenu({
   chevronIconSrc,
   onLogout,
   placement = "navbar",
+  quickOrderAnchorTopPx = 0,
   className,
 }: MarketingNavbarUserMenuProps) {
   const [pinned, setPinned] = useState(false)
@@ -35,6 +39,7 @@ export function MarketingNavbarUserMenu({
   const [addFundsOpen, setAddFundsOpen] = useState(false)
   const [payNowOpen, setPayNowOpen] = useState(false)
   const [payNowAmount, setPayNowAmount] = useState(0)
+  const [quickOrderOpen, setQuickOrderOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const closeTimerRef = useRef<number | null>(null)
 
@@ -91,6 +96,11 @@ export function MarketingNavbarUserMenu({
     setAddFundsOpen(true)
   }
 
+  const openQuickOrderModal = () => {
+    closeAll()
+    setQuickOrderOpen(true)
+  }
+
   return (
     <>
       <AddFundsModal
@@ -106,6 +116,11 @@ export function MarketingNavbarUserMenu({
         onOpenChange={setPayNowOpen}
         topUpAmount={payNowAmount}
         email={email}
+      />
+      <QuickOrderModal
+        open={quickOrderOpen}
+        onOpenChange={setQuickOrderOpen}
+        anchorTopPx={quickOrderAnchorTopPx}
       />
       <div
       ref={rootRef}
@@ -187,6 +202,7 @@ export function MarketingNavbarUserMenu({
             onLogout={onLogout}
             onNavigate={handlePanelNavigate}
             onAddFunds={openAddFundsModal}
+            onNewOrder={openQuickOrderModal}
             className={isDrawer ? "w-full" : undefined}
           />
         </div>

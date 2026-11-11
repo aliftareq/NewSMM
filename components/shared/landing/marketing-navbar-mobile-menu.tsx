@@ -33,6 +33,7 @@ type MarketingNavbarMobileMenuProps = {
   authEmail?: string
   userMenu?: LandingNavbarContent["userMenu"]
   onLogout?: () => void
+  quickOrderAnchorTopPx?: number
 }
 
 export function MarketingNavbarMobileMenu({
@@ -50,6 +51,7 @@ export function MarketingNavbarMobileMenu({
   authEmail,
   userMenu,
   onLogout,
+  quickOrderAnchorTopPx = 0,
 }: MarketingNavbarMobileMenuProps) {
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
@@ -142,6 +144,7 @@ export function MarketingNavbarMobileMenu({
                 email={authEmail ?? ""}
                 avatarIconSrc={userMenu.avatarIconSrc}
                 chevronIconSrc={userMenu.chevronIconSrc}
+                quickOrderAnchorTopPx={quickOrderAnchorTopPx}
                 onLogout={() => {
                   close()
                   onLogout?.()
