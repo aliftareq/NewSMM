@@ -31,7 +31,10 @@ export function ServiceHeroSection({
       <MarketingNavbar overlay mountReveal />
 
       <div className="info-container relative z-10 grid grid-cols-1 items-start gap-6 pt-[118px] sm:gap-8 sm:pt-[160px] md:gap-10 lg:grid-cols-2 lg:items-start lg:gap-8 lg:pt-[180px] xl:grid-cols-[minmax(0,594px)_minmax(0,661px)] xl:justify-between xl:gap-[65px] xl:pt-[128px]">
-        <ServiceHeroIntro content={content.intro} />
+        <ServiceHeroIntro
+          content={content.intro}
+          className="mt-8 sm:mt-10 lg:mt-12 xl:mt-16"
+        />
 
         <div className="mx-auto w-full min-w-0 max-w-[661px] lg:mx-0 lg:max-w-none lg:justify-self-stretch xl:mt-4 xl:justify-self-end">
           <ServiceOrderWidget
