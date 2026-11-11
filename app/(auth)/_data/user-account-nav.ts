@@ -12,7 +12,6 @@ export const userAccountNavContent: UserAccountNavContent = {
   balanceLabel: "My Balance",
   defaultBalance: "$0.00",
   addFundsLabel: "Add funds",
-  addFundsHref: "/checkout",
   items: [
     {
       id: "new-order",

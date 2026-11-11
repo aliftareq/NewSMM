@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 
+import { AddFundsModal } from "@/app/(auth)/_components/add-funds-modal"
+import { PayNowModal } from "@/app/(auth)/_components/pay-now-modal"
 import { UserAccountNavPanel } from "@/app/(auth)/_components/user-account-nav-panel"
 import { cn } from "@/lib/utils"
 
@@ -30,6 +32,9 @@ export function MarketingNavbarUserMenu({
 }: MarketingNavbarUserMenuProps) {
   const [pinned, setPinned] = useState(false)
   const [hovered, setHovered] = useState(false)
+  const [addFundsOpen, setAddFundsOpen] = useState(false)
+  const [payNowOpen, setPayNowOpen] = useState(false)
+  const [payNowAmount, setPayNowAmount] = useState(0)
   const rootRef = useRef<HTMLDivElement>(null)
   const closeTimerRef = useRef<number | null>(null)
 
@@ -81,8 +86,28 @@ export function MarketingNavbarUserMenu({
     closeAll()
   }
 
+  const openAddFundsModal = () => {
+    closeAll()
+    setAddFundsOpen(true)
+  }
+
   return (
-    <div
+    <>
+      <AddFundsModal
+        open={addFundsOpen}
+        onOpenChange={setAddFundsOpen}
+        onContinueToPayment={(amount) => {
+          setPayNowAmount(amount)
+          setPayNowOpen(true)
+        }}
+      />
+      <PayNowModal
+        open={payNowOpen}
+        onOpenChange={setPayNowOpen}
+        topUpAmount={payNowAmount}
+        email={email}
+      />
+      <div
       ref={rootRef}
       className={cn(
         "relative",
@@ -161,10 +186,12 @@ export function MarketingNavbarUserMenu({
             email={email}
             onLogout={onLogout}
             onNavigate={handlePanelNavigate}
+            onAddFunds={openAddFundsModal}
             className={isDrawer ? "w-full" : undefined}
           />
         </div>
       ) : null}
     </div>
+    </>
   )
 }

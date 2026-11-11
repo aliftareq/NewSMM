@@ -16,7 +16,6 @@ export type UserAccountNavContent = {
   balanceLabel: string
   defaultBalance: string
   addFundsLabel: string
-  addFundsHref: string
   items: UserAccountNavItem[]
   logOutLabel: string
 }

@@ -21,6 +21,7 @@ type UserAccountNavPanelProps = {
   content?: UserAccountNavContent
   onLogout: () => void
   onNavigate?: () => void
+  onAddFunds?: () => void
   className?: string
 }
 
@@ -40,6 +41,7 @@ export function UserAccountNavPanel({
   content = userAccountNavContent,
   onLogout,
   onNavigate,
+  onAddFunds,
   className,
 }: UserAccountNavPanelProps) {
   const teamLabel = formatUserAccountTeamLabel(displayName)
@@ -92,9 +94,11 @@ export function UserAccountNavPanel({
               {content.defaultBalance}
             </p>
           </div>
-          <LinkTo
-            href={content.addFundsHref}
-            onClick={onNavigate}
+          <button
+            type="button"
+            onClick={() => {
+              onAddFunds?.()
+            }}
             className="flex h-8 shrink-0 items-center justify-center gap-0.5 rounded-lg border border-[#21aeff] bg-white py-1 pl-1.5 pr-2 text-xs font-medium leading-[1.35] text-[#21aeff] sm:h-9 sm:pl-2 sm:pr-2.5 sm:text-sm"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -106,7 +110,7 @@ export function UserAccountNavPanel({
               className="block size-3.5 sm:size-4"
             />
             {content.addFundsLabel}
-          </LinkTo>
+          </button>
         </div>
 
         <div className="flex w-full flex-col gap-0.5">
