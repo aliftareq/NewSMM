@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react"
 
-import { AuthFlowModalFrame } from "@/components/shared/auth/auth-flow-modal-frame"
+import { AuthFlowModalFrame } from "@/app/(auth)/_components/auth-flow-modal-frame"
 import { setNewPasswordModalContent } from "@/data/auth/set-new-password-modal"
 import type { SetNewPasswordModalContent } from "@/types/auth/set-new-password-modal"
 

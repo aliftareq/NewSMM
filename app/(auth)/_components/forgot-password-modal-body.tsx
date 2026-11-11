@@ -2,7 +2,7 @@
 
 import { useId } from "react"
 
-import { AuthFlowModalFrame } from "@/components/shared/auth/auth-flow-modal-frame"
+import { AuthFlowModalFrame } from "@/app/(auth)/_components/auth-flow-modal-frame"
 import { forgotPasswordModalContent } from "@/data/auth/forgot-password-modal"
 import type { ForgotPasswordModalContent } from "@/types/auth/forgot-password-modal"
 

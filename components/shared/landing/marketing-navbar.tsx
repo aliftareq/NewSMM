@@ -14,7 +14,7 @@ import {
   MarketingNavbarMobileMenu,
   MarketingNavbarMenuTrigger,
 } from "@/components/shared/landing/marketing-navbar-mobile-menu"
-import { LoginModal } from "@/components/shared/auth/login-modal"
+import { LoginModal } from "@/app/(auth)/_components/login-modal"
 import { OurServicesModal } from "@/components/shared/landing/services-modal/our-services-modal"
 import type { AuthModalTab } from "@/types/auth/login-modal"
 import { cn } from "@/lib/utils"

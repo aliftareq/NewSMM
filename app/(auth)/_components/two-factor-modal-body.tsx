@@ -2,7 +2,7 @@
 
 import { useCallback, useId, useMemo, useRef, useState } from "react"
 
-import { AuthFlowModalFrame } from "@/components/shared/auth/auth-flow-modal-frame"
+import { AuthFlowModalFrame } from "@/app/(auth)/_components/auth-flow-modal-frame"
 import { twoFactorModalContent } from "@/data/auth/two-factor-modal"
 import type { TwoFactorModalContent } from "@/types/auth/two-factor-modal"
 import { cn } from "@/lib/utils"
