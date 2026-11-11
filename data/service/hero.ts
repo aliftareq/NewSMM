@@ -48,7 +48,7 @@ export const serviceHeroContent: ServiceHeroContent = {
     socialIconsSprite: serviceOrderSpriteSrc,
   },
   intro: {
-    title: "Buy Instagram Followers",
+    title: "Boost Your Instagram Growth with Premium Promotion Services",
     description:
       "Grow your Instagram presence with the right follower package for your goals. Choose from flexible options designed to increase your audience, strengthen social proof, and give your profile a more established look.",
     trustCard: {
