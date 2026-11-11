@@ -51,6 +51,7 @@ export function MarketingNavbar({
   const servicesHoverCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   )
+  const servicesHoverZonesRef = useRef({ button: false, panel: false })
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const [loginModalTab, setLoginModalTab] = useState<AuthModalTab>("login")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -108,13 +109,47 @@ export function MarketingNavbar({
     setServicesModalOpen(true)
   }, [clearServicesHoverCloseTimer])
 
-  const scheduleCloseServicesModal = useCallback(() => {
+  const maybeCloseServicesModal = useCallback(() => {
     clearServicesHoverCloseTimer()
     servicesHoverCloseTimerRef.current = setTimeout(() => {
-      setServicesModalOpen(false)
+      const { button, panel } = servicesHoverZonesRef.current
+      if (!button && !panel) {
+        setServicesModalOpen(false)
+      }
       servicesHoverCloseTimerRef.current = null
-    }, 180)
+    }, 280)
   }, [clearServicesHoverCloseTimer])
+
+  const handleServicesOpenChange = useCallback(
+    (open: boolean) => {
+      setServicesModalOpen(open)
+      if (!open) {
+        servicesHoverZonesRef.current = { button: false, panel: false }
+        clearServicesHoverCloseTimer()
+      }
+    },
+    [clearServicesHoverCloseTimer],
+  )
+
+  const servicesButtonHoverEnter = useCallback(() => {
+    servicesHoverZonesRef.current.button = true
+    openServicesModal()
+  }, [openServicesModal])
+
+  const servicesButtonHoverLeave = useCallback(() => {
+    servicesHoverZonesRef.current.button = false
+    maybeCloseServicesModal()
+  }, [maybeCloseServicesModal])
+
+  const servicesPanelHoverEnter = useCallback(() => {
+    servicesHoverZonesRef.current.panel = true
+    openServicesModal()
+  }, [openServicesModal])
+
+  const servicesPanelHoverLeave = useCallback(() => {
+    servicesHoverZonesRef.current.panel = false
+    maybeCloseServicesModal()
+  }, [maybeCloseServicesModal])
 
   useEffect(() => {
     return () => clearServicesHoverCloseTimer()
@@ -122,8 +157,8 @@ export function MarketingNavbar({
 
   const servicesHoverHandlers = isLgViewport
     ? {
-        onMouseEnter: openServicesModal,
-        onMouseLeave: scheduleCloseServicesModal,
+        onMouseEnter: servicesButtonHoverEnter,
+        onMouseLeave: servicesButtonHoverLeave,
       }
     : {}
 
@@ -185,12 +220,13 @@ export function MarketingNavbar({
       />
       <OurServicesModal
         open={servicesModalOpen}
-        onOpenChange={setServicesModalOpen}
+        onOpenChange={handleServicesOpenChange}
+        hoverInteraction={isLgViewport}
         onContentMouseEnter={
-          isLgViewport ? openServicesModal : undefined
+          isLgViewport ? servicesPanelHoverEnter : undefined
         }
         onContentMouseLeave={
-          isLgViewport ? scheduleCloseServicesModal : undefined
+          isLgViewport ? servicesPanelHoverLeave : undefined
         }
       />
       <LoginModal

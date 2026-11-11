@@ -22,6 +22,8 @@ type OurServicesModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   content?: ServicesModalContent
+  /** Keeps backdrop visual only so the trigger can stay hovered while open. */
+  hoverInteraction?: boolean
   onContentMouseEnter?: () => void
   onContentMouseLeave?: () => void
 }
@@ -30,6 +32,7 @@ export function OurServicesModal({
   open,
   onOpenChange,
   content = landingServicesModalContent,
+  hoverInteraction = false,
   onContentMouseEnter,
   onContentMouseLeave,
 }: OurServicesModalProps) {
@@ -75,6 +78,11 @@ export function OurServicesModal({
       <DialogContent
         showCloseButton
         closeButtonClassName="top-2 right-2 rounded-xl bg-button/20 text-button hover:!bg-button hover:!text-white focus-visible:!ring-button/30 sm:top-2.5 sm:right-2.5"
+        overlayClassName={
+          hoverInteraction
+            ? "pointer-events-none bg-black/40 data-closed:pointer-events-none"
+            : undefined
+        }
         className="max-h-[min(720px,calc(100vh-2rem))] w-[min(1320px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-7 ring-0 sm:max-w-none"
         onMouseEnter={onContentMouseEnter}
         onMouseLeave={onContentMouseLeave}
