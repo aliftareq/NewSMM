@@ -339,7 +339,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: instagramTheme,
       subtitle: "10 premium packages • Starts from $1.59",
       allServicesLabel: "All Instagram",
-      allServicesHref: "/instagram-smm-panel",
+      allServicesHref: "/instagram-services",
     }),
     platformEntry({
       id: "tiktok",
@@ -350,7 +350,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: tiktokTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All TikTok",
-      allServicesHref: "/tiktok-smm-panel",
+      allServicesHref: "/tiktok-services",
     }),
     platformEntry({
       id: "youtube",
@@ -361,7 +361,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: youtubeTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All YouTube",
-      allServicesHref: "/youtube-smm-panel",
+      allServicesHref: "/youtube-services",
     }),
     platformEntry({
       id: "facebook",
@@ -372,7 +372,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: facebookTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Facebook",
-      allServicesHref: "/facebook-smm-panel",
+      allServicesHref: "/facebook-services",
     }),
     platformEntry({
       id: "twitter",
@@ -383,7 +383,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: twitterTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Twitter",
-      allServicesHref: "/twitter-smm-panel",
+      allServicesHref: "/twitter-services",
     }),
     platformEntry({
       id: "threads",
@@ -394,7 +394,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: threadsTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Threads",
-      allServicesHref: "/threads-smm-panel",
+      allServicesHref: "/threads-services",
     }),
     platformEntry({
       id: "spotify",
@@ -405,7 +405,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: spotifyTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Spotify",
-      allServicesHref: "/spotify-smm-panel",
+      allServicesHref: "/spotify-services",
     }),
     platformEntry({
       id: "soundcloud",
@@ -416,7 +416,7 @@ export const landingServicesModalContent: ServicesModalContent = {
       theme: soundcloudTheme,
       subtitle: "7 premium packages • Starts from $1.59",
       allServicesLabel: "All Soundcloud",
-      allServicesHref: "/soundcloud-smm-panel",
+      allServicesHref: "/soundcloud-services",
     }),
   ],
 }
