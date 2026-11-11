@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { usePathname } from "next/navigation"
 
@@ -20,6 +20,10 @@ import type { AuthModalTab } from "@/types/auth/login-modal"
 import { cn } from "@/lib/utils"
 import { useLandingLgViewport } from "@/lib/landing-animation-trigger"
 import { HERO_ENTRANCE } from "@/components/shared/landing/hero-entrance"
+
+/** Fallback glass bar bottom (px from viewport top) before measure. */
+const NAVBAR_BAR_BOTTOM_FALLBACK_PX = 110
+const SERVICES_MODAL_NAV_GAP_PX = 20
 
 type MarketingNavbarProps = {
   content?: LandingNavbarContent
@@ -48,6 +52,8 @@ export function MarketingNavbar({
   const pathname = usePathname()
   const isLgViewport = useLandingLgViewport()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
+  const navbarBarShellRef = useRef<HTMLDivElement>(null)
+  const [navbarBarBottomPx, setNavbarBarBottomPx] = useState(0)
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const [loginModalTab, setLoginModalTab] = useState<AuthModalTab>("login")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -92,6 +98,45 @@ export function MarketingNavbar({
     setLoginModalTab(tab)
     setLoginModalOpen(true)
   }, [])
+
+  const measureNavbarBarBottom = useCallback(() => {
+    const el = navbarBarShellRef.current
+    if (!el) return
+    setNavbarBarBottomPx(Math.ceil(el.getBoundingClientRect().bottom))
+  }, [])
+
+  useLayoutEffect(() => {
+    if (!servicesModalOpen) {
+      setNavbarBarBottomPx(0)
+      return
+    }
+    measureNavbarBarBottom()
+  }, [servicesModalOpen, measureNavbarBarBottom, isScrolled])
+
+  useEffect(() => {
+    if (!servicesModalOpen) return
+
+    measureNavbarBarBottom()
+    const raf = requestAnimationFrame(measureNavbarBarBottom)
+    const resizeObserver = new ResizeObserver(measureNavbarBarBottom)
+    const el = navbarBarShellRef.current
+    if (el) resizeObserver.observe(el)
+    window.addEventListener("resize", measureNavbarBarBottom, { passive: true })
+    window.addEventListener("scroll", measureNavbarBarBottom, { passive: true })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      resizeObserver.disconnect()
+      window.removeEventListener("resize", measureNavbarBarBottom)
+      window.removeEventListener("scroll", measureNavbarBarBottom)
+    }
+  }, [servicesModalOpen, measureNavbarBarBottom, isScrolled])
+
+  const servicesModalAnchorTopPx =
+    servicesModalOpen && isScrolled
+      ? (navbarBarBottomPx || NAVBAR_BAR_BOTTOM_FALLBACK_PX) +
+        SERVICES_MODAL_NAV_GAP_PX
+      : 0
 
   const servicesButton = (
     <button
@@ -151,6 +196,7 @@ export function MarketingNavbar({
       <OurServicesModal
         open={servicesModalOpen}
         onOpenChange={setServicesModalOpen}
+        anchorTopPx={servicesModalAnchorTopPx}
       />
       <LoginModal
         open={loginModalOpen}
@@ -257,6 +303,8 @@ export function MarketingNavbar({
   const barShell = (
     <div className="info-container w-full">
       <div
+        ref={navbarBarShellRef}
+        data-slot="marketing-navbar-bar"
         className={cn(
           "rounded-[12px] border p-3 transition-[background-color,box-shadow,backdrop-filter,border-color] duration-300 ease-out sm:p-4",
           isScrolled

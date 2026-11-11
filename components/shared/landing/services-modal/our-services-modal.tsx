@@ -17,17 +17,21 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { cn } from "@/lib/utils"
 
 type OurServicesModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   content?: ServicesModalContent
+  /** Viewport `top` for the dialog when sitting below the scrolled glass navbar. */
+  anchorTopPx?: number
 }
 
 export function OurServicesModal({
   open,
   onOpenChange,
   content = landingServicesModalContent,
+  anchorTopPx = 0,
 }: OurServicesModalProps) {
   const [activePlatformId, setActivePlatformId] = useState<ServicesModalPlatformId>(
     content.defaultPlatformId,
@@ -59,6 +63,18 @@ export function OurServicesModal({
     [activePlatformId, content.platforms],
   )
 
+  const belowScrolledNavbar = anchorTopPx > 0
+  const bottomInsetPx = belowScrolledNavbar ? anchorTopPx + 20 : 0
+  const dialogPositionStyle = belowScrolledNavbar
+    ? {
+        top: anchorTopPx,
+        maxHeight: `min(720px, calc(100vh - ${bottomInsetPx}px))`,
+      }
+    : undefined
+  const panelMaxHeight = belowScrolledNavbar
+    ? `min(664px, calc(100vh - ${bottomInsetPx}px - 2rem))`
+    : undefined
+
   const handleSelect = (id: ServicesModalPlatformId) => {
     const index = content.platforms.findIndex((p) => p.id === id)
     if (index >= 0) {
@@ -70,12 +86,27 @@ export function OurServicesModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        centered={!belowScrolledNavbar}
         showCloseButton
         closeButtonClassName="top-2 right-2 rounded-xl bg-button/20 text-button hover:!bg-button hover:!text-white focus-visible:!ring-button/30 sm:top-2.5 sm:right-2.5"
-        className="max-h-[min(720px,calc(100vh-2rem))] w-[min(1320px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-7 ring-0 sm:max-w-none"
+        overlayClassName="z-[89]"
+        style={dialogPositionStyle}
+        className={cn(
+          "z-[90] w-[min(1320px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-7 ring-0 sm:max-w-none",
+          "duration-200 data-open:!opacity-100 data-open:zoom-in-100 data-closed:zoom-out-100",
+          belowScrolledNavbar
+            ? "transition-[top,max-height] duration-300 ease-out"
+            : "max-h-[min(720px,calc(100vh-2rem))]",
+        )}
       >
         <DialogTitle className="sr-only">Our services</DialogTitle>
-        <div className="flex max-h-[min(664px,calc(100vh-4rem))] flex-col gap-6 overflow-y-auto lg:flex-row lg:overflow-hidden">
+        <div
+          className={cn(
+            "flex flex-col gap-6 overflow-y-auto lg:flex-row lg:overflow-hidden",
+            !belowScrolledNavbar && "max-h-[min(664px,calc(100vh-4rem))]",
+          )}
+          style={panelMaxHeight ? { maxHeight: panelMaxHeight } : undefined}
+        >
           <PlatformSidebar
             platforms={content.platforms}
             activeId={activePlatform.id}
