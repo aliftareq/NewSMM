@@ -46,6 +46,30 @@ const PLATFORM_UNIT_LABEL: Record<string, string> = {
   soundcloud: "Plays",
 }
 
+const SERVICE_PRODUCT_SUFFIX_UNIT: Record<string, string> = {
+  followers: "Followers",
+  likes: "Likes",
+  views: "Views",
+  comments: "Comments",
+  subscribers: "Subscribers",
+  plays: "Plays",
+}
+
+export function resolveUnitLabelForServiceProduct(
+  platformId: string,
+  serviceProductId?: string,
+): string {
+  if (serviceProductId) {
+    const prefix = `${platformId}-`
+    if (serviceProductId.startsWith(prefix)) {
+      const suffix = serviceProductId.slice(prefix.length)
+      const fromSuffix = SERVICE_PRODUCT_SUFFIX_UNIT[suffix]
+      if (fromSuffix) return fromSuffix
+    }
+  }
+  return PLATFORM_UNIT_LABEL[platformId] ?? "Followers"
+}
+
 /** Slight per-platform pricing (demo). */
 const PLATFORM_PRICE_FACTOR: Record<string, number> = {
   instagram: 1,
@@ -77,8 +101,9 @@ export function mapHeroPackagesForOrder(
   packages: ServicePackageOption[],
   qualityId: string,
   platformId: string,
+  serviceProductId?: string,
 ): ServicePackageOption[] {
-  const unitLabel = PLATFORM_UNIT_LABEL[platformId] ?? "Followers"
+  const unitLabel = resolveUnitLabelForServiceProduct(platformId, serviceProductId)
   const platformFactor = PLATFORM_PRICE_FACTOR[platformId] ?? 1
 
   return mapHeroPackagesForQuality(packages, qualityId).map((pkg) => {

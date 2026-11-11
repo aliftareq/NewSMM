@@ -186,28 +186,25 @@ export function ServiceOrderWidget({
   )
 
   useEffect(() => {
-    const fromUrl = searchParams.get(SERVICE_PAGE_SERVICE_QUERY_KEY)
-    if (fromUrl) {
+    if (serviceFromUrl) {
       const resolved = resolveServiceProductIdFromQuery(
         platformId,
         content.serviceProductsByPlatform,
         content.defaultServiceProductId,
-        fromUrl,
+        serviceFromUrl,
       )
-      if (resolved !== serviceProductId) {
-        setServiceProductId(resolved)
-        return
-      }
+      setServiceProductId(resolved)
+      return
     }
-    if (serviceProducts.some((item) => item.id === serviceProductId)) return
-    const fallback = serviceProducts[0]?.id
-    if (fallback) setServiceProductId(fallback)
+    setServiceProductId((current) => {
+      if (serviceProducts.some((item) => item.id === current)) return current
+      return serviceProducts[0]?.id ?? current
+    })
   }, [
     content.defaultServiceProductId,
     content.serviceProductsByPlatform,
     platformId,
-    searchParams,
-    serviceProductId,
+    serviceFromUrl,
     serviceProducts,
   ])
 
@@ -217,8 +214,14 @@ export function ServiceOrderWidget({
   )
 
   const packagesForOrder = useMemo(
-    () => mapHeroPackagesForOrder(content.packages, qualityId, platformId),
-    [content.packages, qualityId, platformId],
+    () =>
+      mapHeroPackagesForOrder(
+        content.packages,
+        qualityId,
+        platformId,
+        serviceProductId,
+      ),
+    [content.packages, qualityId, platformId, serviceProductId],
   )
 
   const selectedPackage = useMemo(
