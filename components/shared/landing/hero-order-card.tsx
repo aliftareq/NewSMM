@@ -80,7 +80,11 @@ function HeroSelectField({
             <img alt="" src={chevronSrc} className="block size-full max-w-none" />
           </span>
         </SelectTrigger>
-        <SelectContent align="start" className={menuClassName}>
+        <SelectContent
+          align="start"
+          alignItemWithTrigger={false}
+          className={menuClassName}
+        >
           {children}
         </SelectContent>
       </Select>
@@ -128,11 +132,6 @@ export function HeroOrderCard({
     const nextServiceId = nextServices[0]?.id ?? ""
     setPlatformId(nextPlatformId)
     setServiceId(nextServiceId)
-    router.push(
-      getServicePlatformPageHref(nextPlatformId, {
-        serviceProductId: nextServiceId,
-      }),
-    )
   }
 
   const handleServiceChange = (nextServiceId: string | null) => {
