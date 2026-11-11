@@ -45,7 +45,9 @@ export type HeroSpriteCrop = {
 export type HeroOrderPlatformOption = {
   id: string
   label: string
-  spriteIcon: HeroSpriteCrop
+  spriteIcon?: HeroSpriteCrop
+  imageSrc?: string
+  imageClassName?: string
 }
 
 export type HeroOrderServiceOption = {

@@ -226,7 +226,13 @@ export function LoginModal({
               </label>
               <div className="flex h-[54px] items-center gap-3 rounded-xl border border-[#ebecef] bg-white px-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="" src={assets.mailIcon} width={20} height={20} className="shrink-0 opacity-70" />
+                <img
+                  alt=""
+                  src={assets.mailIcon}
+                  width={20}
+                  height={20}
+                  className="size-5 shrink-0 object-contain opacity-70"
+                />
                 <input
                   id={emailId}
                   type="email"
@@ -247,7 +253,13 @@ export function LoginModal({
               </label>
               <div className="flex h-[54px] items-center gap-3 rounded-xl border border-[#ebecef] bg-white px-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt="" src={assets.lockIcon} width={20} height={20} className="shrink-0 opacity-70" />
+                <img
+                  alt=""
+                  src={assets.lockIcon}
+                  width={20}
+                  height={20}
+                  className="size-5 shrink-0 object-contain opacity-70"
+                />
                 <input
                   id={passwordId}
                   type={showPassword ? "text" : "password"}

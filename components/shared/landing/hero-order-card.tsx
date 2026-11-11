@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 
 import type {
   HeroOrderPlatformOption,
@@ -8,6 +9,7 @@ import type {
   LandingHeroContent,
 } from "@/types/landing/hero"
 import { HeroSpriteIcon } from "@/components/shared/landing/hero-sprite-icon"
+import { getServicePlatformPageHref } from "@/lib/service-platform-routes"
 import {
   Select,
   SelectContent,
@@ -91,6 +93,7 @@ export function HeroOrderCard({
   chevronSrc,
   spriteSrc,
 }: HeroOrderCardProps) {
+  const router = useRouter()
   const {
     platformField,
     serviceField,
@@ -121,14 +124,26 @@ export function HeroOrderCard({
 
   const handlePlatformChange = (nextPlatformId: string | null) => {
     if (!nextPlatformId) return
-    setPlatformId(nextPlatformId)
     const nextServices = servicesByPlatform[nextPlatformId] ?? []
-    setServiceId(nextServices[0]?.id ?? "")
+    const nextServiceId = nextServices[0]?.id ?? ""
+    setPlatformId(nextPlatformId)
+    setServiceId(nextServiceId)
+    router.push(
+      getServicePlatformPageHref(nextPlatformId, {
+        serviceProductId: nextServiceId,
+      }),
+    )
   }
 
   const handleServiceChange = (nextServiceId: string | null) => {
     if (!nextServiceId) return
     setServiceId(nextServiceId)
+  }
+
+  const handleGetStarted = () => {
+    router.push(
+      getServicePlatformPageHref(platformId, { serviceProductId: serviceId }),
+    )
   }
 
   return (
@@ -192,6 +207,7 @@ export function HeroOrderCard({
 
         <button
           type="button"
+          onClick={handleGetStarted}
           className="relative flex w-full items-center justify-center rounded-xl bg-button px-6 py-4 text-lg font-semibold leading-[1.3] text-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
         >
           {submitLabel}
@@ -210,7 +226,18 @@ function PlatformOptionContent({
 }) {
   return (
     <span className="flex items-center gap-1.5">
-      <HeroSpriteIcon spriteSrc={spriteSrc} crop={platform.spriteIcon} />
+      {platform.spriteIcon ? (
+        <HeroSpriteIcon spriteSrc={spriteSrc} crop={platform.spriteIcon} />
+      ) : platform.imageSrc ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          alt=""
+          src={platform.imageSrc}
+          width={18}
+          height={18}
+          className={platform.imageClassName ?? "size-[18px] object-contain"}
+        />
+      ) : null}
       {platform.label}
     </span>
   )

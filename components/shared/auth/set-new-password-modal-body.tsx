@@ -49,7 +49,7 @@ function PasswordField({
             src={assets.lockIcon}
             width={20}
             height={20}
-            className="shrink-0 opacity-70"
+            className="size-5 shrink-0 object-contain opacity-70"
           />
           <input
             id={id}

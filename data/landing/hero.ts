@@ -1,6 +1,41 @@
-import type { LandingHeroContent } from "@/types/landing/hero"
+import { serviceOrderProductsByPlatform } from "@/data/service/order-widget-services"
+import type { HeroOrderServiceOption, LandingHeroContent } from "@/types/landing/hero"
 
 const SPRITE = "/images/landing/social-icons-sprite.png"
+const MODAL_PLATFORMS_IMG = "/images/landing/services-modal/platforms"
+
+function toLandingServiceLabel(productLabel: string): string {
+  const [first, ...rest] = productLabel.split(" ")
+  if (rest.length === 0) return productLabel
+  return `${first} ${rest.join(" ").toLowerCase()}`
+}
+
+function buildLandingHeroServicesByPlatform(): Record<
+  string,
+  HeroOrderServiceOption[]
+> {
+  return Object.fromEntries(
+    Object.entries(serviceOrderProductsByPlatform).map(([platformId, products]) => [
+      platformId,
+      products.map(({ id, label }) => {
+        const entry: HeroOrderServiceOption = {
+          id,
+          label: toLandingServiceLabel(label),
+        }
+        if (id === "instagram-followers") {
+          entry.icon = {
+            src: "/images/landing/instagram-followers-icon.png",
+            width: 20.195,
+            height: 18,
+            className:
+              "absolute h-[144.68%] left-[-45.65%] max-w-none top-[-22.34%] w-[193.48%]",
+          }
+        }
+        return entry
+      }),
+    ]),
+  )
+}
 
 export const landingHeroContent: LandingHeroContent = {
   assets: {
@@ -127,40 +162,32 @@ export const landingHeroContent: LandingHeroContent = {
           height: "639.76%",
         },
       },
+      {
+        id: "twitter",
+        label: "Twitter",
+        imageSrc: `${MODAL_PLATFORMS_IMG}/twitter.png`,
+        imageClassName: "size-[18px] object-contain",
+      },
+      {
+        id: "threads",
+        label: "Threads",
+        imageSrc: `${MODAL_PLATFORMS_IMG}/threads.png`,
+        imageClassName: "size-[18px] object-contain",
+      },
+      {
+        id: "spotify",
+        label: "Spotify",
+        imageSrc: `${MODAL_PLATFORMS_IMG}/spotify.png`,
+        imageClassName: "size-[18px] object-contain",
+      },
+      {
+        id: "soundcloud",
+        label: "Soundcloud",
+        imageSrc: `${MODAL_PLATFORMS_IMG}/soundcloud.png`,
+        imageClassName: "size-[18px] object-contain",
+      },
     ],
-    servicesByPlatform: {
-      instagram: [
-        {
-          id: "instagram-followers",
-          label: "Instagram followers",
-          icon: {
-            src: "/images/landing/instagram-followers-icon.png",
-            width: 20.195,
-            height: 18,
-            className:
-              "absolute h-[144.68%] left-[-45.65%] max-w-none top-[-22.34%] w-[193.48%]",
-          },
-        },
-        { id: "instagram-likes", label: "Instagram likes" },
-        { id: "instagram-views", label: "Instagram views" },
-        { id: "instagram-comments", label: "Instagram comments" },
-      ],
-      tiktok: [
-        { id: "tiktok-followers", label: "TikTok followers" },
-        { id: "tiktok-likes", label: "TikTok likes" },
-        { id: "tiktok-views", label: "TikTok views" },
-      ],
-      youtube: [
-        { id: "youtube-subscribers", label: "YouTube subscribers" },
-        { id: "youtube-views", label: "YouTube views" },
-        { id: "youtube-likes", label: "YouTube likes" },
-      ],
-      facebook: [
-        { id: "facebook-followers", label: "Facebook followers" },
-        { id: "facebook-likes", label: "Facebook likes" },
-        { id: "facebook-views", label: "Facebook views" },
-      ],
-    },
+    servicesByPlatform: buildLandingHeroServicesByPlatform(),
     submitLabel: "Get started now",
   },
   visual: {

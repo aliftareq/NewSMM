@@ -26,6 +26,7 @@ type MarketingNavbarMobileMenuProps = {
   isNavLinkActive: (pathname: string, href: string) => boolean
   onOpenServices: () => void
   onOpenLogin: () => void
+  onOpenSignUp: () => void
 }
 
 export function MarketingNavbarMobileMenu({
@@ -37,6 +38,7 @@ export function MarketingNavbarMobileMenu({
   isNavLinkActive,
   onOpenServices,
   onOpenLogin,
+  onOpenSignUp,
 }: MarketingNavbarMobileMenuProps) {
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
@@ -138,9 +140,12 @@ export function MarketingNavbarMobileMenu({
               </button>
             ) : null}
             {signUp ? (
-              <LinkTo
-                href={signUp.href}
-                onClick={close}
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenSignUp()
+                }}
                 className={cn(
                   buttonVariants({ variant: "default", size: "default" }),
                   "w-full justify-center gap-2 font-sans sm:flex-1",
@@ -148,7 +153,7 @@ export function MarketingNavbarMobileMenu({
               >
                 {signUp.label}
                 <PrimaryButtonArrow />
-              </LinkTo>
+              </button>
             ) : null}
           </div>
         </DialogPrimitive.Popup>

@@ -1,5 +1,11 @@
 import { landingHeroContent } from "@/data/landing/hero"
 import { serviceHeroIntroByPlatform } from "@/data/service/hero-intros"
+import {
+  SERVICE_ORDER_SELECT_CHEVRON,
+  SERVICE_ORDER_SERVICE_SELECT_LABEL,
+  getDefaultServiceProductId,
+  serviceOrderProductsByPlatform,
+} from "@/data/service/order-widget-services"
 import type { ServiceHeroContent } from "@/types/service/hero"
 import type { ServicesModalPlatformIcon } from "@/types/landing/services-modal"
 
@@ -235,5 +241,9 @@ export const serviceHeroContent: ServiceHeroContent = {
       },
     ],
     secureCheckoutLabel: "Guaranteed Safe & Secure Checkout",
+    serviceSelectLabel: SERVICE_ORDER_SERVICE_SELECT_LABEL,
+    serviceSelectChevronSrc: SERVICE_ORDER_SELECT_CHEVRON,
+    defaultServiceProductId: getDefaultServiceProductId("instagram"),
+    serviceProductsByPlatform: serviceOrderProductsByPlatform,
   },
 }

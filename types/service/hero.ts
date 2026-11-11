@@ -13,6 +13,11 @@ export type ServiceOrderPlatform = {
   usernamePlaceholder: string
 }
 
+export type ServiceOrderProductOption = {
+  id: string
+  label: string
+}
+
 export type ServicePackageBadge = "popular" | "max-value"
 
 export type ServicePackageOption = {
@@ -60,5 +65,9 @@ export type ServiceHeroContent = {
     defaultPackageId: string
     packages: ServicePackageOption[]
     secureCheckoutLabel: string
+    serviceSelectLabel: string
+    serviceSelectChevronSrc: string
+    defaultServiceProductId: string
+    serviceProductsByPlatform: Record<string, ServiceOrderProductOption[]>
   }
 }

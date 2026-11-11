@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
 
 import { serviceHeroContent } from "@/data/service/hero"
 import { mapHeroPackagesForOrder } from "@/lib/service-quality-pricing"
@@ -16,12 +17,32 @@ import {
   platformTabCssVars,
   platformTabInactiveHoverClasses,
 } from "@/components/shared/landing/services-explorer/services-explorer-ui"
-import { getServicePlatformPageHref } from "@/lib/service-platform-routes"
+import {
+  SERVICE_PAGE_SERVICE_QUERY_KEY,
+  getServicePlatformPageHref,
+  resolveServiceProductIdFromQuery,
+} from "@/lib/service-platform-routes"
 import { getPlatformThemeById } from "@/lib/services-platform-theme"
 import { startNewDraftGroup } from "@/lib/cart-draft-group"
 import { readCart } from "@/lib/cart-storage"
 import { buildOrderHref } from "@/lib/build-order-href"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+
+const SERVICE_PRODUCT_SELECT_TRIGGER_CLASS =
+  "flex h-[58px] min-h-[58px] w-full items-center justify-between gap-2 rounded-xl border border-[#dfe0e4] bg-white px-5 py-4 text-base font-medium text-[#13203b] shadow-none focus-visible:border-[#8ad8ff] focus-visible:ring-[3px] focus-visible:ring-[#8ad8ff]/30 data-[size=default]:h-[58px] [&>svg]:hidden"
+
+const SERVICE_PRODUCT_MENU_CLASS =
+  "max-h-60 w-(--anchor-width) rounded-xl border border-[#dfe0e4] bg-white p-1.5 text-[#13203b] shadow-[0px_8px_24px_rgba(38,157,231,0.14)] ring-0"
+
+const SERVICE_PRODUCT_MENU_ITEM_CLASS =
+  "rounded-lg py-2.5 pr-8 pl-3 text-base font-medium text-[#13203b] data-highlighted:bg-[#eaf6fd] data-highlighted:text-button data-selected:bg-[#eaf6fd] data-selected:text-button focus:bg-[#eaf6fd] focus:text-button"
 
 type ServiceOrderWidgetProps = {
   content?: ServiceHeroContent["orderWidget"]
@@ -121,10 +142,59 @@ export function ServiceOrderWidget({
     socialIconsSprite: serviceHeroContent.assets.socialIconsSprite,
   },
 }: ServiceOrderWidgetProps) {
+  const searchParams = useSearchParams()
+  const serviceFromUrl = searchParams.get(SERVICE_PAGE_SERVICE_QUERY_KEY)
+
   const [qualityId, setQualityId] = useState(content.defaultQualityId)
   const [platformId, setPlatformId] = useState(content.defaultPlatformId)
   const [packageId, setPackageId] = useState(content.defaultPackageId)
+  const [serviceProductId, setServiceProductId] = useState(() =>
+    resolveServiceProductIdFromQuery(
+      content.defaultPlatformId,
+      content.serviceProductsByPlatform,
+      content.defaultServiceProductId,
+      serviceFromUrl,
+    ),
+  )
   const [username, setUsername] = useState("")
+
+  const serviceProducts = useMemo(
+    () => content.serviceProductsByPlatform[platformId] ?? [],
+    [content.serviceProductsByPlatform, platformId],
+  )
+
+  const selectedServiceProduct = useMemo(
+    () =>
+      serviceProducts.find((item) => item.id === serviceProductId) ??
+      serviceProducts[0],
+    [serviceProductId, serviceProducts],
+  )
+
+  useEffect(() => {
+    const fromUrl = searchParams.get(SERVICE_PAGE_SERVICE_QUERY_KEY)
+    if (fromUrl) {
+      const resolved = resolveServiceProductIdFromQuery(
+        platformId,
+        content.serviceProductsByPlatform,
+        content.defaultServiceProductId,
+        fromUrl,
+      )
+      if (resolved !== serviceProductId) {
+        setServiceProductId(resolved)
+        return
+      }
+    }
+    if (serviceProducts.some((item) => item.id === serviceProductId)) return
+    const fallback = serviceProducts[0]?.id
+    if (fallback) setServiceProductId(fallback)
+  }, [
+    content.defaultServiceProductId,
+    content.serviceProductsByPlatform,
+    platformId,
+    searchParams,
+    serviceProductId,
+    serviceProducts,
+  ])
 
   const platform = useMemo(
     () => content.platforms.find((p) => p.id === platformId) ?? content.platforms[0],
@@ -315,6 +385,69 @@ export function ServiceOrderWidget({
                 "shadow-[inset_0_0_0_1px_rgba(38,157,231,0.08)]",
             )}
           >
+            <div className="flex w-full flex-col gap-2">
+              <p className="text-base font-medium leading-[1.35] text-[#5b6477]">
+                {content.serviceSelectLabel}
+              </p>
+              <Select
+                value={selectedServiceProduct?.id ?? serviceProductId}
+                onValueChange={(next) => {
+                  if (next) setServiceProductId(next)
+                }}
+              >
+                <SelectTrigger
+                  className={SERVICE_PRODUCT_SELECT_TRIGGER_CLASS}
+                  size="default"
+                >
+                  <SelectValue className="flex min-w-0 flex-1 items-center gap-2">
+                    <span className="flex min-w-0 flex-1 items-center gap-2">
+                      <PlatformIcon
+                        icon={platform.icon}
+                        size={24}
+                        className="shrink-0"
+                        spriteSrc={assets.socialIconsSprite}
+                      />
+                      <span className="truncate leading-[1.35]">
+                        {selectedServiceProduct?.label}
+                      </span>
+                    </span>
+                  </SelectValue>
+                  <span
+                    className="flex size-6 shrink-0 items-center justify-center p-1"
+                    aria-hidden
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      alt=""
+                      src={content.serviceSelectChevronSrc}
+                      width={16}
+                      height={16}
+                      className="size-4 rotate-180"
+                    />
+                  </span>
+                </SelectTrigger>
+                <SelectContent align="start" className={SERVICE_PRODUCT_MENU_CLASS}>
+                  {serviceProducts.map((product) => (
+                    <SelectItem
+                      key={product.id}
+                      value={product.id}
+                      className={SERVICE_PRODUCT_MENU_ITEM_CLASS}
+                    >
+                      <span className="flex items-center gap-2">
+                        <PlatformIcon
+                          icon={platform.icon}
+                          size={24}
+                          className="shrink-0"
+                          spriteSrc={assets.socialIconsSprite}
+                        />
+                        {product.label}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <label className="box-border flex h-[52px] w-full min-w-[120px] shrink-0 items-center gap-2 self-stretch rounded-xl border border-[#21aeff] bg-white px-3 py-3 sm:h-[58px] sm:gap-2 sm:px-5 sm:py-4">
               <PlatformIcon
                 icon={platform.icon}

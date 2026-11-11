@@ -213,11 +213,12 @@ export function MarketingNavbar({
         isNavLinkActive={isNavLinkActive}
         onOpenServices={() => setServicesModalOpen(true)}
         onOpenLogin={() => openLoginModal("login")}
+        onOpenSignUp={() => openLoginModal("sign-up")}
       />
 
         <nav
           aria-label="Main"
-          className="hidden items-center gap-8 overflow-hidden rounded-2xl bg-white py-2 pr-6 pl-2 shadow-[0px_2px_4px_0px_rgba(39,83,132,0.12)] lg:flex"
+          className="hidden items-center gap-8 overflow-hidden rounded-2xl bg-white py-2 pl-2 pr-2 shadow-[0px_2px_4px_0px_rgba(39,83,132,0.12)] lg:flex"
         >
           {content.navLinks.map((link) => {
             const active =
@@ -271,8 +272,9 @@ export function MarketingNavbar({
             ) : null}
 
             {signUp ? (
-              <LinkTo
-                href={signUp.href}
+              <button
+                type="button"
+                onClick={() => openLoginModal("sign-up")}
                 className="relative flex h-12 cursor-pointer items-center justify-center gap-3 rounded-xl bg-button px-[18px] py-1.5 text-sm font-semibold leading-normal text-white shadow-[inset_0px_0px_8px_0px_rgba(255,255,255,0.04)]"
               >
                 {signUp.label}
@@ -289,7 +291,7 @@ export function MarketingNavbar({
                     className="block shrink-0"
                   />
                 </span>
-              </LinkTo>
+              </button>
             ) : null}
           </div>
         </div>
