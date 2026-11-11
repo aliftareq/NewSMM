@@ -58,6 +58,8 @@ type ServiceOrderWidgetProps = {
   onBeforeNavigate?: () => void
   /** Hero: platform tabs link to `/{platform}-services` instead of switching in-widget. */
   platformTabsNavigateToServicePages?: boolean
+  /** Service hero: slightly tighter layout to reduce overall height. */
+  compact?: boolean
 }
 
 const BADGE_LABEL: Record<ServicePackageBadge, string> = {
@@ -76,11 +78,13 @@ function PackageCard({
   selected,
   onSelect,
   showBadge,
+  compact,
 }: {
   pkg: ServicePackageOption
   selected: boolean
   onSelect: () => void
   showBadge?: boolean
+  compact?: boolean
 }) {
   const secondaryLabel = pkg.saveLabel ?? pkg.unitLabel
 
@@ -89,7 +93,10 @@ function PackageCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative isolate box-border flex h-[72px] min-w-0 flex-1 basis-0 items-center justify-center overflow-visible rounded-xl border border-solid px-2 py-3 sm:h-[85px] sm:min-w-0 sm:px-3 sm:py-4 lg:px-2 xl:min-w-[120px] xl:px-5",
+        "relative isolate box-border flex min-w-0 flex-1 basis-0 items-center justify-center overflow-visible rounded-xl border border-solid lg:px-2 xl:min-w-[120px]",
+        compact
+          ? "h-[64px] px-2 py-2 sm:h-[76px] sm:px-2.5 sm:py-3 xl:px-4"
+          : "h-[72px] px-2 py-3 sm:h-[85px] sm:min-w-0 sm:px-3 sm:py-4 xl:px-5",
         selected
           ? "border-[#21aeff]"
           : "border-[#ebecef] bg-white hover:border-[#c5e8fc]",
@@ -107,10 +114,16 @@ function PackageCard({
           {BADGE_LABEL[pkg.badge]}
         </span>
       ) : null}
-      <span className="flex flex-col items-center justify-center gap-2">
+      <span
+        className={cn(
+          "flex flex-col items-center justify-center",
+          compact ? "gap-1" : "gap-2",
+        )}
+      >
         <span
           className={cn(
-            "text-base font-semibold leading-[1.3] sm:text-lg",
+            "font-semibold leading-[1.3]",
+            compact ? "text-sm sm:text-base" : "text-base sm:text-lg",
             selected ? "text-[#21aeff]" : "text-[#343e56]",
           )}
         >
@@ -118,7 +131,8 @@ function PackageCard({
         </span>
         <span
           className={cn(
-            "text-sm font-medium leading-[1.35] sm:text-base",
+            "font-medium leading-[1.35]",
+            compact ? "text-xs sm:text-sm" : "text-sm sm:text-base",
             selected ? "text-[#4f586d]" : "text-[#979ca8]",
           )}
         >
@@ -136,6 +150,7 @@ export function ServiceOrderWidget({
   appendNewOrderQuery = false,
   onBeforeNavigate,
   platformTabsNavigateToServicePages = false,
+  compact = false,
   assets = {
     orderDividerLine: serviceHeroContent.assets.orderDividerLine,
     secureLockIcon: serviceHeroContent.assets.secureLockIcon,
@@ -248,17 +263,33 @@ export function ServiceOrderWidget({
   return (
     <div
       className={cn(
-        "box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white px-4 pb-6 pt-4 shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px] sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8",
+        "box-border mx-auto flex w-full min-w-0 max-w-[661px] items-start gap-[10px] rounded-[20px] border border-[#f5f6f7] bg-white shadow-[0px_2px_6px_rgba(37,37,37,0.16)] sm:rounded-[24px]",
+        compact
+          ? "px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4 md:px-6 lg:px-5 xl:px-6"
+          : "px-4 pb-6 pt-4 sm:px-6 sm:pb-8 sm:pt-5 md:px-7 lg:px-6 xl:px-8",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 flex-col items-start gap-5 sm:gap-6">
+      <div
+        className={cn(
+          "flex min-w-0 flex-1 flex-col items-start",
+          compact ? "gap-4 sm:gap-4" : "gap-5 sm:gap-6",
+        )}
+      >
         <div
           role="tablist"
           aria-label="Package quality"
-          className="box-border flex min-h-[60px] w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1 sm:h-[66px]"
+          className={cn(
+            "box-border flex w-full flex-col justify-center rounded-2xl border border-[#f2f2f2] bg-[#f5f6f7] p-1",
+            compact ? "min-h-[56px] sm:h-[60px]" : "min-h-[60px] sm:h-[66px]",
+          )}
         >
-          <div className="flex min-h-[52px] gap-2 sm:h-[56px]">
+          <div
+            className={cn(
+              "flex gap-2",
+              compact ? "min-h-[48px] sm:h-[52px]" : "min-h-[52px] sm:h-[56px]",
+            )}
+          >
             {content.qualityOptions.map((option, index) => {
               const active = option.id === qualityId
               return (
@@ -309,17 +340,28 @@ export function ServiceOrderWidget({
           </div>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-5 sm:gap-6">
+        <div
+          className={cn(
+            "flex w-full flex-col items-center",
+            compact ? "gap-4 sm:gap-4" : "gap-5 sm:gap-6",
+          )}
+        >
           <div
             role="tablist"
             aria-label="Social platforms"
-            className="-mx-1 flex w-full gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:gap-3 sm:px-0 sm:pb-0 md:h-[56px] lg:overflow-x-auto lg:pb-1 xl:h-[56px] xl:overflow-visible [&::-webkit-scrollbar]:hidden"
+            className={cn(
+              "-mx-1 flex w-full gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [scrollbar-width:none] sm:mx-0 sm:gap-3 sm:px-0 sm:pb-0 lg:overflow-x-auto lg:pb-1 xl:overflow-visible [&::-webkit-scrollbar]:hidden",
+              compact ? "md:h-[50px] xl:h-[50px]" : "md:h-[56px] xl:h-[56px]",
+            )}
           >
             {content.platforms.map((item) => {
               const active = item.id === platformId
               const theme = getPlatformThemeById(item.id)
               const tabClassName = cn(
-                "relative box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
+                "relative box-border flex min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 lg:min-w-[44px] xl:min-w-0",
+                compact
+                  ? "h-11 p-1.5 sm:p-2 xl:p-2.5"
+                  : "h-12 p-2 sm:p-2.5 xl:p-3",
                 active ? "z-10 border-transparent" : platformTabInactiveHoverClasses,
               )
               const tabStyle = active ? undefined : platformTabCssVars(theme)
@@ -335,7 +377,7 @@ export function ServiceOrderWidget({
                   <span className="relative z-10">
                     <PlatformIcon
                       icon={item.icon}
-                      size={32}
+                      size={compact ? 28 : 32}
                       spriteSrc={assets.socialIconsSprite}
                     />
                   </span>
@@ -378,7 +420,8 @@ export function ServiceOrderWidget({
 
           <div
             className={cn(
-              "box-border flex w-full flex-col items-start gap-5 self-stretch rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] p-3 transition-[border-color,box-shadow] duration-300",
+              "box-border flex w-full flex-col items-start self-stretch rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] transition-[border-color,box-shadow] duration-300",
+              compact ? "gap-3.5 p-2.5" : "gap-5 p-3",
               qualityId === "real-followers" &&
                 "border-[#c5e8fc] shadow-[inset_0_0_0_1px_rgba(33,174,255,0.12)]",
               platformId !== "instagram" &&
@@ -396,7 +439,11 @@ export function ServiceOrderWidget({
                 }}
               >
                 <SelectTrigger
-                  className={SERVICE_PRODUCT_SELECT_TRIGGER_CLASS}
+                  className={cn(
+                    SERVICE_PRODUCT_SELECT_TRIGGER_CLASS,
+                    compact &&
+                      "h-[52px] min-h-[52px] px-4 py-3 text-sm data-[size=default]:h-[52px]",
+                  )}
                   size="default"
                 >
                   <SelectValue className="flex min-w-0 flex-1 items-center gap-2">
@@ -448,7 +495,12 @@ export function ServiceOrderWidget({
               </Select>
             </div>
 
-            <label className="box-border flex h-[52px] w-full min-w-[120px] shrink-0 items-center gap-2 self-stretch rounded-xl border border-[#21aeff] bg-white px-3 py-3 sm:h-[58px] sm:gap-2 sm:px-5 sm:py-4">
+            <label
+              className={cn(
+                "box-border flex w-full min-w-[120px] shrink-0 items-center gap-2 self-stretch rounded-xl border border-[#21aeff] bg-white px-3 py-3 sm:gap-2 sm:px-5",
+                compact ? "h-[48px] sm:h-[52px] sm:py-3" : "h-[52px] sm:h-[58px] sm:py-4",
+              )}
+            >
               <PlatformIcon
                 icon={platform.icon}
                 size={24}
@@ -466,7 +518,12 @@ export function ServiceOrderWidget({
               />
             </label>
 
-            <div className="relative isolate flex w-full flex-col items-start gap-3 self-stretch overflow-visible pt-1 sm:min-h-[279px] sm:pt-0">
+            <div
+              className={cn(
+                "relative isolate flex w-full flex-col items-start self-stretch overflow-visible pt-1 sm:pt-0",
+                compact ? "gap-2 sm:min-h-0" : "gap-3 sm:min-h-[279px]",
+              )}
+            >
               {[0, 1, 2].map((rowIndex) => (
                 <div
                   key={rowIndex}
@@ -481,6 +538,7 @@ export function ServiceOrderWidget({
                         selected={pkg.id === packageId}
                         onSelect={() => setPackageId(pkg.id)}
                         showBadge
+                        compact={compact}
                       />
                     ))}
                 </div>
@@ -488,9 +546,19 @@ export function ServiceOrderWidget({
             </div>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-3 sm:gap-4">
+          <div
+            className={cn(
+              "flex w-full flex-col items-center",
+              compact ? "gap-2.5 sm:gap-3" : "gap-3 sm:gap-4",
+            )}
+          >
             <div className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-start md:justify-center md:gap-4">
-              <div className="flex min-h-[59px] w-full flex-col justify-center gap-0.5 md:w-[min(100%,200px)] md:shrink-0">
+              <div
+                className={cn(
+                  "flex w-full flex-col justify-center gap-0.5 md:w-[min(100%,200px)] md:shrink-0",
+                  compact ? "min-h-[52px]" : "min-h-[59px]",
+                )}
+              >
                 <span className="text-sm font-medium leading-[1.35] text-[#343e56]">
                   Total price
                 </span>
@@ -498,7 +566,12 @@ export function ServiceOrderWidget({
                   {qualityLabel} · {platform.label}
                 </p>
                 <div className="flex items-center gap-2 tabular-nums transition-opacity duration-200">
-                  <span className="text-2xl font-semibold leading-[1.5] text-[#21aeff]">
+                  <span
+                    className={cn(
+                      "font-semibold leading-[1.5] text-[#21aeff]",
+                      compact ? "text-xl" : "text-2xl",
+                    )}
+                  >
                     {selectedPackage.price}
                   </span>
                   <span className="text-sm font-normal leading-[1.3] text-[#798090] line-through">
@@ -509,7 +582,12 @@ export function ServiceOrderWidget({
               <LinkTo
                 href={orderHref}
                 onClick={handleNavigateToOrder}
-                className="flex min-h-[52px] w-full items-center justify-center rounded-xl bg-[#269de7] px-4 py-3.5 text-sm font-medium leading-[1.35] text-white md:h-[59px] md:min-w-[120px] md:flex-1 md:py-4 md:pl-4 md:pr-3 md:text-base"
+                className={cn(
+                  "flex w-full items-center justify-center rounded-xl bg-[#269de7] px-4 text-sm font-medium leading-[1.35] text-white md:min-w-[120px] md:flex-1 md:pl-4 md:pr-3",
+                  compact
+                    ? "min-h-[48px] py-3 md:h-[52px] md:py-3"
+                    : "min-h-[52px] py-3.5 md:h-[59px] md:py-4 md:text-base",
+                )}
               >
                 {ctaLabel}
               </LinkTo>

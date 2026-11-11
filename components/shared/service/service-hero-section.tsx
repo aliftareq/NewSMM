@@ -37,6 +37,7 @@ export function ServiceHeroSection({
           <ServiceOrderWidget
             content={content.orderWidget}
             platformTabsNavigateToServicePages
+            compact
             assets={{
               orderDividerLine: content.assets.orderDividerLine,
               secureLockIcon: content.assets.secureLockIcon,
