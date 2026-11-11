@@ -11,7 +11,12 @@ import type {
 } from "@/types/service/hero"
 import { LinkTo } from "@/components/shared/link-to"
 import { LAYOUT_IDS, SlidingTabPill } from "@/components/shared/sliding-tab-pill"
-import { PlatformIcon } from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import {
+  PlatformIcon,
+  platformTabCssVars,
+  platformTabInactiveHoverClasses,
+} from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import { getPlatformThemeById } from "@/lib/services-platform-theme"
 import { startNewDraftGroup } from "@/lib/cart-draft-group"
 import { readCart } from "@/lib/cart-storage"
 import { buildOrderHref } from "@/lib/build-order-href"
@@ -238,6 +243,7 @@ export function ServiceOrderWidget({
           >
             {content.platforms.map((item) => {
               const active = item.id === platformId
+              const theme = getPlatformThemeById(item.id)
               return (
                 <button
                   key={item.id}
@@ -247,16 +253,16 @@ export function ServiceOrderWidget({
                   aria-selected={active}
                   onClick={() => setPlatformId(item.id)}
                   className={cn(
-                    "relative box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[border-color,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
-                    active
-                      ? "z-10 border-transparent"
-                      : "border-[#ebecef] bg-white hover:border-[#c5e8fc] hover:bg-[#fafafa]",
+                    "relative box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
+                    active ? "z-10 border-transparent" : platformTabInactiveHoverClasses,
                   )}
+                  style={active ? undefined : platformTabCssVars(theme)}
                 >
                   {active ? (
                     <SlidingTabPill
                       layoutId={LAYOUT_IDS.serviceHeroPlatform}
-                      className="rounded-xl bg-[#269de7] shadow-[0px_4px_12px_rgba(38,157,231,0.35)]"
+                      className="rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
+                      style={{ backgroundColor: theme.tabActiveBg }}
                     />
                   ) : null}
                   <span className="relative z-10">
