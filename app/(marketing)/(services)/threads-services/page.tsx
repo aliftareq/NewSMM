@@ -8,7 +8,7 @@ import { ServiceWhatMakesUsDifferentSection } from "@/components/shared/service/
 export default function ThreadsServicesPage() {
   return (
     <main>
-      <ServiceHeroSection />
+      <ServiceHeroSection platformId="threads" />
       <ServiceHowItWorksSection />
       <ServiceGrowthPackageSection />
       <ServiceFollowerComparisonSection />

@@ -16,6 +16,7 @@ import {
   platformTabCssVars,
   platformTabInactiveHoverClasses,
 } from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import { getServicePlatformPageHref } from "@/lib/service-platform-routes"
 import { getPlatformThemeById } from "@/lib/services-platform-theme"
 import { startNewDraftGroup } from "@/lib/cart-draft-group"
 import { readCart } from "@/lib/cart-storage"
@@ -34,6 +35,8 @@ type ServiceOrderWidgetProps = {
   /** Append `newOrder=1` for /order to pick up the new draft group. */
   appendNewOrderQuery?: boolean
   onBeforeNavigate?: () => void
+  /** Hero: platform tabs link to `/{platform}-services` instead of switching in-widget. */
+  platformTabsNavigateToServicePages?: boolean
 }
 
 const BADGE_LABEL: Record<ServicePackageBadge, string> = {
@@ -111,6 +114,7 @@ export function ServiceOrderWidget({
   forceNewDraftGroup = false,
   appendNewOrderQuery = false,
   onBeforeNavigate,
+  platformTabsNavigateToServicePages = false,
   assets = {
     orderDividerLine: serviceHeroContent.assets.orderDividerLine,
     secureLockIcon: serviceHeroContent.assets.secureLockIcon,
@@ -244,20 +248,13 @@ export function ServiceOrderWidget({
             {content.platforms.map((item) => {
               const active = item.id === platformId
               const theme = getPlatformThemeById(item.id)
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="tab"
-                  aria-label={item.label}
-                  aria-selected={active}
-                  onClick={() => setPlatformId(item.id)}
-                  className={cn(
-                    "relative box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
-                    active ? "z-10 border-transparent" : platformTabInactiveHoverClasses,
-                  )}
-                  style={active ? undefined : platformTabCssVars(theme)}
-                >
+              const tabClassName = cn(
+                "relative box-border flex h-12 min-w-[52px] shrink-0 flex-col items-center justify-center rounded-xl border border-solid p-2 transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out active:scale-[0.97] sm:h-auto sm:min-w-[48px] sm:flex-1 sm:p-2.5 lg:min-w-[44px] xl:min-w-0 xl:p-3",
+                active ? "z-10 border-transparent" : platformTabInactiveHoverClasses,
+              )
+              const tabStyle = active ? undefined : platformTabCssVars(theme)
+              const tabBody = (
+                <>
                   {active ? (
                     <SlidingTabPill
                       layoutId={LAYOUT_IDS.serviceHeroPlatform}
@@ -272,6 +269,38 @@ export function ServiceOrderWidget({
                       spriteSrc={assets.socialIconsSprite}
                     />
                   </span>
+                </>
+              )
+
+              if (platformTabsNavigateToServicePages) {
+                return (
+                  <LinkTo
+                    key={item.id}
+                    href={getServicePlatformPageHref(item.id)}
+                    role="tab"
+                    aria-label={item.label}
+                    aria-current={active ? "page" : undefined}
+                    aria-selected={active}
+                    className={tabClassName}
+                    style={tabStyle}
+                  >
+                    {tabBody}
+                  </LinkTo>
+                )
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-label={item.label}
+                  aria-selected={active}
+                  onClick={() => setPlatformId(item.id)}
+                  className={tabClassName}
+                  style={tabStyle}
+                >
+                  {tabBody}
                 </button>
               )
             })}

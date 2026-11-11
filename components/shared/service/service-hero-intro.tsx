@@ -78,11 +78,25 @@ export function ServiceHeroIntro({
       </div>
 
       <div className="flex w-full flex-col items-start gap-5 sm:gap-7">
-        <div className="flex w-full flex-col items-start gap-2.5 sm:gap-3">
-          <h1 className="w-full bg-gradient-to-r from-[#f27b34] via-[#d8366b] to-[#7e359c] bg-clip-text text-[28px] font-bold leading-[1.2] tracking-[-0.02em] text-transparent min-[400px]:text-[32px] sm:text-[40px] lg:text-[48px]">
+        <div className="flex w-full flex-col items-start gap-3">
+          <h1
+            className={cn(
+              "w-full [word-break:break-word] text-[28px] font-bold leading-[1.2] tracking-[-0.56px] min-[400px]:text-[32px] sm:text-[40px] sm:tracking-[-0.8px] lg:text-[48px] lg:tracking-[-0.96px]",
+              content.titleGradient && "text-transparent",
+            )}
+            style={
+              content.titleGradient
+                ? {
+                    backgroundImage: content.titleGradient,
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                  }
+                : { color: content.titleColor ?? "#232323" }
+            }
+          >
             {content.title}
           </h1>
-          <p className="w-full text-sm font-medium leading-[1.35] text-[#4f586d] sm:text-base">
+          <p className="w-full text-base font-medium leading-[1.35] text-[#4f586d]">
             {content.description}
           </p>
         </div>

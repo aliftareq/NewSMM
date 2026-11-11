@@ -39,6 +39,10 @@ export type ServiceHeroContent = {
   intro: {
     title: string
     description: string
+    /** Solid headline color (Figma). Omit when `titleGradient` is set. */
+    titleColor?: string
+    /** Figma gradient headline (e.g. TikTok 25845:28963). */
+    titleGradient?: string
     trustCard: {
       paymentTitle: string
       paymentLogos: ServicePaymentLogo[]

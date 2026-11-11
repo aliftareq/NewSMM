@@ -8,7 +8,7 @@ import { ServiceWhatMakesUsDifferentSection } from "@/components/shared/service/
 export default function InstagramServicesPage() {
   return (
     <main>
-      <ServiceHeroSection />
+      <ServiceHeroSection platformId="instagram" />
       <ServiceHowItWorksSection />
       <ServiceGrowthPackageSection />
       <ServiceFollowerComparisonSection />

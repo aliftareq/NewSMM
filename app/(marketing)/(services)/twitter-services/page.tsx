@@ -8,7 +8,7 @@ import { ServiceWhatMakesUsDifferentSection } from "@/components/shared/service/
 export default function TwitterServicesPage() {
   return (
     <main>
-      <ServiceHeroSection />
+      <ServiceHeroSection platformId="twitter" />
       <ServiceHowItWorksSection />
       <ServiceGrowthPackageSection />
       <ServiceFollowerComparisonSection />

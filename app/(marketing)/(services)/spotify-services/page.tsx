@@ -8,7 +8,7 @@ import { ServiceWhatMakesUsDifferentSection } from "@/components/shared/service/
 export default function SpotifyServicesPage() {
   return (
     <main>
-      <ServiceHeroSection />
+      <ServiceHeroSection platformId="spotify" />
       <ServiceHowItWorksSection />
       <ServiceGrowthPackageSection />
       <ServiceFollowerComparisonSection />

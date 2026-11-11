@@ -8,7 +8,7 @@ import { ServiceWhatMakesUsDifferentSection } from "@/components/shared/service/
 export default function TiktokServicesPage() {
   return (
     <main>
-      <ServiceHeroSection />
+      <ServiceHeroSection platformId="tiktok" />
       <ServiceHowItWorksSection />
       <ServiceGrowthPackageSection />
       <ServiceFollowerComparisonSection />

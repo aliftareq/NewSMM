@@ -1,4 +1,5 @@
 import { landingHeroContent } from "@/data/landing/hero"
+import { serviceHeroIntroByPlatform } from "@/data/service/hero-intros"
 import type { ServiceHeroContent } from "@/types/service/hero"
 import type { ServicesModalPlatformIcon } from "@/types/landing/services-modal"
 
@@ -48,9 +49,7 @@ export const serviceHeroContent: ServiceHeroContent = {
     socialIconsSprite: serviceOrderSpriteSrc,
   },
   intro: {
-    title: "Boost Your Instagram Growth with Premium Promotion Services",
-    description:
-      "Grow your Instagram presence with the right follower package for your goals. Choose from flexible options designed to increase your audience, strengthen social proof, and give your profile a more established look.",
+    ...serviceHeroIntroByPlatform.instagram,
     trustCard: {
       paymentTitle: "Pay Securely With Your Preferred Method",
       paymentLogos: [

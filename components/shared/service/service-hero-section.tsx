@@ -1,5 +1,7 @@
 import { serviceHeroContent } from "@/data/service/hero"
+import { getServiceHeroContent } from "@/lib/service-hero-content"
 import type { ServiceHeroContent } from "@/types/service/hero"
+import type { ServicesModalPlatformId } from "@/types/landing/services-modal"
 import { MarketingNavbar } from "@/components/shared/landing/marketing-navbar"
 import {
   MarketingHeroShell,
@@ -9,11 +11,16 @@ import { ServiceOrderWidget } from "@/components/shared/service/service-order-wi
 
 type ServiceHeroSectionProps = {
   content?: ServiceHeroContent
+  platformId?: ServicesModalPlatformId
 }
 
 export function ServiceHeroSection({
-  content = serviceHeroContent,
+  content: contentProp,
+  platformId,
 }: ServiceHeroSectionProps) {
+  const content =
+    contentProp ??
+    (platformId ? getServiceHeroContent(platformId) : serviceHeroContent)
   return (
     <MarketingHeroShell
       backgroundSrc={content.assets.backgroundHero}
@@ -28,6 +35,7 @@ export function ServiceHeroSection({
         <div className="mx-auto w-full min-w-0 max-w-[661px] lg:mx-0 lg:max-w-none lg:justify-self-stretch xl:justify-self-end">
           <ServiceOrderWidget
             content={content.orderWidget}
+            platformTabsNavigateToServicePages
             assets={{
               orderDividerLine: content.assets.orderDividerLine,
               secureLockIcon: content.assets.secureLockIcon,
