@@ -28,12 +28,12 @@ export function ServiceHeroSection({
       backgroundHeightClassName={SERVICE_HERO_BACKGROUND_HEIGHT_CLASS}
       className="pb-12 sm:pb-16 md:pb-24 lg:pb-[140px]"
     >
-      <MarketingNavbar className="relative z-20" mountReveal />
+      <MarketingNavbar overlay mountReveal />
 
-      <div className="info-container relative z-10 mt-6 grid grid-cols-1 items-start gap-6 sm:mt-8 sm:gap-8 md:gap-10 lg:mt-8 lg:grid-cols-2 lg:items-start lg:gap-8 xl:mt-[35px] xl:grid-cols-[minmax(0,594px)_minmax(0,661px)] xl:justify-between xl:gap-[65px]">
-        <ServiceHeroIntro content={content.intro} className="xl:mt-[73px]" />
+      <div className="info-container relative z-10 grid grid-cols-1 items-start gap-6 pt-[118px] sm:gap-8 sm:pt-[160px] md:gap-10 lg:grid-cols-2 lg:items-start lg:gap-8 lg:pt-[180px] xl:grid-cols-[minmax(0,594px)_minmax(0,661px)] xl:justify-between xl:gap-[65px] xl:pt-[128px]">
+        <ServiceHeroIntro content={content.intro} />
 
-        <div className="mx-auto w-full min-w-0 max-w-[661px] lg:mx-0 lg:max-w-none lg:justify-self-stretch xl:justify-self-end">
+        <div className="mx-auto w-full min-w-0 max-w-[661px] lg:mx-0 lg:max-w-none lg:justify-self-stretch xl:mt-4 xl:justify-self-end">
           <ServiceOrderWidget
             content={content.orderWidget}
             platformTabsNavigateToServicePages
