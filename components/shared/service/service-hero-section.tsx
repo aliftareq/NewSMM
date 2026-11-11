@@ -5,6 +5,7 @@ import type { ServicesModalPlatformId } from "@/types/landing/services-modal"
 import { MarketingNavbar } from "@/components/shared/landing/marketing-navbar"
 import {
   MarketingHeroShell,
+  SERVICE_HERO_BACKGROUND_HEIGHT_CLASS,
 } from "@/components/shared/landing/marketing-hero-shell"
 import { ServiceHeroIntro } from "@/components/shared/service/service-hero-intro"
 import { ServiceOrderWidget } from "@/components/shared/service/service-order-widget"
@@ -24,8 +25,8 @@ export function ServiceHeroSection({
   return (
     <MarketingHeroShell
       backgroundSrc={content.assets.backgroundHero}
-      backgroundHeightClassName="h-[min(720px,120vh)] sm:h-[840px] md:h-[900px] lg:h-[955px]"
-      className="pb-12 sm:pb-16 md:pb-24 lg:pb-[120px]"
+      backgroundHeightClassName={SERVICE_HERO_BACKGROUND_HEIGHT_CLASS}
+      className="pb-12 sm:pb-16 md:pb-24 lg:pb-[140px]"
     >
       <MarketingNavbar className="relative z-20" mountReveal />
 
