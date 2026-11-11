@@ -32,6 +32,24 @@ const SERVICE_ARROW_BOX_BTN_CLASS = "service-explorer-arrow-btn--box"
 const SERVICE_ARROW_BOX_HOVER_CLASS =
   "transition-[background-color,box-shadow,border-color] duration-200 hover:shadow-[0px_2px_6px_rgba(15,23,42,0.08)]"
 
+type PlatformTabCssVars = CSSProperties & {
+  "--platform-tab-bg": string
+  "--platform-accent": string
+}
+
+export function platformTabCssVars(
+  theme: ServicesModalPlatform["theme"]
+): PlatformTabCssVars {
+  return {
+    "--platform-tab-bg": theme.tabActiveBg,
+    "--platform-accent": theme.accentText,
+  }
+}
+
+/** Inactive tab — tint border, background, and label with each platform theme on hover. */
+export const platformTabInactiveHoverClasses =
+  "border border-[#ebecef] bg-white text-n700 transition-[background-color,border-color,color,box-shadow] duration-200 hover:border-[color-mix(in_srgb,var(--platform-tab-bg)_50%,#ebecef)] hover:bg-[color-mix(in_srgb,var(--platform-tab-bg)_14%,white)] hover:text-[var(--platform-accent)]"
+
 type ServiceArrowLinkStyle = CSSProperties & {
   "--service-arrow-brand": string
 }
@@ -306,11 +324,10 @@ export function PlatformSidebar({
             aria-selected={active}
             onClick={() => onSelect(platform.id)}
             className={cn(
-              "relative flex w-full flex-col justify-center rounded-xl p-4 text-left transition-shadow",
-              active
-                ? "z-10 text-white"
-                : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
+              "relative flex w-full flex-col justify-center rounded-xl p-4 text-left",
+              active ? "z-10 text-white" : platformTabInactiveHoverClasses
             )}
+            style={active ? undefined : platformTabCssVars(platform.theme)}
           >
             {active ? (
               <SlidingTabPill
@@ -364,17 +381,19 @@ export function PlatformTabsRow({
           <button
             key={platform.id}
             type="button"
+            role="tab"
+            aria-selected={active}
             onClick={() => onSelect(platform.id)}
             className={cn(
-              "flex w-full min-w-0 flex-col items-center justify-center rounded-xl p-3 transition-shadow xl:min-w-0 xl:p-4",
+              "flex w-full min-w-0 flex-col items-center justify-center rounded-xl p-3 xl:min-w-0 xl:p-4",
               active
                 ? "text-white shadow-[0px_4px_4px_rgba(0,0,0,0.08)]"
-                : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
+                : platformTabInactiveHoverClasses
             )}
             style={
               active
                 ? { backgroundColor: platform.theme.tabActiveBg }
-                : undefined
+                : platformTabCssVars(platform.theme)
             }
           >
             <span className="flex items-center gap-2 whitespace-nowrap">

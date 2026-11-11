@@ -14,6 +14,8 @@ import type {
 } from "@/types/landing/services-modal"
 import {
   PlatformIcon,
+  platformTabCssVars,
+  platformTabInactiveHoverClasses,
   ServicesPanel,
 } from "@/components/shared/landing/services-explorer/services-explorer-ui"
 import {
@@ -97,10 +99,9 @@ export function AnimatedPlatformTabs({
             onClick={() => onSelect(platform.id, index)}
             className={cn(
               "relative flex w-full min-w-0 flex-col items-center justify-center rounded-xl p-3 xl:min-w-0 xl:p-4",
-              active
-                ? "z-10 text-white"
-                : "border border-[#ebecef] bg-white text-n700 hover:border-[#d8dce3]"
+              active ? "z-10 text-white" : platformTabInactiveHoverClasses
             )}
+            style={active ? undefined : platformTabCssVars(platform.theme)}
           >
             {active ? (
               <SlidingTabPill
