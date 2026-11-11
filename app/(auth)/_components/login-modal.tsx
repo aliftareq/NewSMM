@@ -2,16 +2,16 @@
 
 import { useEffect, useId, useState } from "react"
 
-import { forgotPasswordModalContent } from "@/data/auth/forgot-password-modal"
-import { loginModalContent } from "@/data/auth/login-modal"
-import type { AuthModalTab, LoginModalContent } from "@/types/auth/login-modal"
+import { useDummyAuth } from "@/app/(auth)/_hooks/use-dummy-auth"
 import { AuthModalViewTransition } from "@/app/(auth)/_components/auth-modal-view-transition"
 import { ForgotPasswordModalBody } from "@/app/(auth)/_components/forgot-password-modal-body"
 import { SetNewPasswordModalBody } from "@/app/(auth)/_components/set-new-password-modal-body"
 import { TwoFactorModalBody } from "@/app/(auth)/_components/two-factor-modal-body"
+import { forgotPasswordModalContent } from "@/data/auth/forgot-password-modal"
+import { loginModalContent } from "@/data/auth/login-modal"
 import { setNewPasswordModalContent } from "@/data/auth/set-new-password-modal"
 import { twoFactorModalContent } from "@/data/auth/two-factor-modal"
-import { LinkTo } from "@/components/shared/link-to"
+import type { AuthModalTab, LoginModalContent } from "@/types/auth/login-modal"
 import { LAYOUT_IDS, SlidingTabPill } from "@/components/shared/sliding-tab-pill"
 import {
   Dialog,
@@ -90,11 +90,17 @@ export function LoginModal({
   onActiveTabChange,
   content = loginModalContent,
 }: LoginModalProps) {
+  const { login, signUp, loginWithGoogle } = useDummyAuth()
   const [view, setView] = useState<AuthModalView>("login")
   const [rememberMe, setRememberMe] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [formError, setFormError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const emailId = useId()
   const passwordId = useId()
+  const formErrorId = useId()
   const { assets } = content
   const isLogin = activeTab === "login"
   const isResetView = view === "reset-password"
@@ -106,9 +112,42 @@ export function LoginModal({
     const timeout = window.setTimeout(() => {
       setView("login")
       setShowPassword(false)
+      setEmail("")
+      setPassword("")
+      setFormError(null)
+      setIsSubmitting(false)
     }, AUTH_MODAL_DISMISS_MS)
     return () => window.clearTimeout(timeout)
   }, [open])
+
+  useEffect(() => {
+    setFormError(null)
+  }, [activeTab])
+
+  const handleAuthSubmit = (mode: "login" | "sign-up") => {
+    setFormError(null)
+    setIsSubmitting(true)
+    const result =
+      mode === "login"
+        ? login(email, password, rememberMe)
+        : signUp(email, password, true)
+    setIsSubmitting(false)
+    if (!result.ok) {
+      setFormError(result.error)
+      return
+    }
+    onOpenChange(false)
+  }
+
+  const handleGoogleAuth = () => {
+    setFormError(null)
+    const result = loginWithGoogle(rememberMe)
+    if (!result.ok) {
+      setFormError(result.error)
+      return
+    }
+    onOpenChange(false)
+  }
 
   const tabs: { id: AuthModalTab; label: string }[] = [
     { id: "login", label: content.loginTabLabel },
@@ -215,6 +254,7 @@ export function LoginModal({
             className="flex w-full flex-col gap-5"
             onSubmit={(event) => {
               event.preventDefault()
+              void handleAuthSubmit(isLogin ? "login" : "sign-up")
             }}
           >
             <div className="flex flex-col gap-2">
@@ -239,6 +279,9 @@ export function LoginModal({
                   name="email"
                   autoComplete="email"
                   placeholder={content.emailPlaceholder}
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
                   className="min-w-0 flex-1 bg-transparent text-base font-medium leading-[1.35] text-[#343e56] placeholder:text-[#979ca8] focus:outline-none"
                 />
               </div>
@@ -266,6 +309,10 @@ export function LoginModal({
                   name="password"
                   autoComplete={isLogin ? "current-password" : "new-password"}
                   placeholder={content.passwordPlaceholder}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                  minLength={6}
                   className="min-w-0 flex-1 bg-transparent text-base font-medium leading-[1.35] text-[#343e56] placeholder:text-[#979ca8] focus:outline-none"
                 />
                 <button
@@ -304,22 +351,28 @@ export function LoginModal({
               </div>
             ) : null}
 
-            {isLogin ? (
-              <button
-                type="submit"
-                className="flex h-[54px] w-full items-center justify-center rounded-xl bg-[#269de7] text-base font-medium leading-[1.35] text-white shadow-none transition-[box-shadow] hover:shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
+            {formError ? (
+              <p
+                id={formErrorId}
+                role="alert"
+                className="rounded-xl border border-[#f5c2c7] bg-[#fff5f5] px-4 py-3 text-sm font-medium leading-[1.35] text-[#c92a2a]"
               >
-                {content.submitLoginLabel}
-              </button>
-            ) : (
-              <LinkTo
-                href={content.signUpHref}
-                className="flex h-[54px] w-full items-center justify-center rounded-xl bg-[#269de7] text-base font-medium leading-[1.35] text-white shadow-none transition-[box-shadow] hover:shadow-[0px_4px_14px_rgba(38,157,231,0.4)]"
-                onClick={() => onOpenChange(false)}
-              >
-                {content.signUpSubmitLabel}
-              </LinkTo>
-            )}
+                {formError}
+              </p>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              aria-describedby={formError ? formErrorId : undefined}
+              className="flex h-[54px] w-full items-center justify-center rounded-xl bg-[#269de7] text-base font-medium leading-[1.35] text-white shadow-none transition-[box-shadow] hover:shadow-[0px_4px_14px_rgba(38,157,231,0.4)] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting
+                ? "Please wait…"
+                : isLogin
+                  ? content.submitLoginLabel
+                  : content.signUpSubmitLabel}
+            </button>
           </form>
 
           {isLogin ? (
@@ -329,6 +382,7 @@ export function LoginModal({
               </p>
               <button
                 type="button"
+                onClick={handleGoogleAuth}
                 className="flex h-[54px] w-full items-center justify-center gap-3 rounded-xl border border-[#ebecef] bg-white text-base font-medium leading-[1.35] text-[#343e56] transition-colors hover:border-[#c5e8fc] hover:bg-[#fafafa]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

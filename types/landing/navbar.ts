@@ -29,11 +29,18 @@ export type LandingNavbarContent = {
   }
   auth: NavbarAuthAction[]
   signUpArrowSrc: string
+  userMenu: {
+    avatarIconSrc: string
+    chevronIconSrc: string
+    logOutLabel: string
+  }
   assets: {
     logomark: string
     servicesMenuIcon: string
     servicesChevron: string
     cartIcon: string
     signUpArrow: string
+    userMenuAvatar: string
+    userMenuChevron: string
   }
 }

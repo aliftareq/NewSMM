@@ -9,6 +9,8 @@ export const landingNavbarContent: LandingNavbarContent = {
     servicesChevron: `${NAVBAR_IMG}/chevron-down.svg`,
     cartIcon: `${NAVBAR_IMG}/cart.svg`,
     signUpArrow: `${NAVBAR_IMG}/sign-up-arrow.svg`,
+    userMenuAvatar: `${NAVBAR_IMG}/user-menu-avatar.svg`,
+    userMenuChevron: `${NAVBAR_IMG}/user-menu-chevron.svg`,
   },
   logo: {
     href: "/",
@@ -38,4 +40,9 @@ export const landingNavbarContent: LandingNavbarContent = {
     { label: "Sign Up", href: "/register", variant: "primary" },
   ],
   signUpArrowSrc: `${NAVBAR_IMG}/sign-up-arrow.svg`,
+  userMenu: {
+    avatarIconSrc: `${NAVBAR_IMG}/user-menu-avatar.svg`,
+    chevronIconSrc: `${NAVBAR_IMG}/user-menu-chevron.svg`,
+    logOutLabel: "Log out",
+  },
 }

@@ -15,6 +15,7 @@ import {
   PrimaryButtonArrow,
 } from "@/components/ui/button"
 import type { LandingNavbarContent } from "@/types/landing/navbar"
+import { MarketingNavbarUserMenu } from "@/components/shared/landing/marketing-navbar-user-menu"
 import { cn } from "@/lib/utils"
 
 type MarketingNavbarMobileMenuProps = {
@@ -27,6 +28,11 @@ type MarketingNavbarMobileMenuProps = {
   onOpenServices: () => void
   onOpenLogin: () => void
   onOpenSignUp: () => void
+  isAuthenticated?: boolean
+  authDisplayName?: string
+  authEmail?: string
+  userMenu?: LandingNavbarContent["userMenu"]
+  onLogout?: () => void
 }
 
 export function MarketingNavbarMobileMenu({
@@ -39,6 +45,11 @@ export function MarketingNavbarMobileMenu({
   onOpenServices,
   onOpenLogin,
   onOpenSignUp,
+  isAuthenticated = false,
+  authDisplayName,
+  authEmail,
+  userMenu,
+  onLogout,
 }: MarketingNavbarMobileMenuProps) {
   const signUp = content.auth.find((item) => item.variant === "primary")
   const login = content.auth.find((item) => item.variant === "text")
@@ -124,37 +135,53 @@ export function MarketingNavbarMobileMenu({
           </div>
 
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            {login ? (
-              <button
-                type="button"
-                onClick={() => {
+            {isAuthenticated && userMenu && authDisplayName ? (
+              <MarketingNavbarUserMenu
+                placement="drawer"
+                displayName={authDisplayName}
+                email={authEmail ?? ""}
+                avatarIconSrc={userMenu.avatarIconSrc}
+                chevronIconSrc={userMenu.chevronIconSrc}
+                onLogout={() => {
                   close()
-                  onOpenLogin()
+                  onLogout?.()
                 }}
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "default" }),
-                  "w-full justify-center font-sans sm:flex-1",
-                )}
-              >
-                {login.label}
-              </button>
-            ) : null}
-            {signUp ? (
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenSignUp()
-                }}
-                className={cn(
-                  buttonVariants({ variant: "default", size: "default" }),
-                  "w-full justify-center gap-2 font-sans sm:flex-1",
-                )}
-              >
-                {signUp.label}
-                <PrimaryButtonArrow />
-              </button>
-            ) : null}
+              />
+            ) : isAuthenticated ? null : (
+              <>
+                {login ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenLogin()
+                    }}
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "default" }),
+                      "w-full justify-center font-sans sm:flex-1",
+                    )}
+                  >
+                    {login.label}
+                  </button>
+                ) : null}
+                {signUp ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenSignUp()
+                    }}
+                    className={cn(
+                      buttonVariants({ variant: "default", size: "default" }),
+                      "w-full justify-center gap-2 font-sans sm:flex-1",
+                    )}
+                  >
+                    {signUp.label}
+                    <PrimaryButtonArrow />
+                  </button>
+                ) : null}
+              </>
+            )}
           </div>
         </DialogPrimitive.Popup>
       </DialogPortal>
