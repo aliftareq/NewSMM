@@ -1,6 +1,11 @@
 "use client"
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react"
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type Transition,
+} from "motion/react"
 import { useRef } from "react"
 
 import type {
@@ -18,6 +23,16 @@ import {
 import { cn } from "@/lib/utils"
 
 const PANEL_OFFSET = 40
+
+const panelSlideTransitionHorizontal: Transition = {
+  x: { type: "spring", stiffness: 320, damping: 32 },
+  opacity: { duration: 0.22 },
+}
+
+const panelSlideTransitionVertical: Transition = {
+  y: { type: "spring", stiffness: 320, damping: 32 },
+  opacity: { duration: 0.22 },
+}
 
 const panelVariantsHorizontal = {
   enter: (direction: number) => ({
@@ -153,10 +168,11 @@ export function AnimatedServicesPanel({
           initial="enter"
           animate="center"
           exit="exit"
-          transition={{
-            [motionAxis]: { type: "spring", stiffness: 320, damping: 32 },
-            opacity: { duration: 0.22 },
-          }}
+          transition={
+            motionAxis === "y"
+              ? panelSlideTransitionVertical
+              : panelSlideTransitionHorizontal
+          }
           className="min-w-0"
         >
           <ServicesPanel {...panelProps} />

@@ -371,13 +371,13 @@ export function WhoItsForCardsStage({
       const pinTarget = pinTargetRef?.current
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[]
 
-      const domReady =
-        Boolean(root) &&
-        Boolean(stageRow) &&
-        Boolean(pinTarget) &&
-        cards.length >= expectedCardCount
-
-      if (!domReady || !isLenisScrollProxyReady()) {
+      if (
+        !root ||
+        !stageRow ||
+        !pinTarget ||
+        cards.length < expectedCardCount ||
+        !isLenisScrollProxyReady()
+      ) {
         mountAttempts += 1
         if (mountAttempts < 180) {
           mountRaf = requestAnimationFrame(mountScrollPin)
