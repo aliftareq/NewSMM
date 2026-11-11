@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 
+const CLOSE_LAYOUT_HOLD_MS = 320
+
 type OurServicesModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -37,6 +39,7 @@ export function OurServicesModal({
     content.defaultPlatformId,
   )
   const [slideDirection, setSlideDirection] = useState(0)
+  const [heldAnchorTopPx, setHeldAnchorTopPx] = useState(0)
 
   const defaultIndex = useMemo(
     () =>
@@ -56,6 +59,19 @@ export function OurServicesModal({
     }
   }, [open, content.defaultPlatformId])
 
+  useEffect(() => {
+    if (open) {
+      setHeldAnchorTopPx(anchorTopPx)
+      return
+    }
+
+    const timer = window.setTimeout(() => {
+      setHeldAnchorTopPx(0)
+    }, CLOSE_LAYOUT_HOLD_MS)
+
+    return () => window.clearTimeout(timer)
+  }, [open, anchorTopPx])
+
   const activePlatform = useMemo(
     () =>
       content.platforms.find((p) => p.id === activePlatformId) ??
@@ -63,11 +79,12 @@ export function OurServicesModal({
     [activePlatformId, content.platforms],
   )
 
-  const belowScrolledNavbar = anchorTopPx > 0
-  const bottomInsetPx = belowScrolledNavbar ? anchorTopPx + 20 : 0
+  const layoutAnchorTopPx = open ? anchorTopPx : heldAnchorTopPx
+  const belowScrolledNavbar = layoutAnchorTopPx > 0
+  const bottomInsetPx = belowScrolledNavbar ? layoutAnchorTopPx + 20 : 0
   const dialogPositionStyle = belowScrolledNavbar
     ? {
-        top: anchorTopPx,
+        top: layoutAnchorTopPx,
         maxHeight: `min(720px, calc(100vh - ${bottomInsetPx}px))`,
       }
     : undefined
@@ -89,12 +106,14 @@ export function OurServicesModal({
         centered={!belowScrolledNavbar}
         showCloseButton
         closeButtonClassName="top-2 right-2 rounded-xl bg-button/20 text-button hover:!bg-button hover:!text-white focus-visible:!ring-button/30 sm:top-2.5 sm:right-2.5"
-        overlayClassName="z-[89]"
+        overlayClassName="z-[89] duration-300 ease-out data-open:duration-300 data-closed:duration-300"
         style={dialogPositionStyle}
         className={cn(
           "z-[90] w-[min(1320px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-7 ring-0 sm:max-w-none",
-          "duration-200 data-open:!opacity-100 data-open:zoom-in-100 data-closed:zoom-out-100",
-          belowScrolledNavbar
+          "duration-300 ease-out will-change-[opacity,transform]",
+          "data-open:!opacity-100 data-open:duration-300 data-open:zoom-in-100",
+          "data-closed:duration-300 data-closed:fade-out-0 data-closed:zoom-out-100",
+          belowScrolledNavbar && open
             ? "transition-[top,max-height] duration-300 ease-out"
             : "max-h-[min(720px,calc(100vh-2rem))]",
         )}
