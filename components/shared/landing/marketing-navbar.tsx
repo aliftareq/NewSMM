@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 import { usePathname } from "next/navigation"
 
@@ -48,10 +48,6 @@ export function MarketingNavbar({
   const pathname = usePathname()
   const isLgViewport = useLandingLgViewport()
   const [servicesModalOpen, setServicesModalOpen] = useState(false)
-  const servicesHoverCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  )
-  const servicesHoverZonesRef = useRef({ button: false, panel: false })
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const [loginModalTab, setLoginModalTab] = useState<AuthModalTab>("login")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -97,76 +93,10 @@ export function MarketingNavbar({
     setLoginModalOpen(true)
   }, [])
 
-  const clearServicesHoverCloseTimer = useCallback(() => {
-    if (servicesHoverCloseTimerRef.current != null) {
-      clearTimeout(servicesHoverCloseTimerRef.current)
-      servicesHoverCloseTimerRef.current = null
-    }
-  }, [])
-
-  const openServicesModal = useCallback(() => {
-    clearServicesHoverCloseTimer()
-    setServicesModalOpen(true)
-  }, [clearServicesHoverCloseTimer])
-
-  const maybeCloseServicesModal = useCallback(() => {
-    clearServicesHoverCloseTimer()
-    servicesHoverCloseTimerRef.current = setTimeout(() => {
-      const { button, panel } = servicesHoverZonesRef.current
-      if (!button && !panel) {
-        setServicesModalOpen(false)
-      }
-      servicesHoverCloseTimerRef.current = null
-    }, 280)
-  }, [clearServicesHoverCloseTimer])
-
-  const handleServicesOpenChange = useCallback(
-    (open: boolean) => {
-      setServicesModalOpen(open)
-      if (!open) {
-        servicesHoverZonesRef.current = { button: false, panel: false }
-        clearServicesHoverCloseTimer()
-      }
-    },
-    [clearServicesHoverCloseTimer],
-  )
-
-  const servicesButtonHoverEnter = useCallback(() => {
-    servicesHoverZonesRef.current.button = true
-    openServicesModal()
-  }, [openServicesModal])
-
-  const servicesButtonHoverLeave = useCallback(() => {
-    servicesHoverZonesRef.current.button = false
-    maybeCloseServicesModal()
-  }, [maybeCloseServicesModal])
-
-  const servicesPanelHoverEnter = useCallback(() => {
-    servicesHoverZonesRef.current.panel = true
-    openServicesModal()
-  }, [openServicesModal])
-
-  const servicesPanelHoverLeave = useCallback(() => {
-    servicesHoverZonesRef.current.panel = false
-    maybeCloseServicesModal()
-  }, [maybeCloseServicesModal])
-
-  useEffect(() => {
-    return () => clearServicesHoverCloseTimer()
-  }, [clearServicesHoverCloseTimer])
-
-  const servicesHoverHandlers = isLgViewport
-    ? {
-        onMouseEnter: servicesButtonHoverEnter,
-        onMouseLeave: servicesButtonHoverLeave,
-      }
-    : {}
-
   const servicesButton = (
     <button
       type="button"
-      onClick={openServicesModal}
-      {...servicesHoverHandlers}
+      onClick={() => setServicesModalOpen(true)}
       className={cn(
         "inline-flex cursor-pointer items-center gap-2 transition-[background-color,color,box-shadow] duration-300 ease-out",
         isScrolled
@@ -220,14 +150,7 @@ export function MarketingNavbar({
       />
       <OurServicesModal
         open={servicesModalOpen}
-        onOpenChange={handleServicesOpenChange}
-        hoverInteraction={isLgViewport}
-        onContentMouseEnter={
-          isLgViewport ? servicesPanelHoverEnter : undefined
-        }
-        onContentMouseLeave={
-          isLgViewport ? servicesPanelHoverLeave : undefined
-        }
+        onOpenChange={setServicesModalOpen}
       />
       <LoginModal
         open={loginModalOpen}

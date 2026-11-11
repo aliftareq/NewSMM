@@ -22,22 +22,15 @@ type OurServicesModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   content?: ServicesModalContent
-  /** Keeps backdrop visual only so the trigger can stay hovered while open. */
-  hoverInteraction?: boolean
-  onContentMouseEnter?: () => void
-  onContentMouseLeave?: () => void
 }
 
 export function OurServicesModal({
   open,
   onOpenChange,
   content = landingServicesModalContent,
-  hoverInteraction = false,
-  onContentMouseEnter,
-  onContentMouseLeave,
 }: OurServicesModalProps) {
   const [activePlatformId, setActivePlatformId] = useState<ServicesModalPlatformId>(
-    content.defaultPlatformId
+    content.defaultPlatformId,
   )
   const [slideDirection, setSlideDirection] = useState(0)
 
@@ -45,9 +38,9 @@ export function OurServicesModal({
     () =>
       Math.max(
         0,
-        content.platforms.findIndex((p) => p.id === content.defaultPlatformId)
+        content.platforms.findIndex((p) => p.id === content.defaultPlatformId),
       ),
-    [content.defaultPlatformId, content.platforms]
+    [content.defaultPlatformId, content.platforms],
   )
 
   const { getDirection } = useTabSlideDirection(defaultIndex)
@@ -61,8 +54,9 @@ export function OurServicesModal({
 
   const activePlatform = useMemo(
     () =>
-      content.platforms.find((p) => p.id === activePlatformId) ?? content.platforms[0],
-    [activePlatformId, content.platforms]
+      content.platforms.find((p) => p.id === activePlatformId) ??
+      content.platforms[0],
+    [activePlatformId, content.platforms],
   )
 
   const handleSelect = (id: ServicesModalPlatformId) => {
@@ -78,14 +72,7 @@ export function OurServicesModal({
       <DialogContent
         showCloseButton
         closeButtonClassName="top-2 right-2 rounded-xl bg-button/20 text-button hover:!bg-button hover:!text-white focus-visible:!ring-button/30 sm:top-2.5 sm:right-2.5"
-        overlayClassName={
-          hoverInteraction
-            ? "pointer-events-none bg-black/40 data-closed:pointer-events-none"
-            : undefined
-        }
         className="max-h-[min(720px,calc(100vh-2rem))] w-[min(1320px,calc(100vw-2rem))] max-w-none gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-7 ring-0 sm:max-w-none"
-        onMouseEnter={onContentMouseEnter}
-        onMouseLeave={onContentMouseLeave}
       >
         <DialogTitle className="sr-only">Our services</DialogTitle>
         <div className="flex max-h-[min(664px,calc(100vh-4rem))] flex-col gap-6 overflow-y-auto lg:flex-row lg:overflow-hidden">
