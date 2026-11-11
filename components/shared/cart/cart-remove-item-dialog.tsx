@@ -45,11 +45,12 @@ export function CartRemoveItemDialog({
             {description}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="gap-3 sm:gap-3">
+        <DialogFooter className="gap-3 sm:flex-row sm:justify-end sm:gap-3">
           <Button
             type="button"
             variant="outline"
-            className="h-11 w-full sm:w-auto"
+            showArrow={false}
+            className="w-full sm:w-auto"
             onClick={() => onOpenChange(false)}
           >
             {cartPageContent.removeConfirmCancel}
@@ -57,7 +58,8 @@ export function CartRemoveItemDialog({
           <Button
             type="button"
             variant="destructive"
-            className="h-11 w-full sm:w-auto"
+            showArrow={false}
+            className="h-[50px] min-h-[50px] w-full rounded-[10.971px] px-[29.257px] text-[16px] leading-[1.35] sm:w-auto"
             onClick={() => {
               onConfirm()
               onOpenChange(false)

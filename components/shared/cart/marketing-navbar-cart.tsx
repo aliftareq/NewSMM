@@ -102,12 +102,24 @@ export function MarketingNavbarCart() {
   }
 
   const openPanel = () => {
+    if (removeDialogOpen) {
+      return
+    }
     cancelCloseTimer()
     measurePanel()
     setOpen(true)
   }
 
-  const panel = open && panelPosition && mounted ? (
+  useEffect(() => {
+    if (removeDialogOpen) {
+      cancelCloseTimer()
+      setOpen(false)
+    }
+  }, [removeDialogOpen])
+
+  const showMiniCart = open && !removeDialogOpen
+
+  const panel = showMiniCart && panelPosition && mounted ? (
     createPortal(
       <div
         ref={panelRef}
@@ -137,7 +149,11 @@ export function MarketingNavbarCart() {
                 <CartMiniLineItem
                   key={item.id}
                   item={item}
-                  onRemove={() => requestRemove(item.id, item.title)}
+                  onRemove={() => {
+                    cancelCloseTimer()
+                    setOpen(false)
+                    requestRemove(item.id, item.title)
+                  }}
                 />
               ))
             )}
