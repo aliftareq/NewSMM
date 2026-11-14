@@ -31,11 +31,7 @@ export function DashboardModalScaledBody({
   return (
     <div
       className="w-full overflow-hidden"
-      style={
-        scaledHeight > 0
-          ? { height: scaledHeight }
-          : undefined
-      }
+      style={scaledHeight > 0 ? { height: scaledHeight } : undefined}
     >
       <div
         className="w-full origin-top"
