@@ -60,8 +60,8 @@ export function DashboardPayNowModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className={cn(DASHBOARD_MODAL_CONTENT_CLASS, "!gap-0")}
-        style={{ paddingLeft: 0, paddingRight: 0 }}
+        className={cn(DASHBOARD_MODAL_CONTENT_CLASS, "!gap-0 !px-8")}
+        style={{ paddingLeft: 32, paddingRight: 32 }}
       >
         <DialogClose className="absolute top-[-20px] right-[-22px] z-10 flex h-[42px] w-[43.787px] items-center justify-center overflow-hidden rounded-[10.723px] border-0 bg-[#21aeff] p-0 outline-none transition-colors hover:bg-[#1da3f5] focus-visible:ring-2 focus-visible:ring-white/50">
           {/* eslint-disable-next-line @next/next/no-img-element */}
