@@ -47,6 +47,13 @@ function defaultPresetId(
   )
 }
 
+function parseAmountDraft(raw: string): number | null {
+  const digits = raw.replace(/[^\d.]/g, "")
+  if (!digits || digits === ".") return null
+  const parsed = Number.parseFloat(digits)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
 /** Figma 25704:15896 */
 export function DashboardAddFundsModal({
   open,
@@ -57,34 +64,36 @@ export function DashboardAddFundsModal({
   const amountInputId = useId()
   const [amount, setAmount] = useState(content.defaultAmount)
   const [selectedPresetId, setSelectedPresetId] = useState("")
+  const [customAmountDraft, setCustomAmountDraft] = useState(() =>
+    formatUsd(content.defaultAmount),
+  )
 
   useEffect(() => {
     if (!open) return
     setAmount(content.defaultAmount)
     setSelectedPresetId(defaultPresetId(content))
+    setCustomAmountDraft(formatUsd(content.defaultAmount))
   }, [content, open])
 
   const handlePresetSelect = (presetId: string, presetAmount: number) => {
     setSelectedPresetId(presetId)
     setAmount(presetAmount)
+    setCustomAmountDraft(formatUsd(presetAmount))
   }
 
   const handleCustomChange = (raw: string) => {
-    const digits = raw.replace(/[^\d.]/g, "")
-    if (!digits) {
-      setSelectedPresetId("")
-      setAmount(0)
-      return
-    }
-    const parsed = Number.parseFloat(digits)
-    if (!Number.isFinite(parsed)) return
+    setCustomAmountDraft(raw)
     setSelectedPresetId("")
-    setAmount(parsed)
+    const parsed = parseAmountDraft(raw)
+    setAmount(parsed ?? 0)
   }
 
   const handleCustomBlur = () => {
-    const clamped = clampAmount(amount, content.minAmount, content.maxAmount)
+    const parsed = parseAmountDraft(customAmountDraft)
+    const base = parsed ?? 0
+    const clamped = clampAmount(base, content.minAmount, content.maxAmount)
     setAmount(clamped)
+    setCustomAmountDraft(clamped > 0 ? formatUsd(clamped) : "")
     const match = content.presets.find((preset) => preset.amount === clamped)
     setSelectedPresetId(match?.id ?? "")
   }
@@ -189,7 +198,7 @@ export function DashboardAddFundsModal({
                   id={amountInputId}
                   type="text"
                   inputMode="decimal"
-                  value={amount > 0 ? formatUsd(amount) : ""}
+                  value={customAmountDraft}
                   onChange={(event) => handleCustomChange(event.target.value)}
                   onBlur={handleCustomBlur}
                   className="min-w-0 flex-1 bg-transparent text-base font-medium leading-[1.35] text-[#13203b] outline-none"

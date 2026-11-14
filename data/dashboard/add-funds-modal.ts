@@ -23,7 +23,7 @@ export const dashboardAddFundsModalContent: DashboardAddFundsModalContent = {
     { id: "100", amount: 100, label: "$100", bonusLabel: "+$5" },
     { id: "250", amount: 250, label: "$250", bonusLabel: "+$12.5" },
     { id: "500", amount: 500, label: "$500", bonusLabel: "+$25" },
-    { id: "1000", amount: 1000, label: "$1000", bonusLabel: "+$50" },
-    { id: "1500", amount: 1500, label: "$1500", bonusLabel: "+$75" },
+    { id: "1000", amount: 1000, label: "$1000.00", bonusLabel: "+$50" },
+    { id: "1500", amount: 1500, label: "$1500.00", bonusLabel: "+$75" },
   ],
 }
