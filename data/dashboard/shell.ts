@@ -52,7 +52,7 @@ export const dashboardShellContent: DashboardShellContent = {
     {
       id: "order-history",
       label: "Order history",
-      href: "/cart",
+      href: "/dashboard/order-history",
       iconSrc: `${USER_NAV_IMG}/order-history.svg`,
     },
     {
@@ -98,6 +98,10 @@ export const dashboardShellContent: DashboardShellContent = {
     "/dashboard/neworder": {
       title: "New Order",
       iconSrc: `${NAVBAR_IMG}/page-icon-new-order.svg`,
+    },
+    "/dashboard/order-history": {
+      title: "Order history",
+      iconSrc: `${USER_NAV_IMG}/order-history.svg`,
     },
   },
 }

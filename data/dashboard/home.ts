@@ -124,7 +124,7 @@ export const dashboardHomeContent: DashboardHomeContent = {
         description:
           "Rate your recent order #CSE9CF and get a discount reward for your next order!",
         actionLabel: "Order history",
-        href: "/cart",
+        href: "/dashboard/order-history",
       },
       {
         id: "my-discount",

@@ -126,7 +126,7 @@ export function DashboardNavbar({
 
         <button
           type="button"
-          className="relative flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#f5f6f7] sm:size-[52px] sm:rounded-2xl lg:size-[60px]"
+          className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#f5f6f7] sm:size-[52px] sm:rounded-2xl lg:size-[60px]"
           aria-label="Notifications"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -136,10 +136,6 @@ export function DashboardNavbar({
             width={24}
             height={24}
             className="block size-5 shrink-0 sm:size-[22px] lg:size-6"
-          />
-          <span
-            className="absolute right-3 top-3 size-1.5 rounded-full bg-[#ff0013] sm:right-4 sm:top-4 lg:right-[18px] lg:top-[18px]"
-            aria-hidden
           />
         </button>
 
