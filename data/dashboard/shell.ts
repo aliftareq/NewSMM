@@ -64,7 +64,7 @@ export const dashboardShellContent: DashboardShellContent = {
     {
       id: "my-discounts",
       label: "My discounts",
-      href: "/discount",
+      href: "/dashboard/my-discounts",
       iconSrc: `${USER_NAV_IMG}/my-discounts.svg`,
     },
     {
@@ -106,6 +106,10 @@ export const dashboardShellContent: DashboardShellContent = {
     "/dashboard/balance-history": {
       title: "Balance history",
       iconSrc: `${USER_NAV_IMG}/balance-history.svg`,
+    },
+    "/dashboard/my-discounts": {
+      title: "My discounts",
+      iconSrc: `${USER_NAV_IMG}/my-discounts.svg`,
     },
   },
 }
