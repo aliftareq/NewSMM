@@ -79,7 +79,7 @@ export function DashboardShell({ children, className }: DashboardShellProps) {
           onOpenSidebar={() => setMobileSidebarOpen(true)}
           className="z-10 shrink-0 border-b border-[#ebecef]"
         />
-        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-contain px-[max(1rem,calc(100vw*0.042))] pb-8 pt-4 sm:pb-10 sm:pt-6 lg:px-8">
+        <main className="min-h-0 min-w-0 flex-1 overflow-x-clip overflow-y-auto overscroll-y-contain px-[max(1rem,calc(100vw*0.042))] pb-8 pt-4 sm:pb-10 sm:pt-6 lg:px-8">
           <DashboardMainContent>{children}</DashboardMainContent>
         </main>
       </div>

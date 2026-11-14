@@ -44,7 +44,7 @@ export default function RootLayout({
     >
       <body
         suppressHydrationWarning
-        className="min-h-full flex flex-col font-sans antialiased"
+        className="flex min-h-full w-full max-w-full min-w-0 flex-col overflow-x-clip font-sans antialiased"
       >
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
