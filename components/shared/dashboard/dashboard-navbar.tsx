@@ -7,6 +7,7 @@ import {
   resolveDashboardPageMeta,
 } from "@/data/dashboard/shell"
 import type { DashboardShellContent } from "@/types/dashboard/shell"
+import { DashboardAccountMenu } from "@/components/shared/dashboard/dashboard-account-menu"
 import { DashboardSidebarMenuTrigger } from "@/components/shared/dashboard/dashboard-sidebar-menu-trigger"
 import { LinkTo } from "@/components/shared/link-to"
 import { cn } from "@/lib/utils"
@@ -27,10 +28,19 @@ type DashboardNavbarProps = {
   onOpenSidebar?: () => void
 }
 
-function MetaDivider({ src }: { src: string }) {
+function MetaDivider({
+  src,
+  className,
+}: {
+  src: string
+  className?: string
+}) {
   return (
     <span
-      className="flex h-[15px] w-px shrink-0 items-center justify-center"
+      className={cn(
+        "flex h-[15px] w-px shrink-0 items-center justify-center",
+        className,
+      )}
       aria-hidden
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -57,61 +67,66 @@ export function DashboardNavbar({
   return (
     <header
       className={cn(
-        "flex min-h-[100px] w-full shrink-0 items-center justify-between gap-3 bg-white px-4 py-5 sm:px-7",
+        "relative z-20 flex min-h-[72px] w-full shrink-0 items-center justify-between gap-2 overflow-visible bg-white px-[max(1rem,calc(100vw*0.042))] py-3 sm:min-h-[88px] sm:gap-3 sm:px-6 sm:py-4 lg:min-h-[100px] lg:px-7 lg:py-5",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-[25px]">
+      <div className="flex min-w-0 flex-1 items-center gap-3 lg:gap-[25px]">
         {onOpenSidebar ? (
           <DashboardSidebarMenuTrigger onOpen={onOpenSidebar} />
         ) : null}
-        <div className="hidden rounded-lg border border-[#dfe0e4] px-4 py-2 sm:block">
-          <p className="text-sm font-medium leading-[1.35] text-[#202020]">
-            {todayLabel}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={pageMeta.iconSrc}
-            width={24}
-            height={24}
-            className="block size-6 shrink-0"
-          />
-          <p className="text-center text-xl font-medium leading-[1.3] text-[#21aeff]">
-            {pageMeta.title}
-          </p>
+        <div className="hidden items-center gap-[25px] lg:flex">
+          <div className="rounded-lg border border-[#dfe0e4] px-4 py-2">
+            <p className="text-sm font-medium leading-[1.35] text-[#202020]">
+              {todayLabel}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt=""
+              src={pageMeta.iconSrc}
+              width={24}
+              height={24}
+              className="block size-6 shrink-0"
+            />
+            <p className="text-center text-xl font-medium leading-[1.3] text-[#21aeff]">
+              {pageMeta.title}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2 sm:gap-5">
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-3 lg:gap-5">
         <LinkTo
           href={content.cart.href}
-          className="flex h-[60px] items-center rounded-xl border border-[#dfe0e4] bg-white py-[7.5px] pl-2 pr-4"
+          className="flex h-11 items-center rounded-lg border border-[#dfe0e4] bg-white py-1 pl-1 pr-2.5 sm:h-[52px] sm:rounded-xl sm:py-1.5 sm:pl-2 sm:pr-4 lg:h-[60px] lg:py-[7.5px]"
         >
-          <div className="flex items-center gap-1.5">
-            <span className="flex size-[45px] shrink-0 items-center justify-center rounded-xl bg-[#269de7] p-1">
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#269de7] p-0.5 sm:size-[40px] sm:rounded-xl lg:size-[45px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt=""
                 src={content.assets.cartIcon}
                 width={24}
                 height={24}
-                className="block size-6 shrink-0"
+                className="block size-5 shrink-0 sm:size-[22px] lg:size-6"
               />
             </span>
-            <span className="text-base font-medium leading-[1.35] text-[#202020]">
+            <span className="hidden text-sm font-medium leading-[1.35] text-[#202020] sm:inline sm:text-base">
               {content.cart.label}
             </span>
           </div>
         </LinkTo>
 
-        <MetaDivider src={content.assets.metaDivider} />
+        <MetaDivider
+          src={content.assets.metaDivider}
+          className="hidden sm:flex"
+        />
 
         <button
           type="button"
-          className="relative flex size-[60px] shrink-0 items-center justify-center rounded-2xl bg-[#f5f6f7]"
+          className="relative flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#f5f6f7] sm:size-[52px] sm:rounded-2xl lg:size-[60px]"
           aria-label="Notifications"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -120,42 +135,23 @@ export function DashboardNavbar({
             src={content.assets.notificationBell}
             width={24}
             height={24}
-            className="block size-6 shrink-0"
+            className="block size-5 shrink-0 sm:size-[22px] lg:size-6"
           />
           <span
-            className="absolute right-[18px] top-[18px] size-1.5 rounded-full bg-[#ff0013]"
+            className="absolute right-3 top-3 size-1.5 rounded-full bg-[#ff0013] sm:right-4 sm:top-4 lg:right-[18px] lg:top-[18px]"
             aria-hidden
           />
         </button>
 
-        <MetaDivider src={content.assets.metaDivider} />
+        <MetaDivider
+          src={content.assets.metaDivider}
+          className="hidden sm:flex"
+        />
 
-        <button
-          type="button"
-          className="flex h-[60px] items-center rounded-xl border border-[#dfe0e4] bg-white p-[7.5px]"
-          aria-label="Account menu"
-        >
-          <div className="flex items-center gap-1.5">
-            <span className="relative block size-[45px] shrink-0 overflow-hidden rounded-xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={avatar}
-                width={45}
-                height={45}
-                className="block size-full object-cover"
-              />
-            </span>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt=""
-              src={content.assets.chevronDown}
-              width={18}
-              height={36}
-              className="h-[18px] w-2 shrink-0 -scale-y-100 rotate-90"
-            />
-          </div>
-        </button>
+        <DashboardAccountMenu
+          avatarSrc={avatar}
+          chevronSrc={content.assets.chevronDown}
+        />
       </div>
     </header>
   )
