@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { DashboardAddNewCardModal } from "@/components/shared/dashboard/dashboard-add-new-card-modal"
-import { PlatformIcon } from "@/components/shared/landing/services-explorer/services-explorer-ui"
+import { SocialUsernamesTabs } from "@/components/shared/dashboard/settings/social-usernames-tabs"
 import { dashboardSettingsContent } from "@/data/dashboard/settings"
 import { cn } from "@/lib/utils"
 import type {
@@ -172,54 +172,14 @@ function GeneralSettingsPanel({
           </div>
         </div>
 
-        <div className="relative w-full min-h-[108px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            src={assets.socialUsernamesPanel}
-            className="pointer-events-none absolute inset-0 block h-full w-full max-w-none object-fill"
-          />
-          <div className="relative flex flex-col gap-4 px-4 pb-4 pt-2 sm:px-6">
-            <div className="flex flex-wrap items-center gap-[34px] pl-2 pt-1">
-              {socialIcons.map((entry) =>
-                entry.kind === "sprite" ? (
-                  <PlatformIcon
-                    key={entry.id}
-                    icon={entry.icon}
-                    size={26}
-                    spriteSrc={assets.socialIconsSprite}
-                  />
-                ) : (
-                  <span
-                    key={entry.id}
-                    className="relative block size-[26px] shrink-0 overflow-hidden"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      alt=""
-                      src={entry.src}
-                      className={entry.className ?? "size-full object-cover"}
-                    />
-                  </span>
-                ),
-              )}
-            </div>
-            <button
-              type="button"
-              className="inline-flex w-fit max-w-full items-center gap-1 rounded-lg border border-[#21aeff] bg-white px-[18px] py-3 text-sm font-medium leading-[1.35] text-[#21aeff] transition-colors hover:bg-[#f0f9ff]"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={assets.addUsernamePlus}
-                width={14}
-                height={14}
-                className="block size-3.5 shrink-0"
-              />
-              {contactInfo.addUsernameLabel}
-            </button>
-          </div>
-        </div>
+        <SocialUsernamesTabs
+          socialIcons={socialIcons}
+          socialIconsSprite={assets.socialIconsSprite}
+          socialUsernamesPanelSrc={assets.socialUsernamesPanel}
+          addUsernamePlusSrc={assets.addUsernamePlus}
+          addUsernameLabel={contactInfo.addUsernameLabel}
+          defaultPlatformId="instagram"
+        />
 
         <div className="flex w-full flex-col gap-4">
           <h2 className="text-lg font-medium leading-[1.5] text-[#343e56]">
