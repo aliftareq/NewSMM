@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 
+import { useDashboardAddFunds } from "@/components/shared/dashboard/dashboard-add-funds-context"
 import {
   DashboardHomeCard,
   DashboardHomeCardDivider,
@@ -38,6 +39,7 @@ export function DashboardHomeSection({
   content = dashboardHomeContent,
 }: DashboardHomeSectionProps) {
   const [feedback, setFeedback] = useState("")
+  const openAddFunds = useDashboardAddFunds()
   const { assets } = content
 
   return (
@@ -119,6 +121,7 @@ export function DashboardHomeSection({
                 <DashboardHomeOutlineButton
                   iconSrc={assets.addFundsPlus}
                   className="text-base"
+                  onClick={openAddFunds}
                 >
                   {content.balance.addFundsLabel}
                 </DashboardHomeOutlineButton>

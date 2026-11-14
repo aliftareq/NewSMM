@@ -75,11 +75,13 @@ export function DashboardHomeTextLink({
 
 export function DashboardHomeOutlineButton({
   href,
+  onClick,
   children,
   className,
   iconSrc,
 }: {
   href?: string
+  onClick?: () => void
   children: ReactNode
   className?: string
   iconSrc?: string
@@ -109,7 +111,7 @@ export function DashboardHomeOutlineButton({
   }
 
   return (
-    <button type="button" className={classes}>
+    <button type="button" className={classes} onClick={onClick}>
       {body}
     </button>
   )

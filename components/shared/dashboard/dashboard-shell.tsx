@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 
+import { DashboardAddFundsProvider } from "@/components/shared/dashboard/dashboard-add-funds-context"
 import { DashboardMainContent } from "@/components/shared/dashboard/dashboard-main-content"
 import { DashboardNavbar } from "@/components/shared/dashboard/dashboard-navbar"
 import { DashboardSidebar } from "@/components/shared/dashboard/dashboard-sidebar"
@@ -35,6 +36,7 @@ export function DashboardShell({ children, className }: DashboardShellProps) {
   }, [mobileSidebarOpen])
 
   return (
+    <DashboardAddFundsProvider>
     <div
       className={cn(
         "flex h-screen w-full overflow-hidden bg-[#F1F1F1]",
@@ -82,5 +84,6 @@ export function DashboardShell({ children, className }: DashboardShellProps) {
         </main>
       </div>
     </div>
+    </DashboardAddFundsProvider>
   )
 }

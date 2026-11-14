@@ -7,6 +7,7 @@ import {
   type RefObject,
 } from "react"
 
+import { useDashboardAddFunds } from "@/components/shared/dashboard/dashboard-add-funds-context"
 import {
   dashboardShellContent,
   isDashboardNavActive,
@@ -83,6 +84,7 @@ export function DashboardSidebar({
   const rowIcon = "block size-5 shrink-0 object-contain"
   const contentRef = useRef<HTMLDivElement>(null)
   const scale = useSidebarViewportScale(contentRef, activePath)
+  const openAddFunds = useDashboardAddFunds()
 
   return (
     <aside
@@ -138,6 +140,7 @@ export function DashboardSidebar({
           </div>
           <button
             type="button"
+            onClick={openAddFunds}
             className="flex h-11 w-full items-center justify-center gap-1 rounded-[10px] border border-[#21aeff] bg-white py-1.5 pl-2 pr-3 text-sm font-medium leading-[1.35] text-[#21aeff]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
