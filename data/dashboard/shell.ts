@@ -70,13 +70,13 @@ export const dashboardShellContent: DashboardShellContent = {
     {
       id: "support",
       label: "Support",
-      href: "/contact",
+      href: "/dashboard/support",
       iconSrc: `${USER_NAV_IMG}/support.svg`,
     },
     {
       id: "affiliate",
       label: "Affiliate",
-      href: "/contact",
+      href: "/dashboard/affiliate",
       iconSrc: `${SIDEBAR_IMG}/affiliate.svg`,
     },
     {
@@ -110,6 +110,14 @@ export const dashboardShellContent: DashboardShellContent = {
     "/dashboard/my-discounts": {
       title: "My discounts",
       iconSrc: `${USER_NAV_IMG}/my-discounts.svg`,
+    },
+    "/dashboard/support": {
+      title: "Support",
+      iconSrc: `${USER_NAV_IMG}/support.svg`,
+    },
+    "/dashboard/affiliate": {
+      title: "Affiliate",
+      iconSrc: `${SIDEBAR_IMG}/affiliate.svg`,
     },
   },
 }

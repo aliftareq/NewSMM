@@ -91,7 +91,7 @@ export const dashboardHomeContent: DashboardHomeContent = {
     introAfter:
       " Join our industry leading affiliate program and begin earning a passive income from your referrals today.",
     ctaLabel: "Get started",
-    href: "/contact",
+    href: "/dashboard/affiliate",
   },
   settings: {
     title: "Account settings",
@@ -159,7 +159,7 @@ export const dashboardHomeContent: DashboardHomeContent = {
     faqLabel: "FAQ",
     faqHref: "/faq",
     contactLabel: "Contact us",
-    contactHref: "/contact",
+    contactHref: "/dashboard/support",
   },
   featureRequest: {
     title: "Request a feature",
