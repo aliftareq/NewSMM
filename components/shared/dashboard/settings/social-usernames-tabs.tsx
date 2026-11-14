@@ -20,6 +20,9 @@ const TAB_BUMP_WIDTH_PX = 79
 const TAB_BUMP_HEIGHT_PX = 37
 const TAB_FILL_PATH =
   "M44 0H75C81.6274 0 87 5.37258 87 12V25C87 31.6274 92.3726 37 99 37H20C26.6274 37 32 31.6274 32 25V12C32 5.37258 37.3726 0 44 0Z"
+/** Outline without flat bottom (y=37) so tab meets panel with no seam line */
+const TAB_STROKE_PATH =
+  "M44 0H75C81.6274 0 87 5.37258 87 12V25C87 31.6274 92.3726 37 99 37M20 37C26.6274 37 32 31.6274 32 25V12C32 5.37258 37.3726 0 44 0"
 
 const ICON_ROW_LEFT_PX = 47
 const ICON_GAP_PX = 34
@@ -90,11 +93,14 @@ function MovingTabBump({
     >
       <path d={TAB_FILL_PATH} fill="#F5F6F7" />
       <path
-        d={TAB_FILL_PATH}
+        d={TAB_STROKE_PATH}
         fill="none"
         stroke="#EBECEF"
         strokeWidth={1.2}
+        strokeLinejoin="round"
       />
+      {/* Blend into panel: erase panel top border under active tab */}
+      <rect x="20" y="36" width="79" height="2" fill="#F5F6F7" />
     </svg>
   )
 }
