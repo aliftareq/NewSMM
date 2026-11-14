@@ -75,7 +75,11 @@ export function DashboardPayNowModal({
           <span className="sr-only">Close</span>
         </DialogClose>
 
-        <DashboardModalScaledBody open={open} extraViewportInsetPx={32}>
+        <DashboardModalScaledBody
+          open={open}
+          extraViewportInsetPx={32}
+          fillWidthWhenScaled
+        >
           <DialogTitle className="text-left text-xl font-semibold leading-[1.35] text-[#222e48]">
             {content.title}
           </DialogTitle>

@@ -11,6 +11,8 @@ type DashboardModalScaledBodyProps = {
   className?: string
   /** Extra inset when fitting tall modals (e.g. Pay now) */
   extraViewportInsetPx?: number
+  /** Remove side gutters when viewport scale is below 1 (Pay now) */
+  fillWidthWhenScaled?: boolean
 }
 
 /** Scales modal body down when taller than the viewport — no inner scrollbar. */
@@ -19,6 +21,7 @@ export function DashboardModalScaledBody({
   children,
   className,
   extraViewportInsetPx = 0,
+  fillWidthWhenScaled = false,
 }: DashboardModalScaledBodyProps) {
   const contentRef = useRef<HTMLDivElement>(null)
   const { scale, scaledHeight } = useDashboardModalViewportScale(
@@ -34,14 +37,15 @@ export function DashboardModalScaledBody({
       style={scaledHeight > 0 ? { height: scaledHeight } : undefined}
     >
       <div
-        className="w-full origin-top"
+        className="origin-top"
         style={
           shouldScale
             ? {
                 transform: `scale(${scale})`,
-                transformOrigin: "top center",
+                transformOrigin: fillWidthWhenScaled ? "top left" : "top center",
+                width: fillWidthWhenScaled ? `${100 / scale}%` : "100%",
               }
-            : undefined
+            : { width: "100%" }
         }
       >
         <div
