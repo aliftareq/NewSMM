@@ -14,9 +14,9 @@ import { PlatformIcon } from "@/components/shared/landing/services-explorer/serv
 import { cn } from "@/lib/utils"
 import type { DashboardSettingsSocialIcon } from "@/types/dashboard/settings"
 
-/** Figma union tab bump (from social-usernames-panel.svg), viewBox 0 0 99 38 */
-const TAB_BUMP_VIEWBOX = "0 0 99 38"
-const TAB_BUMP_WIDTH_PX = 99
+/** Figma union tab bump — cropped to path bounds (x 20–99) so width/2 = visual center */
+const TAB_BUMP_VIEWBOX = "20 0 79 38"
+const TAB_BUMP_WIDTH_PX = 79
 const TAB_BUMP_HEIGHT_PX = 37
 const TAB_FILL_PATH =
   "M44 0H75C81.6274 0 87 5.37258 87 12V25C87 31.6274 92.3726 37 99 37H20C26.6274 37 32 31.6274 32 25V12C32 5.37258 37.3726 0 44 0Z"
@@ -38,7 +38,6 @@ type SocialPlatformId = "instagram" | "tiktok" | "twitter" | "spotify"
 type SocialUsernamesTabsProps = {
   socialIcons: DashboardSettingsSocialIcon[]
   socialIconsSprite: string
-  socialUsernamesPanelSrc: string
   addUsernamePlusSrc: string
   addUsernameLabel: string
   defaultPlatformId?: SocialPlatformId
@@ -113,12 +112,12 @@ function DynamicPanelBody() {
 export function SocialUsernamesTabs({
   socialIcons,
   socialIconsSprite,
-  socialUsernamesPanelSrc,
   addUsernamePlusSrc,
   addUsernameLabel,
   defaultPlatformId = "instagram",
 }: SocialUsernamesTabsProps) {
   const panelId = useId()
+  const panelRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const iconRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [activeId, setActiveId] = useState<SocialPlatformId>(defaultPlatformId)
@@ -138,24 +137,19 @@ export function SocialUsernamesTabs({
     socialIcons.findIndex((icon) => icon.id === activeId),
   )
 
-  const useStaticChrome = activeId === "instagram"
-
   const updateBumpPosition = useCallback(() => {
-    if (useStaticChrome) {
-      setBumpLeftPx(0)
-      return
-    }
-    const header = headerRef.current
+    const panel = panelRef.current
     const iconBtn = iconRefs.current[activeIndex]
-    if (!header || !iconBtn) return
+    if (!panel || !iconBtn) return
 
-    const headerRect = header.getBoundingClientRect()
+    const panelRect = panel.getBoundingClientRect()
     const iconRect = iconBtn.getBoundingClientRect()
-    const iconCenterX = iconRect.left - headerRect.left + iconRect.width / 2
+    const iconCenterX = iconRect.left - panelRect.left + iconRect.width / 2
     let left = iconCenterX - TAB_BUMP_WIDTH_PX / 2
-    left = Math.max(0, left)
+    const maxLeft = panelRect.width - TAB_BUMP_WIDTH_PX
+    left = Math.max(0, Math.min(maxLeft, left))
     setBumpLeftPx(left)
-  }, [activeIndex, useStaticChrome])
+  }, [activeIndex])
 
   useLayoutEffect(() => {
     updateBumpPosition()
@@ -212,23 +206,12 @@ export function SocialUsernamesTabs({
 
   return (
     <div
+      ref={panelRef}
       className="relative w-full max-w-[789px]"
       style={{ minHeight: PANEL_HEIGHT_PX }}
     >
-      {useStaticChrome ? (
-        // Pixel-perfect Figma chrome (default Instagram tab)
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          alt=""
-          src={socialUsernamesPanelSrc}
-          className="pointer-events-none absolute inset-0 z-0 block h-[109px] w-full max-w-none object-fill"
-        />
-      ) : (
-        <>
-          <DynamicPanelBody />
-          <MovingTabBump leftPx={bumpLeftPx} reduceMotion={reduceMotion} />
-        </>
-      )}
+      <DynamicPanelBody />
+      <MovingTabBump leftPx={bumpLeftPx} reduceMotion={reduceMotion} />
 
       <div
         ref={headerRef}

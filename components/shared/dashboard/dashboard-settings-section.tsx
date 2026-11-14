@@ -175,7 +175,6 @@ function GeneralSettingsPanel({
         <SocialUsernamesTabs
           socialIcons={socialIcons}
           socialIconsSprite={assets.socialIconsSprite}
-          socialUsernamesPanelSrc={assets.socialUsernamesPanel}
           addUsernamePlusSrc={assets.addUsernamePlus}
           addUsernameLabel={contactInfo.addUsernameLabel}
           defaultPlatformId="instagram"
