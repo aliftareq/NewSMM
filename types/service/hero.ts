@@ -23,6 +23,8 @@ export type ServicePackageBadge = "popular" | "max-value"
 export type ServicePackageOption = {
   id: string
   quantity: number
+  /** Shown on package cards when set (e.g. `1k`, `2.5k`). */
+  quantityLabel?: string
   unitLabel: string
   saveLabel?: string
   badge?: ServicePackageBadge

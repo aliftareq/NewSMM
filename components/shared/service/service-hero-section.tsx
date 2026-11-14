@@ -8,7 +8,7 @@ import {
   SERVICE_HERO_BACKGROUND_HEIGHT_CLASS,
 } from "@/components/shared/landing/marketing-hero-shell"
 import { ServiceHeroIntro } from "@/components/shared/service/service-hero-intro"
-import { ServiceOrderWidget } from "@/components/shared/service/service-order-widget"
+import { ServiceOrderWidgetSuspense } from "@/components/shared/service/service-order-widget-suspense"
 
 type ServiceHeroSectionProps = {
   content?: ServiceHeroContent
@@ -37,7 +37,7 @@ export function ServiceHeroSection({
         />
 
         <div className="mx-auto w-full min-w-0 max-w-[661px] lg:mx-0 lg:max-w-none lg:justify-self-stretch xl:mt-4 xl:justify-self-end">
-          <ServiceOrderWidget
+          <ServiceOrderWidgetSuspense
             content={content.orderWidget}
             platformTabsNavigateToServicePages
             compact

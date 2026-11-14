@@ -7,6 +7,8 @@ import { serviceHeroContent } from "@/data/service/hero"
 import { mapHeroPackagesForOrder } from "@/lib/service-quality-pricing"
 import type {
   ServiceHeroContent,
+  ServiceOrderPlatform,
+  ServiceOrderProductOption,
   ServicePackageBadge,
   ServicePackageOption,
 } from "@/types/service/hero"
@@ -66,6 +68,17 @@ type ServiceOrderWidgetProps = {
   shellPadding?: boolean
   /** Show lock + secure checkout line under the CTA. */
   showSecureCheckoutNote?: boolean
+  /** Hide horizontal platform tabs (e.g. dashboard vertical rail). */
+  hidePlatformTabs?: boolean
+  /** Controlled platform when `hidePlatformTabs` is true. */
+  platformId?: string
+  onPlatformIdChange?: (platformId: string) => void
+  /** Figma dashboard: service dropdown sits above the gray order panel. */
+  serviceSelectAbovePanel?: boolean
+  /** Hide POPULAR / MAX VALUE chips on package cards. */
+  showPackageBadges?: boolean
+  /** Hide quality + platform line under “Total price”. */
+  showOrderFooterMeta?: boolean
 }
 
 const BADGE_LABEL: Record<ServicePackageBadge, string> = {
@@ -78,6 +91,93 @@ const QUALITY_BUTTON_INSET_SHADOW =
 
 const SELECTED_PACKAGE_BG =
   "linear-gradient(97.43deg, rgba(0, 135, 212, 0.08) 2.53%, rgba(50, 180, 255, 0.08) 61.03%, rgba(7, 149, 231, 0.0696) 91.98%)"
+
+function ServiceProductSelect({
+  platform,
+  serviceProductId,
+  serviceProducts,
+  selectedServiceProduct,
+  onServiceProductChange,
+  content,
+  assets,
+  compact,
+}: {
+  platform: ServiceOrderPlatform
+  serviceProductId: string
+  serviceProducts: ServiceOrderProductOption[]
+  selectedServiceProduct: ServiceOrderProductOption | undefined
+  onServiceProductChange: (id: string) => void
+  content: ServiceHeroContent["orderWidget"]
+  assets: Pick<
+    ServiceHeroContent["assets"],
+  "socialIconsSprite"
+  >
+  compact?: boolean
+}) {
+  return (
+    <Select
+      value={selectedServiceProduct?.id ?? serviceProductId}
+      onValueChange={(next) => {
+        if (next) onServiceProductChange(next)
+      }}
+    >
+      <SelectTrigger
+        className={cn(
+          SERVICE_PRODUCT_SELECT_TRIGGER_CLASS,
+          compact &&
+            "h-[52px] min-h-[52px] px-4 py-3 text-sm data-[size=default]:h-[52px]",
+        )}
+        size="default"
+      >
+        <SelectValue className="flex min-w-0 flex-1 items-center gap-2">
+          <span className="flex min-w-0 flex-1 items-center gap-2">
+            <PlatformIcon
+              icon={platform.icon}
+              size={24}
+              className="shrink-0"
+              spriteSrc={assets.socialIconsSprite}
+            />
+            <span className="truncate leading-[1.35]">
+              {selectedServiceProduct?.label}
+            </span>
+          </span>
+        </SelectValue>
+        <span
+          className="flex size-6 shrink-0 items-center justify-center p-1"
+          aria-hidden
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            src={content.serviceSelectChevronSrc}
+            width={16}
+            height={16}
+            className="size-4 rotate-180"
+          />
+        </span>
+      </SelectTrigger>
+      <SelectContent align="start" className={SERVICE_PRODUCT_MENU_CLASS}>
+        {serviceProducts.map((product) => (
+          <SelectItem
+            key={product.id}
+            value={product.id}
+            className={SERVICE_PRODUCT_MENU_ITEM_CLASS}
+          >
+            <span className="flex items-center gap-2">
+              <PlatformIcon
+                icon={platform.icon}
+                size={24}
+                className="shrink-0"
+                spriteSrc={assets.socialIconsSprite}
+              />
+              {product.label}
+            </span>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
 
 function PackageCard({
   pkg,
@@ -133,7 +233,7 @@ function PackageCard({
             selected ? "text-[#21aeff]" : "text-[#343e56]",
           )}
         >
-          {pkg.quantity}
+          {pkg.quantityLabel ?? pkg.quantity}
         </span>
         <span
           className={cn(
@@ -160,6 +260,12 @@ export function ServiceOrderWidget({
   hideQualityTabs = false,
   shellPadding = true,
   showSecureCheckoutNote = true,
+  hidePlatformTabs = false,
+  platformId: platformIdProp,
+  onPlatformIdChange,
+  serviceSelectAbovePanel = false,
+  showPackageBadges = true,
+  showOrderFooterMeta = true,
   assets = {
     orderDividerLine: serviceHeroContent.assets.orderDividerLine,
     secureLockIcon: serviceHeroContent.assets.secureLockIcon,
@@ -170,7 +276,22 @@ export function ServiceOrderWidget({
   const serviceFromUrl = searchParams.get(SERVICE_PAGE_SERVICE_QUERY_KEY)
 
   const [qualityId, setQualityId] = useState(content.defaultQualityId)
-  const [platformId, setPlatformId] = useState(content.defaultPlatformId)
+  const [platformIdState, setPlatformIdState] = useState(
+    platformIdProp ?? content.defaultPlatformId,
+  )
+  const platformId = platformIdProp ?? platformIdState
+  const setPlatformId = (next: string) => {
+    onPlatformIdChange?.(next)
+    if (platformIdProp === undefined) {
+      setPlatformIdState(next)
+    }
+  }
+
+  useEffect(() => {
+    if (platformIdProp !== undefined) {
+      setPlatformIdState(platformIdProp)
+    }
+  }, [platformIdProp])
   const [packageId, setPackageId] = useState(content.defaultPackageId)
   const [serviceProductId, setServiceProductId] = useState(() =>
     resolveServiceProductIdFromQuery(
@@ -241,7 +362,9 @@ export function ServiceOrderWidget({
   const qualityLabel =
     content.qualityOptions.find((q) => q.id === qualityId)?.label ?? ""
 
-  const ctaLabel = `Get ${selectedPackage.quantity} ${selectedPackage.unitLabel}`
+  const selectedQuantityLabel =
+    selectedPackage.quantityLabel ?? String(selectedPackage.quantity)
+  const ctaLabel = `Get ${selectedQuantityLabel} ${selectedPackage.unitLabel}`
 
   const orderHref = useMemo(() => {
     const href = buildOrderHref({
@@ -362,8 +485,28 @@ export function ServiceOrderWidget({
           className={cn(
             "flex w-full flex-col items-center",
             compact ? "gap-4 sm:gap-4" : "gap-5 sm:gap-6",
+            serviceSelectAbovePanel && "gap-6",
           )}
         >
+          {serviceSelectAbovePanel ? (
+            <div className="flex w-full flex-col gap-3">
+              <p className="text-base font-medium leading-[1.35] text-[#404a60]">
+                {content.serviceSelectLabel}
+              </p>
+              <ServiceProductSelect
+                platform={platform}
+                serviceProductId={serviceProductId}
+                serviceProducts={serviceProducts}
+                selectedServiceProduct={selectedServiceProduct}
+                onServiceProductChange={setServiceProductId}
+                content={content}
+                assets={assets}
+                compact={compact}
+              />
+            </div>
+          ) : null}
+
+          {hidePlatformTabs ? null : (
           <div
             role="tablist"
             aria-label="Social platforms"
@@ -435,83 +578,35 @@ export function ServiceOrderWidget({
               )
             })}
           </div>
+          )}
 
           <div
             className={cn(
               "box-border flex w-full flex-col items-start self-stretch rounded-2xl border border-[#f5f6f7] bg-[#f9f9f9] transition-[border-color,box-shadow] duration-300",
-              compact ? "gap-3.5 p-2.5" : "gap-5 p-3",
+              serviceSelectAbovePanel ? "gap-5 p-3" : compact ? "gap-3.5 p-2.5" : "gap-5 p-3",
               qualityId === "real-followers" &&
                 "border-[#c5e8fc] shadow-[inset_0_0_0_1px_rgba(33,174,255,0.12)]",
               platformId !== "instagram" &&
                 "shadow-[inset_0_0_0_1px_rgba(38,157,231,0.08)]",
             )}
           >
+            {serviceSelectAbovePanel ? null : (
             <div className="flex w-full flex-col gap-2">
               <p className="text-base font-medium leading-[1.35] text-[#5b6477]">
                 {content.serviceSelectLabel}
               </p>
-              <Select
-                value={selectedServiceProduct?.id ?? serviceProductId}
-                onValueChange={(next) => {
-                  if (next) setServiceProductId(next)
-                }}
-              >
-                <SelectTrigger
-                  className={cn(
-                    SERVICE_PRODUCT_SELECT_TRIGGER_CLASS,
-                    compact &&
-                      "h-[52px] min-h-[52px] px-4 py-3 text-sm data-[size=default]:h-[52px]",
-                  )}
-                  size="default"
-                >
-                  <SelectValue className="flex min-w-0 flex-1 items-center gap-2">
-                    <span className="flex min-w-0 flex-1 items-center gap-2">
-                      <PlatformIcon
-                        icon={platform.icon}
-                        size={24}
-                        className="shrink-0"
-                        spriteSrc={assets.socialIconsSprite}
-                      />
-                      <span className="truncate leading-[1.35]">
-                        {selectedServiceProduct?.label}
-                      </span>
-                    </span>
-                  </SelectValue>
-                  <span
-                    className="flex size-6 shrink-0 items-center justify-center p-1"
-                    aria-hidden
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      alt=""
-                      src={content.serviceSelectChevronSrc}
-                      width={16}
-                      height={16}
-                      className="size-4 rotate-180"
-                    />
-                  </span>
-                </SelectTrigger>
-                <SelectContent align="start" className={SERVICE_PRODUCT_MENU_CLASS}>
-                  {serviceProducts.map((product) => (
-                    <SelectItem
-                      key={product.id}
-                      value={product.id}
-                      className={SERVICE_PRODUCT_MENU_ITEM_CLASS}
-                    >
-                      <span className="flex items-center gap-2">
-                        <PlatformIcon
-                          icon={platform.icon}
-                          size={24}
-                          className="shrink-0"
-                          spriteSrc={assets.socialIconsSprite}
-                        />
-                        {product.label}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ServiceProductSelect
+                platform={platform}
+                serviceProductId={serviceProductId}
+                serviceProducts={serviceProducts}
+                selectedServiceProduct={selectedServiceProduct}
+                onServiceProductChange={setServiceProductId}
+                content={content}
+                assets={assets}
+                compact={compact}
+              />
             </div>
+            )}
 
             <label
               className={cn(
@@ -555,7 +650,7 @@ export function ServiceOrderWidget({
                         pkg={pkg}
                         selected={pkg.id === packageId}
                         onSelect={() => setPackageId(pkg.id)}
-                        showBadge
+                        showBadge={showPackageBadges}
                         compact={compact}
                       />
                     ))}
@@ -570,19 +665,29 @@ export function ServiceOrderWidget({
               compact ? "gap-2.5 sm:gap-3" : "gap-3 sm:gap-4",
             )}
           >
-            <div className="flex w-full flex-col items-stretch gap-3 md:flex-row md:items-start md:justify-center md:gap-4">
+            <div
+              className={cn(
+                "flex w-full items-center justify-between gap-4",
+                !serviceSelectAbovePanel &&
+                  "flex-col items-stretch md:flex-row md:items-start md:justify-center",
+              )}
+            >
               <div
                 className={cn(
-                  "flex w-full flex-col justify-center gap-0.5 md:w-[min(100%,200px)] md:shrink-0",
-                  compact ? "min-h-[52px]" : "min-h-[59px]",
+                  "flex w-full flex-col justify-center gap-1",
+                  !serviceSelectAbovePanel &&
+                    "gap-0.5 md:w-[min(100%,200px)] md:shrink-0",
+                  serviceSelectAbovePanel ? "w-[140px] shrink-0" : compact ? "min-h-[52px]" : "min-h-[59px]",
                 )}
               >
                 <span className="text-sm font-medium leading-[1.35] text-[#343e56]">
                   Total price
                 </span>
-                <p className="line-clamp-1 text-xs font-normal text-[#798090]">
-                  {qualityLabel} · {platform.label}
-                </p>
+                {showOrderFooterMeta ? (
+                  <p className="line-clamp-1 text-xs font-normal text-[#798090]">
+                    {qualityLabel} · {platform.label}
+                  </p>
+                ) : null}
                 <div className="flex items-center gap-2 tabular-nums transition-opacity duration-200">
                   <span
                     className={cn(
@@ -601,10 +706,15 @@ export function ServiceOrderWidget({
                 href={orderHref}
                 onClick={handleNavigateToOrder}
                 className={cn(
-                  "flex w-full items-center justify-center rounded-xl bg-[#269de7] px-4 text-sm font-medium leading-[1.35] text-white md:min-w-[120px] md:flex-1 md:pl-4 md:pr-3",
-                  compact
-                    ? "min-h-[48px] py-3 md:h-[52px] md:py-3"
-                    : "min-h-[52px] py-3.5 md:h-[59px] md:py-4 md:text-base",
+                  "flex items-center justify-center rounded-xl bg-[#269de7] px-6 text-white",
+                  serviceSelectAbovePanel
+                    ? "h-14 min-w-[120px] flex-1 text-lg font-medium leading-[1.5]"
+                    : cn(
+                        "w-full px-4 text-sm font-medium leading-[1.35] md:min-w-[120px] md:flex-1 md:pl-4 md:pr-3",
+                        compact
+                          ? "min-h-[48px] py-3 md:h-[52px] md:py-3"
+                          : "min-h-[52px] py-3.5 md:h-[59px] md:py-4 md:text-base",
+                      ),
                 )}
               >
                 {ctaLabel}

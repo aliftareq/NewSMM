@@ -4,7 +4,7 @@ import { useState } from "react"
 
 import { cartPageContent } from "@/data/cart/cart"
 import { serviceHeroContent } from "@/data/service/hero"
-import { ServiceOrderWidget } from "@/components/shared/service/service-order-widget"
+import { ServiceOrderWidgetSuspense } from "@/components/shared/service/service-order-widget-suspense"
 import {
   Dialog,
   DialogContent,
@@ -62,7 +62,7 @@ export function CartAddServiceLink({ className }: CartAddServiceLinkProps) {
             {cartPageContent.addServiceModalTitle}
           </DialogTitle>
           {open ? (
-            <ServiceOrderWidget
+            <ServiceOrderWidgetSuspense
               className="mx-0 max-w-none shadow-none"
               forceNewDraftGroup
               appendNewOrderQuery

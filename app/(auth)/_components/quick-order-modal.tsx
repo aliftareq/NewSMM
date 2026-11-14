@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { quickOrderModalContent } from "@/app/(auth)/_data/quick-order-modal"
 import type { QuickOrderModalContent } from "@/app/(auth)/_types/quick-order-modal"
 import { serviceHeroContent } from "@/data/service/hero"
-import { ServiceOrderWidget } from "@/components/shared/service/service-order-widget"
+import { ServiceOrderWidgetSuspense } from "@/components/shared/service/service-order-widget-suspense"
 import {
   Dialog,
   DialogClose,
@@ -105,7 +105,7 @@ export function QuickOrderModal({
           </div>
 
           {open ? (
-            <ServiceOrderWidget
+            <ServiceOrderWidgetSuspense
               className="mx-0 max-w-none rounded-none border-0 bg-transparent shadow-none"
               compact
               hideQualityTabs
