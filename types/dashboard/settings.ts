@@ -21,6 +21,35 @@ export type DashboardSettingsEmailPreference = {
   locked?: boolean
 }
 
+export type DashboardSettingsBillingField = {
+  id: string
+  label: string
+  placeholder: string
+  labelTone?: "dark" | "muted"
+  optional?: boolean
+  colSpan?: "half" | "full"
+}
+
+export type DashboardSettingsBillingContent = {
+  personalInfo: {
+    sectionTitle: string
+    fields: DashboardSettingsBillingField[]
+    countryField: {
+      id: string
+      label: string
+      placeholder: string
+    }
+    saveChangesLabel: string
+    defaultCountryId: string
+    countries: { id: string; label: string }[]
+  }
+  savedCards: {
+    sectionTitle: string
+    addNewCardLabel: string
+  }
+  transactionsEmptyMessage: string
+}
+
 export type DashboardSettingsSecurityContent = {
   changePassword: {
     title: string
@@ -60,6 +89,7 @@ export type DashboardSettingsContent = {
     navGeneralInactive: string
     navSecurity: string
     navBilling: string
+    countrySelectChevron: string
     socialIconsSprite: string
   }
   nav: DashboardSettingsNavItem[]
@@ -83,8 +113,5 @@ export type DashboardSettingsContent = {
     items: DashboardSettingsEmailPreference[]
   }
   security: DashboardSettingsSecurityContent
-  tabPlaceholders: Record<
-    Extract<DashboardSettingsTabId, "billing">,
-    { title: string; description: string }
-  >
+  billing: DashboardSettingsBillingContent
 }

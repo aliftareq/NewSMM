@@ -3,12 +3,12 @@
 import { useState } from "react"
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  DashboardSelectContent,
+  DashboardSelectItem,
+  dashboardSelectValueLabel,
+  labelsBySelectId,
+} from "@/components/shared/dashboard/dashboard-select"
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DashboardSecondaryEmailModal } from "@/components/shared/dashboard/dashboard-secondary-email-modal"
 import { dashboardSupportContent } from "@/data/dashboard/support"
 import { cn } from "@/lib/utils"
@@ -91,15 +91,22 @@ export function DashboardSupportSection({
               id="dashboard-support-request-type"
               className={SELECT_TRIGGER_CLASS}
             >
-              <SelectValue />
+              <SelectValue className="text-base font-medium text-[#202020]">
+                {(value) =>
+                  dashboardSelectValueLabel(
+                    value as string | null,
+                    labelsBySelectId(requestTypes),
+                  )
+                }
+              </SelectValue>
             </SelectTrigger>
-            <SelectContent align="start" side="bottom">
+            <DashboardSelectContent>
               {requestTypes.map((type) => (
-                <SelectItem key={type.id} value={type.id}>
+                <DashboardSelectItem key={type.id} value={type.id}>
                   {type.label}
-                </SelectItem>
+                </DashboardSelectItem>
               ))}
-            </SelectContent>
+            </DashboardSelectContent>
           </Select>
         </div>
 

@@ -31,6 +31,7 @@ export const dashboardSettingsContent: DashboardSettingsContent = {
     navGeneralInactive: `${AUTH_MENU_IMG}/settings.svg`,
     navSecurity: `${IMG}/nav-security.svg`,
     navBilling: `${IMG}/nav-billing.svg`,
+    countrySelectChevron: `${IMG}/country-select-chevron.svg`,
     socialIconsSprite: `${IMG}/social-icons-sprite.png`,
   },
   nav: [
@@ -148,10 +149,73 @@ export const dashboardSettingsContent: DashboardSettingsContent = {
       requestDeletionLabel: "Request deletion",
     },
   },
-  tabPlaceholders: {
-    billing: {
-      title: "Billing",
-      description: "Payment methods, invoices, and billing preferences.",
+  billing: {
+    personalInfo: {
+      sectionTitle: "Personal billing information",
+      fields: [
+        {
+          id: "first-name",
+          label: "First name",
+          placeholder: "Enter here",
+          labelTone: "dark",
+          colSpan: "half",
+        },
+        {
+          id: "last-name",
+          label: "Last name",
+          placeholder: "Enter here",
+          labelTone: "dark",
+          colSpan: "half",
+        },
+        {
+          id: "city",
+          label: "City",
+          placeholder: "Enter here",
+          labelTone: "muted",
+          colSpan: "half",
+        },
+        {
+          id: "street-address",
+          label: "Street address",
+          placeholder: "Enter your address",
+          labelTone: "dark",
+          colSpan: "full",
+        },
+        {
+          id: "business-name",
+          label: "Business name (optional)",
+          placeholder: "Enter here",
+          labelTone: "dark",
+          colSpan: "half",
+          optional: true,
+        },
+        {
+          id: "registration-number",
+          label: "Registration number (optional)",
+          placeholder: "Enter here",
+          labelTone: "dark",
+          colSpan: "half",
+          optional: true,
+        },
+      ],
+      countryField: {
+        id: "country",
+        label: "Country",
+        placeholder: "Country",
+      },
+      saveChangesLabel: "Save changes",
+      defaultCountryId: "bangladesh",
+      countries: [
+        { id: "bangladesh", label: "Bangladesh" },
+        { id: "united-states", label: "United States" },
+        { id: "united-kingdom", label: "United Kingdom" },
+        { id: "canada", label: "Canada" },
+      ],
     },
+    savedCards: {
+      sectionTitle: "Saved cards",
+      addNewCardLabel: "Add New Card",
+    },
+    transactionsEmptyMessage: "You have no transaction yet",
   },
 }

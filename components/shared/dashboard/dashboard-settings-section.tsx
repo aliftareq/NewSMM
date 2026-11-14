@@ -2,6 +2,18 @@
 
 import { useMemo, useState } from "react"
 
+import {
+  DashboardSelectContent,
+  DashboardSelectItem,
+  dashboardSelectValueLabel,
+  labelsBySelectId,
+} from "@/components/shared/dashboard/dashboard-select"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { DashboardAddNewCardModal } from "@/components/shared/dashboard/dashboard-add-new-card-modal"
 import { PlatformIcon } from "@/components/shared/landing/services-explorer/services-explorer-ui"
 import { dashboardSettingsContent } from "@/data/dashboard/settings"
 import { cn } from "@/lib/utils"
@@ -32,6 +44,16 @@ const SAVE_CHANGES_BUTTON_STYLE = {
 
 const PASSWORD_INPUT_CLASS =
   "h-[52px] w-full rounded-xl border border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4 text-base font-medium leading-[1.35] text-[#5b6477] outline-none placeholder:text-[#5b6477] focus-visible:border-[#21aeff] focus-visible:ring-2 focus-visible:ring-[#21aeff]/20"
+
+const BILLING_INPUT_CLASS =
+  "h-[52px] w-full rounded-xl border border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4 text-base font-medium leading-[1.35] text-[#202020] outline-none placeholder:text-[#798090] focus-visible:border-[#21aeff] focus-visible:ring-2 focus-visible:ring-[#21aeff]/20"
+
+const BILLING_SELECT_TRIGGER_CLASS = cn(
+  BILLING_INPUT_CLASS,
+  "flex !h-[52px] min-h-[52px] w-full items-center justify-between text-left",
+  "data-[size=default]:!h-[52px]",
+  "[&_[data-slot=select-icon]]:hidden [&_svg]:hidden",
+)
 
 function SectionDivider({ src }: { src: string }) {
   return (
@@ -425,6 +447,244 @@ function SecuritySettingsPanel({ content }: { content: DashboardSettingsContent 
   )
 }
 
+function BillingTextField({
+  id,
+  label,
+  placeholder,
+  labelTone = "dark",
+  value,
+  onChange,
+}: {
+  id: string
+  label: string
+  placeholder: string
+  labelTone?: "dark" | "muted"
+  value: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <label
+        htmlFor={id}
+        className={cn(
+          "text-base font-medium leading-[1.35]",
+          labelTone === "muted" ? "text-[#798090]" : "text-[#202020]",
+        )}
+      >
+        {label}
+      </label>
+      <input
+        id={id}
+        type="text"
+        value={value}
+        placeholder={placeholder}
+        onChange={(event) => onChange(event.target.value)}
+        className={BILLING_INPUT_CLASS}
+      />
+    </div>
+  )
+}
+
+/** Figma 25704:15068 */
+function BillingSettingsPanel({ content }: { content: DashboardSettingsContent }) {
+  const { billing, assets } = content
+  const { personalInfo, savedCards, transactionsEmptyMessage } = billing
+
+  const [addNewCardOpen, setAddNewCardOpen] = useState(false)
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({})
+  const [countryId, setCountryId] = useState(personalInfo.defaultCountryId)
+
+  const setField = (id: string, value: string) => {
+    setFieldValues((prev) => ({ ...prev, [id]: value }))
+  }
+
+  const getValue = (id: string) => fieldValues[id] ?? ""
+
+  const firstRow = personalInfo.fields.filter((field) =>
+    ["first-name", "last-name"].includes(field.id),
+  )
+  const countryCityRow = personalInfo.fields.filter((field) =>
+    ["city"].includes(field.id),
+  )
+  const streetField = personalInfo.fields.find(
+    (field) => field.id === "street-address",
+  )
+  const optionalRow = personalInfo.fields.filter((field) =>
+    ["business-name", "registration-number"].includes(field.id),
+  )
+
+  const countryLabels = labelsBySelectId(personalInfo.countries)
+
+  return (
+    <>
+      <DashboardAddNewCardModal
+        open={addNewCardOpen}
+        onOpenChange={setAddNewCardOpen}
+      />
+      <div className="flex w-full min-w-0 flex-col gap-6">
+      <div className="flex w-full flex-col gap-6">
+        <div className="flex w-full flex-col gap-5">
+          <h2 className="text-lg font-medium leading-[1.5] text-[#343e56]">
+            {personalInfo.sectionTitle}
+          </h2>
+          <SectionDivider src={assets.sectionDivider} />
+        </div>
+
+        <div className="flex w-full flex-col gap-6">
+          <div className="flex w-full flex-col gap-[18px] lg:flex-row lg:items-end">
+            {firstRow.map((field) => (
+              <BillingTextField
+                key={field.id}
+                id={`dashboard-billing-${field.id}`}
+                label={field.label}
+                placeholder={field.placeholder}
+                labelTone={field.labelTone}
+                value={getValue(field.id)}
+                onChange={(value) => setField(field.id, value)}
+              />
+            ))}
+          </div>
+
+          <div className="flex w-full flex-col gap-[18px] lg:flex-row lg:items-end">
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              <label
+                htmlFor="dashboard-billing-country"
+                className="text-base font-medium leading-[1.35] text-[#202020]"
+              >
+                {personalInfo.countryField.label}
+              </label>
+              <Select
+                value={countryId}
+                onValueChange={(value) => {
+                  if (value) setCountryId(value)
+                }}
+              >
+                <SelectTrigger
+                  id="dashboard-billing-country"
+                  className={BILLING_SELECT_TRIGGER_CLASS}
+                >
+                  <SelectValue
+                    placeholder={personalInfo.countryField.placeholder}
+                    className="min-w-0 flex-1 truncate text-left text-base font-medium text-[#202020] data-placeholder:text-[#798090]"
+                  >
+                    {(value) =>
+                      dashboardSelectValueLabel(
+                        value as string | null,
+                        countryLabels,
+                        personalInfo.countryField.placeholder,
+                      )
+                    }
+                  </SelectValue>
+                  <span
+                    className="flex size-5 shrink-0 items-center justify-center rounded-full p-[3.333px]"
+                    aria-hidden
+                  >
+                    <span className="relative block h-2 w-[14px] shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        alt=""
+                        src={assets.countrySelectChevron}
+                        width={14}
+                        height={8}
+                        className="block size-full max-w-none"
+                      />
+                    </span>
+                  </span>
+                </SelectTrigger>
+                <DashboardSelectContent>
+                  {personalInfo.countries.map((country) => (
+                    <DashboardSelectItem key={country.id} value={country.id}>
+                      {country.label}
+                    </DashboardSelectItem>
+                  ))}
+                </DashboardSelectContent>
+              </Select>
+            </div>
+            {countryCityRow.map((field) => (
+              <BillingTextField
+                key={field.id}
+                id={`dashboard-billing-${field.id}`}
+                label={field.label}
+                placeholder={field.placeholder}
+                labelTone={field.labelTone}
+                value={getValue(field.id)}
+                onChange={(value) => setField(field.id, value)}
+              />
+            ))}
+          </div>
+
+          {streetField ? (
+            <BillingTextField
+              id={`dashboard-billing-${streetField.id}`}
+              label={streetField.label}
+              placeholder={streetField.placeholder}
+              labelTone={streetField.labelTone}
+              value={getValue(streetField.id)}
+              onChange={(value) => setField(streetField.id, value)}
+            />
+          ) : null}
+
+          <div className="flex w-full flex-col gap-[18px] lg:flex-row lg:items-end">
+            {optionalRow.map((field) => (
+              <BillingTextField
+                key={field.id}
+                id={`dashboard-billing-${field.id}`}
+                label={field.label}
+                placeholder={field.placeholder}
+                labelTone={field.labelTone}
+                value={getValue(field.id)}
+                onChange={(value) => setField(field.id, value)}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="flex h-[54px] w-full items-center justify-center rounded-xl border border-[#21aeff] px-5 text-base font-medium leading-[1.35] text-[#21aeff] transition-opacity hover:opacity-95"
+            style={SAVE_CHANGES_BUTTON_STYLE}
+          >
+            {personalInfo.saveChangesLabel}
+          </button>
+
+          <SectionDivider src={assets.sectionDivider} />
+        </div>
+      </div>
+
+      <div className="w-full rounded-2xl border border-[#ebecef] bg-[#fafafb] px-[18px] py-5">
+        <div className="flex w-full flex-col gap-6">
+          <h2 className="text-xl font-medium leading-[1.3] text-[#343e56]">
+            {savedCards.sectionTitle}
+          </h2>
+          <button
+            type="button"
+            onClick={() => setAddNewCardOpen(true)}
+            className="flex h-[145px] w-full items-center justify-center rounded-xl border border-dashed border-[#21aeff] bg-white px-5 transition-colors hover:bg-[#f0f9ff]"
+          >
+            <span className="inline-flex items-center gap-3 text-base font-medium leading-[1.35] text-[#21aeff]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt=""
+                src={assets.addUsernamePlus}
+                width={14}
+                height={14}
+                className="block size-3.5 shrink-0"
+              />
+              {savedCards.addNewCardLabel}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex min-h-[52px] w-full items-center justify-center rounded-xl border border-[#ebecef] bg-[#fafafb] px-5 py-4">
+        <p className="text-base font-medium leading-[1.35] text-[#404a60]">
+          {transactionsEmptyMessage}
+        </p>
+      </div>
+    </div>
+    </>
+  )
+}
+
 /** Figma 25704:14540 */
 export function DashboardSettingsSection({
   content = dashboardSettingsContent,
@@ -448,7 +708,7 @@ export function DashboardSettingsSection({
     setEmailPrefs((prev) => ({ ...prev, [id]: value }))
   }
 
-  const { assets, nav, tabPlaceholders } = content
+  const { assets, nav } = content
 
   return (
     <section className="flex w-full min-w-0 flex-col overflow-hidden rounded-3xl border border-[#ebecef] bg-white">
@@ -523,14 +783,7 @@ export function DashboardSettingsSection({
           ) : activeTab === "security" ? (
             <SecuritySettingsPanel content={content} />
           ) : (
-            <div className="flex w-full flex-col gap-3 py-2">
-              <h2 className="text-lg font-medium leading-[1.5] text-[#343e56]">
-                {tabPlaceholders.billing.title}
-              </h2>
-              <p className="text-base font-normal leading-[1.35] text-[#798090]">
-                {tabPlaceholders.billing.description}
-              </p>
-            </div>
+            <BillingSettingsPanel content={content} />
           )}
         </div>
       </div>

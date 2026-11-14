@@ -3,12 +3,12 @@
 import { useState } from "react"
 import { LinkTo } from "@/components/shared/link-to"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  DashboardSelectContent,
+  DashboardSelectItem,
+  dashboardSelectValueLabel,
+  labelsBySelectId,
+} from "@/components/shared/dashboard/dashboard-select"
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { dashboardAffiliateContent } from "@/data/dashboard/affiliate"
 import { cn } from "@/lib/utils"
 import type {
@@ -404,7 +404,18 @@ function AffiliateStepTwo({
               }}
             >
               <SelectTrigger className={SELECT_TRIGGER_CLASS}>
-                <SelectValue placeholder={stepTwo.countryPlaceholder} />
+                <SelectValue
+                  placeholder={stepTwo.countryPlaceholder}
+                  className="min-w-0 flex-1 truncate text-left text-base font-medium text-[#202020] data-placeholder:text-[#798090]"
+                >
+                  {(value) =>
+                    dashboardSelectValueLabel(
+                      value as string | null,
+                      labelsBySelectId(stepTwo.countries),
+                      stepTwo.countryPlaceholder,
+                    )
+                  }
+                </SelectValue>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   alt=""
@@ -415,13 +426,13 @@ function AffiliateStepTwo({
                   aria-hidden
                 />
               </SelectTrigger>
-              <SelectContent align="start" side="bottom">
+              <DashboardSelectContent>
                 {stepTwo.countries.map((country) => (
-                  <SelectItem key={country.id} value={country.id}>
+                  <DashboardSelectItem key={country.id} value={country.id}>
                     {country.label}
-                  </SelectItem>
+                  </DashboardSelectItem>
                 ))}
-              </SelectContent>
+              </DashboardSelectContent>
             </Select>
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-2">

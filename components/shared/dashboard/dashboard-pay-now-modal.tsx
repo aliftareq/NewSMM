@@ -11,12 +11,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  DashboardSelectContent,
+  DashboardSelectItem,
+} from "@/components/shared/dashboard/dashboard-select"
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DashboardModalScaledBody } from "@/components/shared/dashboard/dashboard-modal-scaled-body"
 import { DASHBOARD_MODAL_CONTENT_CLASS } from "@/components/shared/dashboard/dashboard-modal-shell"
 import { cn } from "@/lib/utils"
@@ -373,22 +371,13 @@ export function DashboardPayNowModal({
                             aria-hidden
                           />
                         </SelectTrigger>
-                        <SelectContent
-                          align="start"
-                          side="bottom"
-                          sideOffset={8}
-                          className="z-[100] max-h-[240px] rounded-xl border border-[#ebecef] bg-white p-1 shadow-[0px_8px_24px_rgba(39,83,132,0.14)]"
-                        >
+                        <DashboardSelectContent className="z-[100]">
                           {content.countries.map((entry) => (
-                            <SelectItem
-                              key={entry}
-                              value={entry}
-                              className="rounded-lg py-2.5 text-sm font-medium text-[#13203b] focus:bg-[#f5f6f7]"
-                            >
+                            <DashboardSelectItem key={entry} value={entry}>
                               {entry}
-                            </SelectItem>
+                            </DashboardSelectItem>
                           ))}
-                        </SelectContent>
+                        </DashboardSelectContent>
                       </Select>
                     </div>
                   </div>
