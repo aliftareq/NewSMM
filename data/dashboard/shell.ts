@@ -58,7 +58,7 @@ export const dashboardShellContent: DashboardShellContent = {
     {
       id: "balance-history",
       label: "Balance history",
-      href: "/checkout",
+      href: "/dashboard/balance-history",
       iconSrc: `${USER_NAV_IMG}/balance-history.svg`,
     },
     {
@@ -102,6 +102,10 @@ export const dashboardShellContent: DashboardShellContent = {
     "/dashboard/order-history": {
       title: "Order history",
       iconSrc: `${USER_NAV_IMG}/order-history.svg`,
+    },
+    "/dashboard/balance-history": {
+      title: "Balance history",
+      iconSrc: `${USER_NAV_IMG}/balance-history.svg`,
     },
   },
 }

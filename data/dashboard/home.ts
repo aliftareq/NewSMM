@@ -45,7 +45,7 @@ export const dashboardHomeContent: DashboardHomeContent = {
     description:
       "Add funds to your account's balance for easy checkout process. You get 5% bonus funds for top ups of $100 and more.",
     balanceHistoryLabel: "Balance history",
-    balanceHistoryHref: "/checkout",
+    balanceHistoryHref: "/dashboard/balance-history",
     amount: "$0.00",
     addFundsLabel: "Add funds",
   },

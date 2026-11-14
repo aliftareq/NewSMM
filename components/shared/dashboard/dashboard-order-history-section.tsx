@@ -1,5 +1,7 @@
 "use client"
 
+import { Plus } from "lucide-react"
+
 import { useDashboardAddFunds } from "@/components/shared/dashboard/dashboard-add-funds-context"
 import { LinkTo } from "@/components/shared/link-to"
 import { dashboardOrderHistoryContent } from "@/data/dashboard/order-history"
@@ -15,7 +17,7 @@ export function DashboardOrderHistorySection({
   content = dashboardOrderHistoryContent,
 }: DashboardOrderHistorySectionProps) {
   const openAddFunds = useDashboardAddFunds()
-  const { balance, empty, assets } = content
+  const { balance, empty } = content
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-[18px]">
@@ -49,14 +51,7 @@ export function DashboardOrderHistorySection({
               onClick={openAddFunds}
               className="inline-flex h-[54px] min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl bg-[#269de7] px-6 py-4 text-base font-medium leading-[1.35] text-white transition-opacity hover:opacity-95 sm:flex-initial"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                src={assets.addFundsPlus}
-                width={18}
-                height={18}
-                className="size-[18px] shrink-0"
-              />
+              <Plus className="size-[18px] shrink-0 stroke-[2.5]" aria-hidden />
               {balance.addFundsLabel}
             </button>
           </div>
