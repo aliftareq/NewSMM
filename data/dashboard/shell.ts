@@ -82,7 +82,7 @@ export const dashboardShellContent: DashboardShellContent = {
     {
       id: "settings",
       label: "Setting",
-      href: "/faq",
+      href: "/dashboard/settings",
       iconSrc: `${USER_NAV_IMG}/settings.svg`,
     },
   ],
@@ -118,6 +118,10 @@ export const dashboardShellContent: DashboardShellContent = {
     "/dashboard/affiliate": {
       title: "Affiliate",
       iconSrc: `${SIDEBAR_IMG}/affiliate.svg`,
+    },
+    "/dashboard/settings": {
+      title: "Setting",
+      iconSrc: `${USER_NAV_IMG}/settings.svg`,
     },
   },
 }

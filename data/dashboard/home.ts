@@ -97,9 +97,9 @@ export const dashboardHomeContent: DashboardHomeContent = {
     title: "Account settings",
     description: "Manage your account's settings here",
     items: [
-      { id: "general", label: "General", href: "/faq" },
-      { id: "security", label: "Security", href: "/faq" },
-      { id: "billing", label: "Billing", href: "/checkout" },
+      { id: "general", label: "General", href: "/dashboard/settings" },
+      { id: "security", label: "Security", href: "/dashboard/settings" },
+      { id: "billing", label: "Billing", href: "/dashboard/settings" },
     ],
   },
   quickOrder: {

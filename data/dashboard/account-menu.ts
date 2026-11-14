@@ -6,7 +6,7 @@ const AUTH_MENU_IMG = "/images/auth/user-nav-menu"
 export const dashboardAccountMenuContent: DashboardAccountMenuContent = {
   settings: {
     label: "Setting",
-    href: "/faq",
+    href: "/dashboard/settings",
     iconSrc: `${AUTH_MENU_IMG}/settings.svg`,
   },
   logout: {
