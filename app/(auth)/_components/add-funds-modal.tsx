@@ -93,7 +93,7 @@ export function AddFundsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="box-border w-[calc(100%-2rem)] max-w-[661px] gap-0 overflow-visible rounded-3xl border border-[#ebecef] bg-white p-6 shadow-[0px_8px_32px_rgba(39,83,132,0.14)] sm:p-8"
+        className="box-border w-[calc(100%-2rem)] max-w-[700px] gap-0 overflow-visible rounded-3xl border border-[#ebecef] bg-white p-6 shadow-[0px_8px_32px_rgba(39,83,132,0.14)] sm:max-w-[700px] sm:p-8"
       >
         <DialogClose className="absolute top-[-20px] right-[-22px] z-10 flex h-[42px] w-[43.787px] items-center justify-center overflow-hidden rounded-[10.723px] border-0 bg-[#21aeff] p-0 outline-none transition-colors hover:bg-[#1da3f5] focus-visible:ring-2 focus-visible:ring-white/50">
           {/* eslint-disable-next-line @next/next/no-img-element */}
