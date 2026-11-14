@@ -25,6 +25,14 @@ const CHANGE_BUTTON_STYLE = {
     "linear-gradient(111deg, rgba(0, 135, 212, 0.08) 2.53%, rgba(50, 180, 255, 0.08) 61.03%, rgba(7, 149, 231, 0.07) 91.98%)",
 } as const
 
+const SAVE_CHANGES_BUTTON_STYLE = {
+  backgroundImage:
+    "linear-gradient(152deg, rgba(0, 135, 212, 0.08) 2.53%, rgba(50, 180, 255, 0.08) 61.03%, rgba(7, 149, 231, 0.07) 91.98%)",
+} as const
+
+const PASSWORD_INPUT_CLASS =
+  "h-[52px] w-full rounded-xl border border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4 text-base font-medium leading-[1.35] text-[#5b6477] outline-none placeholder:text-[#5b6477] focus-visible:border-[#21aeff] focus-visible:ring-2 focus-visible:ring-[#21aeff]/20"
+
 function SectionDivider({ src }: { src: string }) {
   return (
     <div className="relative h-px w-full shrink-0" aria-hidden>
@@ -224,6 +232,199 @@ function GeneralSettingsPanel({
   )
 }
 
+function PasswordField({
+  id,
+  label,
+  value,
+  visible,
+  placeholder,
+  visibilityIconSrc,
+  onChange,
+  onToggleVisibility,
+}: {
+  id: string
+  label: string
+  value: string
+  visible: boolean
+  placeholder: string
+  visibilityIconSrc: string
+  onChange: (value: string) => void
+  onToggleVisibility: () => void
+}) {
+  return (
+    <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <label
+        htmlFor={id}
+        className="text-base font-medium leading-[1.35] text-[#798090]"
+      >
+        {label}
+      </label>
+      <div className="relative w-full">
+        <input
+          id={id}
+          type={visible ? "text" : "password"}
+          value={value}
+          placeholder={placeholder}
+          onChange={(event) => onChange(event.target.value)}
+          className={cn(PASSWORD_INPUT_CLASS, "pr-12")}
+        />
+        <button
+          type="button"
+          onClick={onToggleVisibility}
+          className="absolute right-[18px] top-1/2 flex size-5 -translate-y-1/2 items-center justify-center"
+          aria-label={visible ? "Hide password" : "Show password"}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            src={visibilityIconSrc}
+            width={20}
+            height={20}
+            className="block size-5 max-w-none"
+          />
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/** Figma 25704:14921 */
+function SecuritySettingsPanel({ content }: { content: DashboardSettingsContent }) {
+  const { security, assets } = content
+  const { changePassword, accountProtection, deleteAccount } = security
+
+  const [newPassword, setNewPassword] = useState("")
+  const [repeatPassword, setRepeatPassword] = useState("")
+  const [newPasswordVisible, setNewPasswordVisible] = useState(false)
+  const [repeatPasswordVisible, setRepeatPasswordVisible] = useState(false)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(
+    accountProtection.defaultTwoFactorEnabled,
+  )
+
+  return (
+    <div className="flex w-full min-w-0 flex-col gap-6">
+      <div className="flex w-full flex-col gap-6">
+        <div className="flex w-full flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-medium leading-[1.3] text-[#343e56]">
+              {changePassword.title}
+            </h2>
+            <p className="text-base font-normal leading-[1.35] text-[#6a7283]">
+              {changePassword.description}
+            </p>
+          </div>
+          <SectionDivider src={assets.sectionDivider} />
+        </div>
+
+        <div className="flex w-full flex-col gap-6">
+          <div className="flex w-full flex-col gap-[18px] lg:flex-row lg:items-end">
+            <PasswordField
+              id="dashboard-settings-new-password"
+              label={changePassword.newPasswordLabel}
+              value={newPassword}
+              visible={newPasswordVisible}
+              placeholder={changePassword.passwordPlaceholder}
+              visibilityIconSrc={assets.passwordVisibility}
+              onChange={setNewPassword}
+              onToggleVisibility={() =>
+                setNewPasswordVisible((current) => !current)
+              }
+            />
+            <PasswordField
+              id="dashboard-settings-repeat-password"
+              label={changePassword.repeatPasswordLabel}
+              value={repeatPassword}
+              visible={repeatPasswordVisible}
+              placeholder={changePassword.passwordPlaceholder}
+              visibilityIconSrc={assets.passwordVisibility}
+              onChange={setRepeatPassword}
+              onToggleVisibility={() =>
+                setRepeatPasswordVisible((current) => !current)
+              }
+            />
+          </div>
+
+          <button
+            type="button"
+            className="flex h-[54px] w-full items-center justify-center rounded-xl border border-[#21aeff] px-5 text-base font-medium leading-[1.35] text-[#21aeff] transition-opacity hover:opacity-95"
+            style={SAVE_CHANGES_BUTTON_STYLE}
+          >
+            {changePassword.saveChangesLabel}
+          </button>
+
+          <SectionDivider src={assets.sectionDivider} />
+
+          <div className="flex w-full flex-col gap-4">
+            <h3 className="text-lg font-medium leading-[1.5] text-[#343e56]">
+              {accountProtection.sectionTitle}
+            </h3>
+            <div className="flex w-full flex-col gap-4 rounded-2xl border border-[#ebecef] bg-[#fafafb] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 flex-col gap-3">
+                <p className="text-base font-medium leading-[1.35] text-[#343e56]">
+                  {accountProtection.twoFactorTitle}
+                </p>
+                <p className="text-sm font-medium leading-[1.35] text-[#798090]">
+                  {accountProtection.twoFactorDescription}
+                </p>
+              </div>
+              <SettingsToggle
+                checked={twoFactorEnabled}
+                toggleOnSrc={assets.toggleOn}
+                onToggle={() => setTwoFactorEnabled((current) => !current)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <SectionDivider src={assets.securityBlockDivider} />
+
+      <div className="w-full rounded-[20px] border border-[#ebecef] bg-[#fafafb] px-[18px] py-5">
+        <div className="flex w-full flex-col gap-6">
+          <div className="flex w-full flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-xl font-medium leading-[1.3] text-[#343e56]">
+                {deleteAccount.title}
+              </h2>
+              <p className="text-base font-normal leading-[1.35] text-[#6a7283]">
+                {deleteAccount.description.map((line, index) => (
+                  <span key={line}>
+                    {line}
+                    {index < deleteAccount.description.length - 1 ? " " : ""}
+                  </span>
+                ))}
+              </p>
+            </div>
+            <SectionDivider src={assets.deleteAccountSectionDivider} />
+          </div>
+
+          <div className="flex w-full flex-col gap-6">
+            <div className="flex min-h-[54px] w-full items-center rounded-xl border border-[#ffedd2] bg-[#fff3e2] px-5 py-4">
+              <p className="text-base leading-[1.35]">
+                <span className="font-medium text-[#da912c]">
+                  {deleteAccount.warningPrefix}
+                </span>
+                <span className="font-normal text-[#f7ac43]">
+                  {deleteAccount.warningMiddle}
+                </span>
+                <span className="font-normal text-[#d38417]">
+                  {deleteAccount.warningSuffix}
+                </span>
+              </p>
+            </div>
+            <button
+              type="button"
+              className="inline-flex h-[54px] w-fit items-center justify-center rounded-xl border border-[#ff4d4d] bg-white px-5 text-base font-medium leading-[1.35] text-[#ff4d4d] transition-colors hover:bg-[#fff5f5]"
+            >
+              {deleteAccount.requestDeletionLabel}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /** Figma 25704:14540 */
 export function DashboardSettingsSection({
   content = dashboardSettingsContent,
@@ -319,13 +520,15 @@ export function DashboardSettingsSection({
               emailPrefs={emailPrefs}
               setEmailPref={setEmailPref}
             />
+          ) : activeTab === "security" ? (
+            <SecuritySettingsPanel content={content} />
           ) : (
             <div className="flex w-full flex-col gap-3 py-2">
               <h2 className="text-lg font-medium leading-[1.5] text-[#343e56]">
-                {tabPlaceholders[activeTab].title}
+                {tabPlaceholders.billing.title}
               </h2>
               <p className="text-base font-normal leading-[1.35] text-[#798090]">
-                {tabPlaceholders[activeTab].description}
+                {tabPlaceholders.billing.description}
               </p>
             </div>
           )}

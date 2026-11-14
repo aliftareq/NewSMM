@@ -21,13 +21,41 @@ export type DashboardSettingsEmailPreference = {
   locked?: boolean
 }
 
+export type DashboardSettingsSecurityContent = {
+  changePassword: {
+    title: string
+    description: string
+    newPasswordLabel: string
+    repeatPasswordLabel: string
+    passwordPlaceholder: string
+    saveChangesLabel: string
+  }
+  accountProtection: {
+    sectionTitle: string
+    twoFactorTitle: string
+    twoFactorDescription: string
+    defaultTwoFactorEnabled: boolean
+  }
+  deleteAccount: {
+    title: string
+    description: string[]
+    warningPrefix: string
+    warningMiddle: string
+    warningSuffix: string
+    requestDeletionLabel: string
+  }
+}
+
 export type DashboardSettingsContent = {
   assets: {
     sectionDivider: string
+    securityBlockDivider: string
+    deleteAccountSectionDivider: string
     panelDividerVertical: string
     socialUsernamesPanel: string
     addUsernamePlus: string
     toggleOn: string
+    passwordVisibility: string
     navGeneralActive: string
     navGeneralInactive: string
     navSecurity: string
@@ -54,8 +82,9 @@ export type DashboardSettingsContent = {
     sectionTitle: string
     items: DashboardSettingsEmailPreference[]
   }
+  security: DashboardSettingsSecurityContent
   tabPlaceholders: Record<
-    Exclude<DashboardSettingsTabId, "general">,
+    Extract<DashboardSettingsTabId, "billing">,
     { title: string; description: string }
   >
 }

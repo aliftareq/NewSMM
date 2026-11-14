@@ -20,6 +20,9 @@ const serviceSpriteTiktok = {
 export const dashboardSettingsContent: DashboardSettingsContent = {
   assets: {
     sectionDivider: `${IMG}/section-divider.svg`,
+    securityBlockDivider: `${IMG}/security-section-divider-alt.svg`,
+    deleteAccountSectionDivider: `${IMG}/delete-section-divider.svg`,
+    passwordVisibility: `${IMG}/password-visibility.svg`,
     panelDividerVertical: `${IMG}/panel-divider-vertical.svg`,
     socialUsernamesPanel: `${IMG}/social-usernames-panel.svg`,
     addUsernamePlus: `${IMG}/add-username-plus.svg`,
@@ -118,11 +121,34 @@ export const dashboardSettingsContent: DashboardSettingsContent = {
       },
     ],
   },
-  tabPlaceholders: {
-    security: {
-      title: "Security",
-      description: "Password, two-factor authentication, and login activity.",
+  security: {
+    changePassword: {
+      title: "Change your password",
+      description: "Fill in the form below if you wish to change your password",
+      newPasswordLabel: "New password",
+      repeatPasswordLabel: "Repeat password",
+      passwordPlaceholder: "****************",
+      saveChangesLabel: "Save changes",
     },
+    accountProtection: {
+      sectionTitle: "Account protection",
+      twoFactorTitle: "2FA Authentification",
+      twoFactorDescription: "Receive code to your email to confirm login.",
+      defaultTwoFactorEnabled: true,
+    },
+    deleteAccount: {
+      title: "Delete your account",
+      description: [
+        "We respect your data privacy, security, and the right to be forgotten. You can request account",
+        "deletion below.",
+      ],
+      warningPrefix: "Warning: ",
+      warningMiddle: "once your account and related data has ",
+      warningSuffix: "been deleted it cannot be recovered!",
+      requestDeletionLabel: "Request deletion",
+    },
+  },
+  tabPlaceholders: {
     billing: {
       title: "Billing",
       description: "Payment methods, invoices, and billing preferences.",
