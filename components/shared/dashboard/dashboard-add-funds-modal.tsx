@@ -76,6 +76,12 @@ export function DashboardAddFundsModal({
   }, [content, open])
 
   const handlePresetSelect = (presetId: string, presetAmount: number) => {
+    if (presetId === selectedPresetId) {
+      setSelectedPresetId("")
+      setAmount(0)
+      setCustomAmountDraft("")
+      return
+    }
     setSelectedPresetId(presetId)
     setAmount(presetAmount)
     setCustomAmountDraft(formatUsd(presetAmount))
@@ -86,6 +92,9 @@ export function DashboardAddFundsModal({
     setSelectedPresetId("")
     const parsed = parseAmountDraft(raw)
     setAmount(parsed ?? 0)
+    if (raw.trim() === "") {
+      setAmount(0)
+    }
   }
 
   const handleCustomBlur = () => {
@@ -98,8 +107,22 @@ export function DashboardAddFundsModal({
     setSelectedPresetId(match?.id ?? "")
   }
 
+  const parsedDraftAmount = parseAmountDraft(customAmountDraft)
+  const noPresetSelected = selectedPresetId === ""
+  const noCustomValue = customAmountDraft.trim() === ""
+  const canSubmit =
+    !(noPresetSelected && noCustomValue) &&
+    parsedDraftAmount !== null &&
+    parsedDraftAmount >= content.minAmount &&
+    parsedDraftAmount <= content.maxAmount
+
   const handleSubmit = () => {
-    const clamped = clampAmount(amount, content.minAmount, content.maxAmount)
+    if (!canSubmit || parsedDraftAmount === null) return
+    const clamped = clampAmount(
+      parsedDraftAmount,
+      content.minAmount,
+      content.maxAmount,
+    )
     onOpenChange(false)
     onAddFunds?.(clamped)
   }
@@ -146,6 +169,7 @@ export function DashboardAddFundsModal({
                     <button
                       key={preset.id}
                       type="button"
+                      aria-pressed={selected}
                       onClick={() =>
                         handlePresetSelect(preset.id, preset.amount)
                       }
@@ -217,9 +241,23 @@ export function DashboardAddFundsModal({
 
             <button
               type="button"
-              onClick={handleSubmit}
-              disabled={amount < content.minAmount}
-              className="flex h-[58px] w-full items-center justify-center rounded-xl bg-[#269de7] text-base font-medium leading-[1.35] text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={(event) => {
+                if (!canSubmit) {
+                  event.preventDefault()
+                  event.stopPropagation()
+                  return
+                }
+                handleSubmit()
+              }}
+              disabled={!canSubmit}
+              aria-disabled={!canSubmit}
+              tabIndex={canSubmit ? 0 : -1}
+              className={cn(
+                "flex h-[58px] w-full items-center justify-center rounded-xl text-base font-medium leading-[1.35] text-white transition-opacity",
+                canSubmit
+                  ? "bg-[#269de7] hover:opacity-95"
+                  : "pointer-events-none cursor-not-allowed bg-[#269de7] opacity-50",
+              )}
             >
               {content.submitLabel}
             </button>

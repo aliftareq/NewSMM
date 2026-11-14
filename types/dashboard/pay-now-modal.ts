@@ -31,6 +31,7 @@ export type DashboardPayNowModalContent = {
   cvvLabel: string
   countryLabel: string
   defaultCountry: string
+  countries: string[]
   cvvHelpText: string
   saveCardLabel: string
   confirmPayLabel: string

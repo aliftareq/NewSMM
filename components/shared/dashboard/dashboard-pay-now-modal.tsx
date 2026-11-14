@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useEffect, useId, useState } from "react"
 
 import { dashboardPayNowModalContent } from "@/data/dashboard/pay-now-modal"
 import type { DashboardPayNowModalContent } from "@/types/dashboard/pay-now-modal"
@@ -10,12 +10,21 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { DashboardModalScaledBody } from "@/components/shared/dashboard/dashboard-modal-scaled-body"
 import { DASHBOARD_MODAL_CONTENT_CLASS } from "@/components/shared/dashboard/dashboard-modal-shell"
 import { cn } from "@/lib/utils"
 
 const FIELD_SHELL =
   "flex h-[52px] w-full items-center rounded-xl border border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4"
+
+const PAY_WALLET_MARK_CLASS = "block size-8 shrink-0"
 
 function formatMoney(amount: number): string {
   return `$${amount.toLocaleString("en-US", {
@@ -51,6 +60,12 @@ export function DashboardPayNowModal({
   const cvvId = useId()
 
   const [saveCard, setSaveCard] = useState(false)
+  const [country, setCountry] = useState(content.defaultCountry)
+
+  useEffect(() => {
+    if (!open) return
+    setCountry(content.defaultCountry)
+  }, [content.defaultCountry, open])
 
   const handleConfirm = () => {
     onOpenChange(false)
@@ -125,7 +140,7 @@ export function DashboardPayNowModal({
                       src={content.assets.applePayMark}
                       width={32}
                       height={32}
-                      className="block size-8 shrink-0"
+                      className={PAY_WALLET_MARK_CLASS}
                     />
                     <span className="text-lg font-medium leading-[1.25] text-[#202020]">
                       {content.applePayLabel}
@@ -143,7 +158,10 @@ export function DashboardPayNowModal({
                       src={content.assets.googlePayMark}
                       width={32}
                       height={32}
-                      className="block size-8 shrink-0 object-contain"
+                      className={cn(
+                        PAY_WALLET_MARK_CLASS,
+                        "origin-center scale-[1.2]",
+                      )}
                     />
                     <span className="text-lg font-medium leading-[1.25] text-[#202020]">
                       {content.googlePayLabel}
@@ -330,19 +348,48 @@ export function DashboardPayNowModal({
                       <span className="text-base font-medium leading-[1.35] text-[#202020]">
                         {content.countryLabel}
                       </span>
-                      <div className={cn(FIELD_SHELL, "justify-between gap-2")}>
-                        <span className="text-sm font-medium leading-[1.35] text-[#798090]">
-                          {content.defaultCountry}
-                        </span>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          alt=""
-                          src={content.assets.countryChevronIcon}
-                          width={14}
-                          height={14}
-                          className="block size-5 shrink-0"
-                        />
-                      </div>
+                      <Select
+                        value={country}
+                        onValueChange={(value) => {
+                          if (value) setCountry(value)
+                        }}
+                      >
+                        <SelectTrigger
+                          size="default"
+                          className={cn(
+                            FIELD_SHELL,
+                            "w-full min-w-0 gap-2 rounded-xl border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4 text-sm font-medium text-[#13203b] shadow-none ring-0 focus-visible:border-[#21aeff] focus-visible:ring-2 focus-visible:ring-[#21aeff]/20 data-[size=default]:h-[52px]",
+                            "[&_[data-slot=select-icon]]:hidden [&_svg]:hidden",
+                          )}
+                        >
+                          <SelectValue className="min-w-0 flex-1 truncate text-left text-sm font-medium text-[#13203b]" />
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            alt=""
+                            src={content.assets.countryChevronIcon}
+                            width={14}
+                            height={14}
+                            className="block size-5 shrink-0"
+                            aria-hidden
+                          />
+                        </SelectTrigger>
+                        <SelectContent
+                          align="start"
+                          side="bottom"
+                          sideOffset={8}
+                          className="z-[100] max-h-[240px] rounded-xl border border-[#ebecef] bg-white p-1 shadow-[0px_8px_24px_rgba(39,83,132,0.14)]"
+                        >
+                          {content.countries.map((entry) => (
+                            <SelectItem
+                              key={entry}
+                              value={entry}
+                              className="rounded-lg py-2.5 text-sm font-medium text-[#13203b] focus:bg-[#f5f6f7]"
+                            >
+                              {entry}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </div>
