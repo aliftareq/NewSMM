@@ -59,6 +59,8 @@ type DashboardSidebarProps = {
   activePath: string
   content?: DashboardShellContent
   className?: string
+  /** Close mobile drawer after navigation */
+  onNavigate?: () => void
 }
 
 function NavDivider({ src }: { src: string }) {
@@ -75,6 +77,7 @@ export function DashboardSidebar({
   activePath,
   content = dashboardShellContent,
   className,
+  onNavigate,
 }: DashboardSidebarProps) {
   const iconShell = "flex size-10 shrink-0 items-center justify-center rounded-full bg-[#f7f8f9] p-1.5"
   const rowIcon = "block size-5 shrink-0 object-contain"
@@ -100,6 +103,7 @@ export function DashboardSidebar({
       <LinkTo
         href={content.brand.href}
         className="flex items-center gap-2"
+        onClick={onNavigate}
       >
         <span className="relative block h-[39px] w-[50px] shrink-0 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -157,6 +161,7 @@ export function DashboardSidebar({
                 <LinkTo
                   key={item.id}
                   href={item.href}
+                  onClick={onNavigate}
                   className="flex w-full items-center gap-4 overflow-hidden rounded-xl bg-[#269de7] px-5 py-2 transition-opacity hover:opacity-95"
                 >
                   <span className={iconShell}>
@@ -180,6 +185,7 @@ export function DashboardSidebar({
               <LinkTo
                 key={item.id}
                 href={item.href}
+                onClick={onNavigate}
                 className={cn(
                   "flex w-full items-center gap-3 rounded-xl px-3 py-2",
                   NAV_ROW_HOVER,

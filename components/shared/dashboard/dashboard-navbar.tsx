@@ -7,6 +7,7 @@ import {
   resolveDashboardPageMeta,
 } from "@/data/dashboard/shell"
 import type { DashboardShellContent } from "@/types/dashboard/shell"
+import { DashboardSidebarMenuTrigger } from "@/components/shared/dashboard/dashboard-sidebar-menu-trigger"
 import { LinkTo } from "@/components/shared/link-to"
 import { cn } from "@/lib/utils"
 
@@ -23,6 +24,7 @@ type DashboardNavbarProps = {
   content?: DashboardShellContent
   userAvatarSrc?: string
   className?: string
+  onOpenSidebar?: () => void
 }
 
 function MetaDivider({ src }: { src: string }) {
@@ -43,6 +45,7 @@ export function DashboardNavbar({
   content = dashboardShellContent,
   userAvatarSrc,
   className,
+  onOpenSidebar,
 }: DashboardNavbarProps) {
   const pageMeta = useMemo(
     () => resolveDashboardPageMeta(activePath),
@@ -54,12 +57,15 @@ export function DashboardNavbar({
   return (
     <header
       className={cn(
-        "flex min-h-[100px] w-full shrink-0 items-center justify-between bg-white px-7 py-5",
+        "flex min-h-[100px] w-full shrink-0 items-center justify-between gap-3 bg-white px-4 py-5 sm:px-7",
         className,
       )}
     >
-      <div className="flex h-9 items-center gap-[25px]">
-        <div className="rounded-lg border border-[#dfe0e4] px-4 py-2">
+      <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-[25px]">
+        {onOpenSidebar ? (
+          <DashboardSidebarMenuTrigger onOpen={onOpenSidebar} />
+        ) : null}
+        <div className="hidden rounded-lg border border-[#dfe0e4] px-4 py-2 sm:block">
           <p className="text-sm font-medium leading-[1.35] text-[#202020]">
             {todayLabel}
           </p>
@@ -79,7 +85,7 @@ export function DashboardNavbar({
         </div>
       </div>
 
-      <div className="flex items-center gap-5">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-5">
         <LinkTo
           href={content.cart.href}
           className="flex h-[60px] items-center rounded-xl border border-[#dfe0e4] bg-white py-[7.5px] pl-2 pr-4"
