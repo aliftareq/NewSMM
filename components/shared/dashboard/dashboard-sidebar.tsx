@@ -1,6 +1,13 @@
 "use client"
 
 import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react"
+
+import {
   dashboardShellContent,
   isDashboardNavActive,
 } from "@/data/dashboard/shell"
@@ -12,6 +19,41 @@ const BALANCE_CARD_BG =
   "linear-gradient(102.33deg, rgba(0, 135, 212, 0.2) 2.53%, rgba(50, 180, 255, 0.2) 61.03%, rgba(7, 149, 231, 0.174) 91.98%)"
 
 const NAV_ROW_HOVER = "transition-colors hover:bg-[#269de7]/10"
+
+const SIDEBAR_VERTICAL_PADDING_PX = 60
+
+function useSidebarViewportScale(
+  contentRef: RefObject<HTMLDivElement | null>,
+  activePath: string,
+) {
+  const [scale, setScale] = useState(1)
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = contentRef.current
+      if (!el) return
+      const naturalHeight = el.offsetHeight
+      if (naturalHeight <= 0) return
+      const available = window.innerHeight - SIDEBAR_VERTICAL_PADDING_PX
+      const next = Math.min(1, available / naturalHeight)
+      setScale((current) =>
+        Math.abs(current - next) < 0.002 ? current : next,
+      )
+    }
+
+    measure()
+    window.addEventListener("resize", measure)
+    const observer = new ResizeObserver(measure)
+    if (contentRef.current) observer.observe(contentRef.current)
+
+    return () => {
+      window.removeEventListener("resize", measure)
+      observer.disconnect()
+    }
+  }, [contentRef, activePath])
+
+  return scale
+}
 
 type DashboardSidebarProps = {
   activePath: string
@@ -36,14 +78,25 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
   const iconShell = "flex size-10 shrink-0 items-center justify-center rounded-full bg-[#f7f8f9] p-1.5"
   const rowIcon = "block size-5 shrink-0 object-contain"
+  const contentRef = useRef<HTMLDivElement>(null)
+  const scale = useSidebarViewportScale(contentRef, activePath)
 
   return (
     <aside
       className={cn(
-        "flex w-[min(100vw,300px)] shrink-0 flex-col gap-[30px] bg-white px-[30px] py-[30px] shadow-[0px_4px_10px_rgba(0,0,0,0.05)]",
+        "flex h-screen w-[min(100vw,300px)] shrink-0 flex-col overflow-hidden bg-white px-[30px] py-[30px] shadow-[0px_4px_10px_rgba(0,0,0,0.05)]",
         className,
       )}
     >
+      <div
+        ref={contentRef}
+        className="flex w-full min-w-0 flex-col gap-[30px] will-change-transform"
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          width: scale < 1 ? `${100 / scale}%` : "100%",
+        }}
+      >
       <LinkTo
         href={content.brand.href}
         className="flex items-center gap-2"
@@ -66,7 +119,7 @@ export function DashboardSidebar({
 
       <NavDivider src={content.assets.divider} />
 
-      <div className="flex w-full flex-1 flex-col items-center gap-6">
+      <div className="flex w-full min-w-0 flex-1 flex-col items-stretch gap-6">
         <div
           className="flex w-full flex-col gap-4 rounded-2xl border border-[rgba(33,174,255,0.4)] p-5"
           style={{ backgroundImage: BALANCE_CARD_BG }}
@@ -187,6 +240,7 @@ export function DashboardSidebar({
             </button>
           </div>
         </div>
+      </div>
       </div>
     </aside>
   )

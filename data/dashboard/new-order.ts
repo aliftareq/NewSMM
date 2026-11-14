@@ -4,7 +4,7 @@ import type { DashboardNewOrderContent } from "@/types/dashboard/new-order"
 
 const SERVICE_IMG = "/images/service"
 
-/** Figma 25704:13937 — dashboard home new-order card */
+/** Figma 25704:13937 — dashboard `/dashboard/neworder` card */
 export const dashboardNewOrderContent: DashboardNewOrderContent = {
   assets: {
     columnDivider: `${SERVICE_IMG}/order/divider-line.svg`,

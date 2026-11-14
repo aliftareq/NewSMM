@@ -41,7 +41,7 @@ export function DashboardHomeSection({
   const { assets } = content
 
   return (
-    <div className="mx-auto flex w-full max-w-[1100px] flex-col gap-6">
+    <div className="flex w-full min-w-0 flex-col gap-6">
       <header
         className="w-full rounded-[20px] border border-[#b1e5ff] px-5 py-6"
         style={{
