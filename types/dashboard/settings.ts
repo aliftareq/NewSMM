@@ -83,7 +83,9 @@ export type DashboardSettingsContent = {
     panelDividerVertical: string
     socialUsernamesPanel: string
     addUsernamePlus: string
+    socialUsernameAvatar: string
     toggleOn: string
+    toggleOff: string
     passwordVisibility: string
     navGeneralActive: string
     navGeneralInactive: string
@@ -101,6 +103,7 @@ export type DashboardSettingsContent = {
     emailLabel: string
     changeLabel: string
     addUsernameLabel: string
+    deleteUsernameLabel: string
     defaults: {
       firstName: string
       lastName: string

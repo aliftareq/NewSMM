@@ -27,7 +27,23 @@ const TAB_STROKE_PATH =
 const ICON_ROW_LEFT_PX = 47
 const ICON_GAP_PX = 34
 const ICON_SIZE_PX = 26
-const PANEL_HEIGHT_PX = 109
+const PANEL_HEIGHT_EMPTY_PX = 109
+/** Figma 25704:14794 — one saved row + Add username */
+const PANEL_HEIGHT_EXPANDED_BASE_PX = 168
+const PANEL_EXTRA_ROW_PX = 55
+const USERNAME_ROW_GAP_PX = 12
+
+/** Figma 25704:14810 — Add username control */
+const ADD_USERNAME_BUTTON_CLASS =
+  "group inline-flex h-[43px] w-[150px] shrink-0 items-center justify-center gap-1 self-start rounded-lg border border-solid border-[#21aeff] bg-white px-[18px] py-[12px] text-sm font-medium leading-[1.35] text-[#21aeff] backdrop-blur-[40px] transition-colors hover:border-[#21aeff] hover:bg-[#21aeff] hover:text-white"
+
+/** Figma 25704:14799 — saved / draft username row */
+const USERNAME_ROW_CLASS = "flex w-full items-center justify-between"
+const USERNAME_ROW_LEFT_CLASS = "flex min-w-0 items-center gap-1"
+const DELETE_USERNAME_BUTTON_CLASS =
+  "inline-flex h-[43px] w-[120px] shrink-0 items-center justify-center rounded-lg border border-solid border-[#ff4d4d] bg-white px-[18px] py-[12px] text-sm font-medium leading-[1.35] text-[#ff4d4d] backdrop-blur-[40px] transition-colors hover:border-[#ff4d4d] hover:bg-[#ff4d4d] hover:text-white"
+const USERNAME_TEXT_CLASS =
+  "truncate text-sm font-medium leading-[1.35] text-[#222e48] whitespace-nowrap"
 
 const PLATFORM_LABELS: Record<string, string> = {
   instagram: "Instagram",
@@ -43,7 +59,18 @@ type SocialUsernamesTabsProps = {
   socialIconsSprite: string
   addUsernamePlusSrc: string
   addUsernameLabel: string
+  deleteUsernameLabel: string
+  usernameAvatarSrc: string
   defaultPlatformId?: SocialPlatformId
+}
+
+function computePanelMinHeight(usernameCount: number, isAdding: boolean) {
+  const rowCount = usernameCount + (isAdding ? 1 : 0)
+  if (rowCount === 0) return PANEL_HEIGHT_EMPTY_PX
+  return (
+    PANEL_HEIGHT_EXPANDED_BASE_PX +
+    Math.max(0, rowCount - 1) * PANEL_EXTRA_ROW_PX
+  )
 }
 
 function SocialIconVisual({
@@ -120,6 +147,8 @@ export function SocialUsernamesTabs({
   socialIconsSprite,
   addUsernamePlusSrc,
   addUsernameLabel,
+  deleteUsernameLabel,
+  usernameAvatarSrc,
   defaultPlatformId = "instagram",
 }: SocialUsernamesTabsProps) {
   const panelId = useId()
@@ -130,13 +159,24 @@ export function SocialUsernamesTabs({
   const [bumpLeftPx, setBumpLeftPx] = useState(0)
   const [reduceMotion, setReduceMotion] = useState(false)
 
-  const [usernamesByPlatform] = useState<Record<string, string[]>>(() => {
+  const [usernamesByPlatform, setUsernamesByPlatform] = useState<
+    Record<string, string[]>
+  >(() => {
     const initial: Record<string, string[]> = {}
     for (const icon of socialIcons) {
       initial[icon.id] = []
     }
     return initial
   })
+  const [isAddingByPlatform, setIsAddingByPlatform] = useState<
+    Record<string, boolean>
+  >({})
+  const [draftUsername, setDraftUsername] = useState("")
+  const draftInputRef = useRef<HTMLInputElement>(null)
+
+  const usernames = usernamesByPlatform[activeId] ?? []
+  const isAdding = Boolean(isAddingByPlatform[activeId])
+  const panelMinHeight = computePanelMinHeight(usernames.length, isAdding)
 
   const activeIndex = Math.max(
     0,
@@ -174,6 +214,52 @@ export function SocialUsernamesTabs({
     window.addEventListener("resize", onResize)
     return () => window.removeEventListener("resize", onResize)
   }, [updateBumpPosition])
+
+  useEffect(() => {
+    setDraftUsername("")
+    setIsAddingByPlatform((prev) => {
+      if (!prev[activeId]) return prev
+      const next = { ...prev }
+      delete next[activeId]
+      return next
+    })
+  }, [activeId])
+
+  useLayoutEffect(() => {
+    if (!isAdding) return
+    draftInputRef.current?.focus()
+  }, [isAdding, activeId])
+
+  const startAddingUsername = () => {
+    setIsAddingByPlatform((prev) => ({ ...prev, [activeId]: true }))
+    setDraftUsername("")
+  }
+
+  const cancelAddingUsername = () => {
+    setIsAddingByPlatform((prev) => {
+      const next = { ...prev }
+      delete next[activeId]
+      return next
+    })
+    setDraftUsername("")
+  }
+
+  const commitDraftUsername = () => {
+    const value = draftUsername.trim()
+    if (!value) return
+    setUsernamesByPlatform((prev) => ({
+      ...prev,
+      [activeId]: [...(prev[activeId] ?? []), value],
+    }))
+    cancelAddingUsername()
+  }
+
+  const removeUsername = (index: number) => {
+    setUsernamesByPlatform((prev) => ({
+      ...prev,
+      [activeId]: (prev[activeId] ?? []).filter((_, i) => i !== index),
+    }))
+  }
 
   const focusTabAt = (index: number) => {
     const icon = socialIcons[index]
@@ -214,7 +300,7 @@ export function SocialUsernamesTabs({
     <div
       ref={panelRef}
       className="relative w-full max-w-[789px]"
-      style={{ minHeight: PANEL_HEIGHT_PX }}
+      style={{ minHeight: panelMinHeight }}
     >
       <DynamicPanelBody />
       <MovingTabBump leftPx={bumpLeftPx} reduceMotion={reduceMotion} />
@@ -266,11 +352,89 @@ export function SocialUsernamesTabs({
         id={`${panelId}-panel`}
         role="tabpanel"
         aria-labelledby={`${panelId}-tab-${activeId}`}
-        className="absolute left-4 top-[51px] z-10"
+        className={cn(
+          "absolute inset-x-4 z-10 flex w-[calc(100%-2rem)] max-w-[758px] flex-col items-start",
+          panelMinHeight > PANEL_HEIGHT_EMPTY_PX ? "top-[54px]" : "top-[51px]",
+        )}
+        style={{ gap: USERNAME_ROW_GAP_PX }}
       >
+        {usernames.map((username, index) => (
+          <div key={`${username}-${index}`} className={USERNAME_ROW_CLASS}>
+            <div className={USERNAME_ROW_LEFT_CLASS}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt=""
+                src={usernameAvatarSrc}
+                width={27}
+                height={27}
+                className="block size-[27px] shrink-0"
+              />
+              <span className={USERNAME_TEXT_CLASS}>{username}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => removeUsername(index)}
+              className={DELETE_USERNAME_BUTTON_CLASS}
+            >
+              {deleteUsernameLabel}
+            </button>
+          </div>
+        ))}
+
+        {isAdding ? (
+          <div className={USERNAME_ROW_CLASS}>
+            <div className={USERNAME_ROW_LEFT_CLASS}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt=""
+                src={usernameAvatarSrc}
+                width={27}
+                height={27}
+                className="block size-[27px] shrink-0"
+              />
+              <input
+                ref={draftInputRef}
+                type="text"
+                value={draftUsername}
+                onChange={(event) => setDraftUsername(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault()
+                    commitDraftUsername()
+                  }
+                  if (event.key === "Escape") {
+                    event.preventDefault()
+                    cancelAddingUsername()
+                  }
+                }}
+                placeholder={addUsernameLabel}
+                className={cn(
+                  USERNAME_TEXT_CLASS,
+                  "min-w-0 flex-1 border-0 bg-transparent outline-none placeholder:text-[#798090]",
+                )}
+                aria-label={addUsernameLabel}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={cancelAddingUsername}
+              className={DELETE_USERNAME_BUTTON_CLASS}
+            >
+              {deleteUsernameLabel}
+            </button>
+          </div>
+        ) : null}
+
         <button
           type="button"
-          className="inline-flex w-fit max-w-full items-center gap-1 rounded-lg border border-[#21aeff] bg-white px-[18px] py-3 text-sm font-medium leading-[1.35] text-[#21aeff] transition-colors hover:bg-[#f0f9ff]"
+          onClick={() => {
+            if (isAdding) {
+              draftInputRef.current?.focus()
+              return
+            }
+            startAddingUsername()
+          }}
+          className={ADD_USERNAME_BUTTON_CLASS}
           data-platform={activeId}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -279,23 +443,10 @@ export function SocialUsernamesTabs({
             src={addUsernamePlusSrc}
             width={14}
             height={14}
-            className="block size-3.5 shrink-0"
+            className="block size-[14px] shrink-0 transition-[filter] group-hover:brightness-0 group-hover:invert"
           />
-          {addUsernameLabel}
+          <span className="whitespace-nowrap">{addUsernameLabel}</span>
         </button>
-
-        {usernamesByPlatform[activeId]?.length ? (
-          <ul className="mt-3 flex flex-col gap-2">
-            {usernamesByPlatform[activeId].map((username) => (
-              <li
-                key={username}
-                className="text-sm font-medium text-[#202020]"
-              >
-                {username}
-              </li>
-            ))}
-          </ul>
-        ) : null}
       </div>
     </div>
   )

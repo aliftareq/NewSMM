@@ -29,18 +29,26 @@ type DashboardSettingsSectionProps = {
 const INPUT_SHELL =
   "flex h-[52px] w-full items-center rounded-xl border border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4 text-base font-medium leading-[1.35] text-[#202020] outline-none"
 
-const CHANGE_BUTTON_CLASS =
-  "inline-flex h-[52px] w-[150px] shrink-0 items-center justify-center rounded-xl border border-[#21aeff] text-sm font-medium leading-[1.35] text-[#21aeff] transition-opacity hover:opacity-95"
+const BRAND_OUTLINE_HOVER_CLASS =
+  "transition-colors hover:border-[#21aeff] hover:bg-[#21aeff] hover:text-white hover:[background-image:none]"
 
-const CHANGE_BUTTON_STYLE = {
-  backgroundImage:
-    "linear-gradient(111deg, rgba(0, 135, 212, 0.08) 2.53%, rgba(50, 180, 255, 0.08) 61.03%, rgba(7, 149, 231, 0.07) 91.98%)",
-} as const
+const CHANGE_BUTTON_GRADIENT_CLASS =
+  "[background-image:linear-gradient(111deg,rgba(0,135,212,0.08)_2.53%,rgba(50,180,255,0.08)_61.03%,rgba(7,149,231,0.07)_91.98%)]"
 
-const SAVE_CHANGES_BUTTON_STYLE = {
-  backgroundImage:
-    "linear-gradient(152deg, rgba(0, 135, 212, 0.08) 2.53%, rgba(50, 180, 255, 0.08) 61.03%, rgba(7, 149, 231, 0.07) 91.98%)",
-} as const
+const SAVE_CHANGES_GRADIENT_CLASS =
+  "[background-image:linear-gradient(152deg,rgba(0,135,212,0.08)_2.53%,rgba(50,180,255,0.08)_61.03%,rgba(7,149,231,0.07)_91.98%)]"
+
+const CHANGE_BUTTON_CLASS = cn(
+  "inline-flex h-[52px] w-[150px] shrink-0 items-center justify-center rounded-xl border border-[#21aeff] bg-white text-sm font-medium leading-[1.35] text-[#21aeff]",
+  CHANGE_BUTTON_GRADIENT_CLASS,
+  BRAND_OUTLINE_HOVER_CLASS,
+)
+
+const SAVE_CHANGES_BUTTON_CLASS = cn(
+  "flex h-[54px] w-full items-center justify-center rounded-xl border border-[#21aeff] bg-white px-5 text-base font-medium leading-[1.35] text-[#21aeff]",
+  SAVE_CHANGES_GRADIENT_CLASS,
+  BRAND_OUTLINE_HOVER_CLASS,
+)
 
 const PASSWORD_INPUT_CLASS =
   "h-[52px] w-full rounded-xl border border-[#ebecef] bg-[#f5f6f7] px-[18px] py-4 text-base font-medium leading-[1.35] text-[#5b6477] outline-none placeholder:text-[#5b6477] focus-visible:border-[#21aeff] focus-visible:ring-2 focus-visible:ring-[#21aeff]/20"
@@ -69,43 +77,52 @@ function SettingsToggle({
   disabled,
   onToggle,
   toggleOnSrc,
+  toggleOffSrc,
+  ariaLabel,
 }: {
   checked: boolean
   disabled?: boolean
   onToggle: () => void
   toggleOnSrc: string
+  toggleOffSrc: string
+  ariaLabel: string
 }) {
+  const handleToggle = () => {
+    if (disabled) return
+    onToggle()
+  }
+
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
+      aria-label={ariaLabel}
+      aria-readonly={disabled || undefined}
       disabled={disabled}
-      onClick={() => {
-        if (!disabled) onToggle()
+      onClick={handleToggle}
+      onKeyDown={(event) => {
+        if (disabled) return
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault()
+          onToggle()
+        }
       }}
       className={cn(
-        "relative h-6 w-[39px] shrink-0 overflow-hidden",
-        disabled ? "cursor-not-allowed opacity-90" : "cursor-pointer",
+        "relative h-6 w-[39px] shrink-0 overflow-hidden rounded-full outline-none transition-opacity",
+        disabled
+          ? "cursor-not-allowed opacity-90"
+          : "cursor-pointer focus-visible:ring-2 focus-visible:ring-[#21aeff] focus-visible:ring-offset-2",
       )}
     >
-      {checked ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          alt=""
-          src={toggleOnSrc}
-          width={39}
-          height={24}
-          className="block size-full max-w-none"
-        />
-      ) : (
-        <span
-          aria-hidden
-          className="flex size-full items-center rounded-full bg-[#d8dde3] px-0.5"
-        >
-          <span className="size-5 rounded-full bg-white shadow-sm" />
-        </span>
-      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        alt=""
+        src={checked ? toggleOnSrc : toggleOffSrc}
+        width={39}
+        height={24}
+        className="pointer-events-none block size-full max-w-none"
+      />
     </button>
   )
 }
@@ -146,11 +163,7 @@ function GeneralSettingsPanel({
               </label>
               <div className={INPUT_SHELL}>{defaults.lastName}</div>
             </div>
-            <button
-              type="button"
-              className={CHANGE_BUTTON_CLASS}
-              style={CHANGE_BUTTON_STYLE}
-            >
+            <button type="button" className={CHANGE_BUTTON_CLASS}>
               {contactInfo.changeLabel}
             </button>
           </div>
@@ -162,11 +175,7 @@ function GeneralSettingsPanel({
               </label>
               <div className={INPUT_SHELL}>{defaults.email}</div>
             </div>
-            <button
-              type="button"
-              className={CHANGE_BUTTON_CLASS}
-              style={CHANGE_BUTTON_STYLE}
-            >
+            <button type="button" className={CHANGE_BUTTON_CLASS}>
               {contactInfo.changeLabel}
             </button>
           </div>
@@ -177,6 +186,8 @@ function GeneralSettingsPanel({
           socialIconsSprite={assets.socialIconsSprite}
           addUsernamePlusSrc={assets.addUsernamePlus}
           addUsernameLabel={contactInfo.addUsernameLabel}
+          deleteUsernameLabel={contactInfo.deleteUsernameLabel}
+          usernameAvatarSrc={assets.socialUsernameAvatar}
           defaultPlatformId="instagram"
         />
 
@@ -198,8 +209,10 @@ function GeneralSettingsPanel({
                 </p>
               </div>
               <SettingsToggle
+                ariaLabel={item.title}
                 checked={emailPrefs[item.id] ?? item.defaultEnabled}
                 disabled={item.locked}
+                toggleOffSrc={assets.toggleOff}
                 toggleOnSrc={assets.toggleOn}
                 onToggle={() =>
                   setEmailPref(item.id, !(emailPrefs[item.id] ?? item.defaultEnabled))
@@ -325,11 +338,7 @@ function SecuritySettingsPanel({ content }: { content: DashboardSettingsContent 
             />
           </div>
 
-          <button
-            type="button"
-            className="flex h-[54px] w-full items-center justify-center rounded-xl border border-[#21aeff] px-5 text-base font-medium leading-[1.35] text-[#21aeff] transition-opacity hover:opacity-95"
-            style={SAVE_CHANGES_BUTTON_STYLE}
-          >
+          <button type="button" className={SAVE_CHANGES_BUTTON_CLASS}>
             {changePassword.saveChangesLabel}
           </button>
 
@@ -349,7 +358,9 @@ function SecuritySettingsPanel({ content }: { content: DashboardSettingsContent 
                 </p>
               </div>
               <SettingsToggle
+                ariaLabel={accountProtection.twoFactorTitle}
                 checked={twoFactorEnabled}
+                toggleOffSrc={assets.toggleOff}
                 toggleOnSrc={assets.toggleOn}
                 onToggle={() => setTwoFactorEnabled((current) => !current)}
               />
@@ -395,7 +406,7 @@ function SecuritySettingsPanel({ content }: { content: DashboardSettingsContent 
             </div>
             <button
               type="button"
-              className="inline-flex h-[54px] w-fit items-center justify-center rounded-xl border border-[#ff4d4d] bg-white px-5 text-base font-medium leading-[1.35] text-[#ff4d4d] transition-colors hover:bg-[#fff5f5]"
+              className="inline-flex h-[54px] w-fit items-center justify-center rounded-xl border border-[#ff4d4d] bg-white px-5 text-base font-medium leading-[1.35] text-[#ff4d4d] transition-colors hover:border-[#ff4d4d] hover:bg-[#ff4d4d] hover:text-white"
             >
               {deleteAccount.requestDeletionLabel}
             </button>
@@ -597,11 +608,7 @@ function BillingSettingsPanel({ content }: { content: DashboardSettingsContent }
             ))}
           </div>
 
-          <button
-            type="button"
-            className="flex h-[54px] w-full items-center justify-center rounded-xl border border-[#21aeff] px-5 text-base font-medium leading-[1.35] text-[#21aeff] transition-opacity hover:opacity-95"
-            style={SAVE_CHANGES_BUTTON_STYLE}
-          >
+          <button type="button" className={SAVE_CHANGES_BUTTON_CLASS}>
             {personalInfo.saveChangesLabel}
           </button>
 

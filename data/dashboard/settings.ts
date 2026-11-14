@@ -26,7 +26,9 @@ export const dashboardSettingsContent: DashboardSettingsContent = {
     panelDividerVertical: `${IMG}/panel-divider-vertical.svg`,
     socialUsernamesPanel: `${IMG}/social-usernames-panel.svg`,
     addUsernamePlus: `${IMG}/add-username-plus.svg`,
+    socialUsernameAvatar: `${IMG}/social-username-avatar.svg`,
     toggleOn: `${IMG}/toggle-on.svg`,
+    toggleOff: `${IMG}/toggle-off.svg`,
     navGeneralActive: `${IMG}/nav-general-active.svg`,
     navGeneralInactive: `${AUTH_MENU_IMG}/settings.svg`,
     navSecurity: `${IMG}/nav-security.svg`,
@@ -59,6 +61,7 @@ export const dashboardSettingsContent: DashboardSettingsContent = {
     emailLabel: "Email",
     changeLabel: "Change",
     addUsernameLabel: "Add username",
+    deleteUsernameLabel: "Delete",
     defaults: {
       firstName: "Seam",
       lastName: "Rahman",
